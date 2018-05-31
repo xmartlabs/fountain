@@ -35,7 +35,7 @@ interface UserDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertUserSearch(posts: List<UserSearch>)
 
-  @Query("SELECT * FROM User INNER JOIN UserSearch ON User.id = UserSearch.userId " +
+  @Query("SELECT User.* FROM User INNER JOIN UserSearch ON User.id = UserSearch.userId " +
       "WHERE search=:search ORDER BY searchPosition ASC")
   fun findUsersByName(search: String): DataSource.Factory<Int, User>
 
