@@ -16,6 +16,7 @@ internal class PagedDataSource<T>(
     private val pageFetcher: ListResponsePageFetcher<T>
 ) : PageKeyedDataSource<Int, T>() {
 
+  private var isLoadingInitialData = false
   private var retry: (() -> Any)? = null
   val networkState = MutableLiveData<NetworkState>()
   val initialLoad = MutableLiveData<NetworkState>()
@@ -32,58 +33,69 @@ internal class PagedDataSource<T>(
   }
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
-    if (pageFetcher.canFetch(params.key)) {
-      networkState.postValue(NetworkState.LOADING)
-      pageFetcher.getPage(page = params.key, pageSize = params.requestedLoadSize)
-          .subscribeOn(ioServiceExecutor)
-          .subscribe(object : SingleObserver<ListResponse<T>> {
-            override fun onSuccess(data: ListResponse<T>) {
-              retry = null
-              callback.onResult(data.getElements(), params.key + 1)
-              networkState.postValue(NetworkState.LOADED)
-            }
-
-            override fun onSubscribe(d: Disposable) {
-
-            }
-
-            override fun onError(t: Throwable) {
-              retry = {
-                loadAfter(params, callback)
+    synchronized(this) {
+      if (pageFetcher.canFetch(params.key) && !isLoadingInitialData) {
+        networkState.postValue(NetworkState.LOADING)
+        pageFetcher.getPage(page = params.key, pageSize = params.requestedLoadSize)
+            .subscribeOn(ioServiceExecutor)
+            .subscribe(object : SingleObserver<ListResponse<T>> {
+              override fun onSuccess(data: ListResponse<T>) {
+                retry = null
+                callback.onResult(data.getElements(), params.key + 1)
+                networkState.postValue(NetworkState.LOADED)
               }
-              networkState.postValue(NetworkState.error(t))
-            }
-          })
+
+              override fun onSubscribe(d: Disposable) {
+
+              }
+
+              override fun onError(t: Throwable) {
+                retry = {
+                  loadAfter(params, callback)
+                }
+                networkState.postValue(NetworkState.error(t))
+              }
+            })
+      }
+    }
+  }
+
+  fun onInitialDataLoaded() {
+    synchronized(this) {
+      isLoadingInitialData = false
     }
   }
 
   override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
-    if (pageFetcher.canFetch(firstPage)) {
-      networkState.postValue(NetworkState.LOADING)
-      initialLoad.postValue(NetworkState.LOADING)
-      pageFetcher.getPage(page = firstPage, pageSize = params.requestedLoadSize)
-          .subscribeOn(ioServiceExecutor)
-          .subscribe(object : SingleObserver<ListResponse<T>> {
-            override fun onSuccess(data: ListResponse<T>) {
-              retry = null
-              networkState.postValue(NetworkState.LOADED)
-              initialLoad.postValue(NetworkState.LOADED)
-              callback.onResult(data.getElements(), -1, 2)
-            }
-
-            override fun onSubscribe(d: Disposable) {
-
-            }
-
-            override fun onError(t: Throwable) {
-              retry = {
-                loadInitial(params, callback)
+    synchronized(this) {
+      if (pageFetcher.canFetch(firstPage)) {
+        isLoadingInitialData = true
+        networkState.postValue(NetworkState.LOADING)
+        initialLoad.postValue(NetworkState.LOADING)
+        pageFetcher.getPage(page = firstPage, pageSize = params.requestedLoadSize)
+            .subscribeOn(ioServiceExecutor)
+            .subscribe(object : SingleObserver<ListResponse<T>> {
+              override fun onSuccess(data: ListResponse<T>) {
+                retry = null
+                networkState.postValue(NetworkState.LOADED)
+                initialLoad.postValue(NetworkState.LOADED)
+                onInitialDataLoaded()
+                callback.onResult(data.getElements(), -1, 2)
               }
-              val error = NetworkState.error(t)
-              networkState.postValue(error)
-              initialLoad.postValue(error)
-            }
-          })
+
+              override fun onSubscribe(d: Disposable) {}
+
+              override fun onError(t: Throwable) {
+                onInitialDataLoaded()
+                retry = {
+                  loadInitial(params, callback)
+                }
+                val error = NetworkState.error(t)
+                networkState.postValue(error)
+                initialLoad.postValue(error)
+              }
+            })
+      }
     }
   }
 }
