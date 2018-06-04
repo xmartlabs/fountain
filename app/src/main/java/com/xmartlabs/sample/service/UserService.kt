@@ -8,11 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface UserService {
-  companion object {
-    const val GET_SEARCH_USERS = "/search/users"
-  }
-
-  @GET(GET_SEARCH_USERS)
+  @GET("/search/users")
   fun searchUsers(@Query("q") name: String,
                   @Query("page") page: Int,
                   @Query("per_page") pageSize: Int

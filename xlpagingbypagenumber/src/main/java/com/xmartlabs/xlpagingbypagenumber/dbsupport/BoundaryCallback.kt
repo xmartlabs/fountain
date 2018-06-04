@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 
 internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PageFetcher<out ServiceResponse>,
-                                                    private val databaseEntitiesHandler: DatabaseEntitiesHandler<ServiceResponse>,
+                                                    private val databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
                                                     private val pagedListConfig: PagedList.Config,
                                                     private val ioServiceExecutor: Executor,
                                                     private val ioDatabaseExecutor: Executor,
@@ -67,9 +67,9 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
           .subscribe(object : SingleObserver<ServiceResponse> {
             override fun onSuccess(t: ServiceResponse) {
               page = firstPage + 1
-              databaseEntitiesHandler.runInTransaction {
-                databaseEntitiesHandler.dropEntities()
-                databaseEntitiesHandler.saveEntities(t)
+              databaseEntityHandler.runInTransaction {
+                databaseEntityHandler.dropEntities()
+                databaseEntityHandler.saveEntities(t)
               }
               helper.removeListener(networkStateListener)
               helper = PagingRequestHelper(ioServiceExecutor)
@@ -97,11 +97,11 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(data: ServiceResponse) {
             page++
-            databaseEntitiesHandler.runInTransaction {
+            databaseEntityHandler.runInTransaction {
               if (dropDatabase) {
-                databaseEntitiesHandler.dropEntities()
+                databaseEntityHandler.dropEntities()
               }
-              databaseEntitiesHandler.saveEntities(data)
+              databaseEntityHandler.saveEntities(data)
             }
             callback.recordSuccess()
           }

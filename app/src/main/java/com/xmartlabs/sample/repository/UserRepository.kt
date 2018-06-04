@@ -13,7 +13,7 @@ import com.xmartlabs.xlpagingbypagenumber.ListResponse
 import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.common.ListResponsePageFetcher
 import com.xmartlabs.xlpagingbypagenumber.common.PageFetcher
-import com.xmartlabs.xlpagingbypagenumber.dbsupport.DatabaseEntitiesHandler
+import com.xmartlabs.xlpagingbypagenumber.dbsupport.DatabaseEntityHandler
 import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListingCreator
 import io.reactivex.Single
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class UserRepository @Inject constructor(
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val databaseFunctionsHandler = object : DatabaseEntitiesHandler<ListResponse<User>> {
+    val databaseFunctionsHandler = object : DatabaseEntityHandler<ListResponse<User>> {
       override fun runInTransaction(transaction: () -> Unit) {
         db.runInTransaction(transaction)
       }
@@ -68,7 +68,7 @@ class UserRepository @Inject constructor(
       }
     }
     return ServiceAndDatabasePagedListingCreator.createListing(
-        databaseEntitiesHandler = databaseFunctionsHandler,
+        databaseEntityHandler = databaseFunctionsHandler,
         dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,
         pageFetcher = pageFetcher

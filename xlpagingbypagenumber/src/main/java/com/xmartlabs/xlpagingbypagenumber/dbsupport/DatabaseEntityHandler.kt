@@ -2,7 +2,7 @@ package com.xmartlabs.xlpagingbypagenumber.dbsupport
 
 import android.support.annotation.WorkerThread
 
-interface DatabaseEntitiesHandler<T> {
+interface DatabaseEntityHandler<T> {
   @WorkerThread
   fun saveEntities(response: T?)
 

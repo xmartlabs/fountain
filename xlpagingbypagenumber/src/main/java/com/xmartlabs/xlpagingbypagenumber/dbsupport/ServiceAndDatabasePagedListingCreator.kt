@@ -19,7 +19,7 @@ object ServiceAndDatabasePagedListingCreator {
   fun <Value, ServiceResponse> createListing(
       dataSourceFactory: DataSource.Factory<*, Value>,
       pageFetcher: PageFetcher<out ServiceResponse>,
-      databaseEntitiesHandler: DatabaseEntitiesHandler<ServiceResponse>,
+      databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
       firstPage: Int = 1,
@@ -29,7 +29,7 @@ object ServiceAndDatabasePagedListingCreator {
     val boundaryCallback = BoundaryCallback<Value, ServiceResponse>(
         pageFetcher = pageFetcher,
         firstPage = firstPage,
-        databaseEntitiesHandler = databaseEntitiesHandler,
+        databaseEntityHandler = databaseEntityHandler,
         pagedListConfig = pagedListConfig,
         ioDatabaseExecutor = ioDatabaseExecutor,
         ioServiceExecutor = ioServiceExecutor
