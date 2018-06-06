@@ -12,7 +12,7 @@ import com.xmartlabs.xlpagingbypagenumber.NetworkState
 import com.xmartlabs.xlpagingbypagenumber.Status
 
 /**
- * A View Holder that can display a loading or have click action.
+ * A View Holder that can display a loading view or have click action.
  * It is used to show the network state of paging.
  */
 class NetworkStateItemViewHolder(view: View,

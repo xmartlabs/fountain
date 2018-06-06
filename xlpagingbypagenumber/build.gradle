@@ -26,7 +26,6 @@ dependencies {
     implementation "android.arch.paging:runtime:${libraryVersion.paging}"
     implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     testImplementation "junit:junit:${libraryVersion.junit}"
 }

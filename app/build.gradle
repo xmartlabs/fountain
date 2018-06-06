@@ -29,7 +29,6 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':xlpagingbypagenumber')
 
     implementation "android.arch.paging:runtime:${libraryVersion.paging}"
