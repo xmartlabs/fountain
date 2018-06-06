@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+    defaultConfig {
+        applicationId "com.xmartlabs.xlpagingbypagenumber"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
+    androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
+
+    implementation project(':xlpagingbypagenumber')
+
+    implementation "android.arch.paging:runtime:${libraryVersion.paging}"
+    implementation "android.arch.persistence.room:runtime:${libraryVersion.room}"
+    implementation "com.android.support:appcompat-v7:${libraryVersion.androidSupport}"
+    implementation "com.android.support:design:${libraryVersion.androidSupport}"
+    implementation "com.facebook.stetho:stetho-okhttp3:${libraryVersion.stetho}"
+    implementation "com.facebook.stetho:stetho:${libraryVersion.stetho}"
+    implementation "com.google.code.gson:gson:${libraryVersion.gson}"
+    implementation "com.google.dagger:dagger-android-support:${libraryVersion.dagger}"
+    implementation "com.google.dagger:dagger:${libraryVersion.dagger}"
+    implementation "com.jakewharton.timber:timber:${libraryVersion.timber}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${libraryVersion.okHttp}"
+    implementation "com.squareup.okhttp3:okhttp:${libraryVersion.okHttp}"
+    implementation "com.squareup.picasso:picasso:${libraryVersion.picasso}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${libraryVersion.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${libraryVersion.retrofit}"
+    implementation "com.squareup.retrofit2:retrofit:${libraryVersion.retrofit}"
+    implementation "io.reactivex.rxjava2:rxandroid:${libraryVersion.rxandroid}"
+    implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
+
+    kapt "android.arch.persistence.room:compiler:${libraryVersion.room}"
+    kapt "com.google.dagger:dagger-android-processor:${libraryVersion.dagger}"
+    kapt "com.google.dagger:dagger-compiler:${libraryVersion.dagger}"
+
+    testImplementation "junit:junit:${libraryVersion.junit}"
+}
