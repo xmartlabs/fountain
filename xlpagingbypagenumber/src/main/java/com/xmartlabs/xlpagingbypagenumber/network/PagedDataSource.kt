@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
 import com.xmartlabs.xlpagingbypagenumber.ListResponse
 import com.xmartlabs.xlpagingbypagenumber.NetworkState
-import com.xmartlabs.xlpagingbypagenumber.common.ListResponsePageFetcher
+import com.xmartlabs.xlpagingbypagenumber.fetcher.ListResponsePagingHandler
 import com.xmartlabs.xlpagingbypagenumber.common.subscribeOn
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
@@ -13,7 +13,7 @@ import java.util.concurrent.Executor
 internal class PagedDataSource<T>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
-    private val pageFetcher: ListResponsePageFetcher<T>
+    private val pagingHandler: ListResponsePagingHandler<T>
 ) : PageKeyedDataSource<Int, T>() {
 
   private var retry: (() -> Any)? = null
@@ -32,9 +32,9 @@ internal class PagedDataSource<T>(
   }
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
-    if (pageFetcher.canFetch(params.key)) {
+    if (pagingHandler.canFetch(page = params.key, pageSize = params.requestedLoadSize)) {
       networkState.postValue(NetworkState.LOADING)
-      pageFetcher.getPage(page = params.key, pageSize = params.requestedLoadSize)
+      pagingHandler.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
           .subscribeOn(ioServiceExecutor)
           .subscribe(object : SingleObserver<ListResponse<T>> {
             override fun onSuccess(data: ListResponse<T>) {
@@ -58,10 +58,10 @@ internal class PagedDataSource<T>(
   }
 
   override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
-    if (pageFetcher.canFetch(firstPage)) {
+    if (pagingHandler.canFetch(page = firstPage, pageSize = params.requestedLoadSize)) {
       networkState.postValue(NetworkState.LOADING)
       initialLoad.postValue(NetworkState.LOADING)
-      pageFetcher.getPage(page = firstPage, pageSize = params.requestedLoadSize)
+      pagingHandler.fetchPage(page = firstPage, pageSize = params.requestedLoadSize)
           .subscribeOn(ioServiceExecutor)
           .subscribe(object : SingleObserver<ListResponse<T>> {
             override fun onSuccess(data: ListResponse<T>) {
