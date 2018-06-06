@@ -38,9 +38,8 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
     }
   }
 
-  override fun onZeroItemsLoaded() {
-
-  }
+  // ignored, since we are requesting the first page in the init method.
+  override fun onZeroItemsLoaded() {}
 
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: T) {
@@ -52,9 +51,8 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
     }
   }
 
-  override fun onItemAtFrontLoaded(itemAtFront: T) {
-    // ignored, since we only ever append to what's in the DB
-  }
+  // ignored, since we only ever append to what's in the DB
+  override fun onItemAtFrontLoaded(itemAtFront: T) {}
 
   @AnyThread
   fun resetData(): LiveData<NetworkState> {
