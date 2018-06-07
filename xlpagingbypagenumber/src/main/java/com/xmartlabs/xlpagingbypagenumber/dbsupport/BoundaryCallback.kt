@@ -13,7 +13,6 @@ import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 
 internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PagingHandler<out ServiceResponse>,
@@ -23,18 +22,20 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
                                                     private val ioDatabaseExecutor: Executor,
                                                     private val firstPage: Int
 ) : PagedList.BoundaryCallback<T>() {
-  var page = firstPage
+  private var isLoadingInitialData = false
+  private var page = firstPage
   var helper = PagingRequestHelper(ioServiceExecutor)
   val networkState = MutableLiveData<NetworkState>()
-  val networkStateListener: (PagingRequestHelper.StatusReport) -> Unit = { report ->
-    networkState.postValue(report.createNetworkState())
-  }
+  val networkStateListener = PagingRequestHelper.Listener { report -> networkState.postValue(report.createNetworkState()) }
 
   init {
     helper.addListener(networkStateListener)
-    helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-      pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
-          .createWebserviceCallback(it, true)
+    synchronized(this) {
+      isLoadingInitialData = true
+      helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
+        pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
+            .createWebserviceCallback(it, pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize, true)
+      }
     }
   }
 
@@ -43,10 +44,14 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
 
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: T) {
-    if (pageFetcher.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
-      helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-        pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
-            .createWebserviceCallback(it)
+      if (pageFetcher.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
+        synchronized(this) {
+        if (!isLoadingInitialData) {
+          helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
+            pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
+                .createWebserviceCallback(it, 1)
+          }
+        }
       }
     }
   }
@@ -57,45 +62,64 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
   @AnyThread
   fun resetData(): LiveData<NetworkState> {
     val networkState = MutableLiveData<NetworkState>()
-    networkState.postValue(NetworkState.LOADING)
-    pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
-        .subscribeOn(ioServiceExecutor)
-        .observeOn(ioDatabaseExecutor)
-        .subscribe(object : SingleObserver<ServiceResponse> {
-          override fun onSuccess(t: ServiceResponse) {
-            page = firstPage + 1
-            databaseEntityHandler.runInTransaction {
-              databaseEntityHandler.dropEntities()
-              databaseEntityHandler.saveEntities(t)
-            }
-            helper.removeListener(networkStateListener)
-            helper = PagingRequestHelper(ioServiceExecutor)
-            helper.addListener(networkStateListener)
-            networkState.postValue(NetworkState.LOADED)
-          }
+    synchronized(this) {
+      if (!isLoadingInitialData) {
+        isLoadingInitialData = true
+        networkState.postValue(NetworkState.LOADING)
+        pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
+            .subscribeOn(ioServiceExecutor)
+            .observeOn(ioDatabaseExecutor)
+            .subscribe(object : SingleObserver<ServiceResponse> {
+              override fun onSuccess(t: ServiceResponse) {
+                page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
+                databaseEntityHandler.runInTransaction {
+                  databaseEntityHandler.dropEntities()
+                  databaseEntityHandler.saveEntities(t)
+                }
+                onInitialDataLoaded()
+                helper.removeListener(networkStateListener)
+                helper = PagingRequestHelper(ioServiceExecutor)
+                helper.addListener(networkStateListener)
+                networkState.postValue(NetworkState.LOADED)
+              }
 
-          override fun onSubscribe(d: Disposable) {}
+              override fun onSubscribe(d: Disposable) {}
 
-          override fun onError(e: Throwable) {
-            networkState.postValue(NetworkState.error(e))
-          }
-        })
+              override fun onError(e: Throwable) {
+                onInitialDataLoaded()
+                networkState.postValue(NetworkState.error(e))
+              }
+            })
+      } else {
+        networkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
+      }
+    }
     return networkState
   }
 
+  private fun onInitialDataLoaded() {
+    synchronized(this) {
+      isLoadingInitialData = false
+    }
+  }
+
   private fun Single<out ServiceResponse>.createWebserviceCallback(callback: PagingRequestHelper.Request.Callback,
-                                                                   dropDatabase: Boolean = false) {
+                                                                   requestedPages: Int,
+                                                                   initialData: Boolean = false) {
     this
-        .subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io())
+        .subscribeOn(ioServiceExecutor)
+        .observeOn(ioDatabaseExecutor)
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(data: ServiceResponse) {
-            page++
+            page += requestedPages
             databaseEntityHandler.runInTransaction {
-              if (dropDatabase) {
+              if (initialData) {
                 databaseEntityHandler.dropEntities()
               }
               databaseEntityHandler.saveEntities(data)
+            }
+            if (initialData) {
+              onInitialDataLoaded()
             }
             callback.recordSuccess()
           }
@@ -103,6 +127,9 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
           override fun onSubscribe(d: Disposable) {}
 
           override fun onError(t: Throwable) {
+            if (initialData) {
+              onInitialDataLoaded()
+            }
             callback.recordFailure(t)
           }
         })

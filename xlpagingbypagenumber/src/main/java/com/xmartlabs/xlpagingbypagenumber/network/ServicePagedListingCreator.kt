@@ -10,9 +10,6 @@ import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListi
 import com.xmartlabs.xlpagingbypagenumber.network.ServicePagedDataSourceFactory
 import java.util.concurrent.Executor
 
-/**
- * Created by mirland on 28/05/18.
- */
 object ServicePagedListingCreator {
   fun <T> createListing(
       firstPage: Int = 1,
@@ -20,7 +17,12 @@ object ServicePagedListingCreator {
       pagedListConfig: PagedList.Config = ServiceAndDatabasePagedListingCreator.DEFAULT_PAGED_LIST_CONFIG,
       pagingHandler: ListResponsePagingHandler<T>
   ): Listing<T> {
-    val sourceFactory = ServicePagedDataSourceFactory(pagingHandler = pagingHandler, firstPage = firstPage, ioServiceExecutor = ioServiceExecutor)
+    val sourceFactory = ServicePagedDataSourceFactory(
+        firstPage = firstPage,
+        ioServiceExecutor = ioServiceExecutor,
+        pagedListConfig = pagedListConfig,
+        pagingHandler = pagingHandler
+    )
     val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
         .build()
 

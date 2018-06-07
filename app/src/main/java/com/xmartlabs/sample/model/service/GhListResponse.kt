@@ -10,5 +10,5 @@ data class GhListResponse<T>(
 
   override fun getEntityCount() = totalCount
 
-  override fun getElements(): List<T> = items
+  override fun getElements() = items
 }
