@@ -6,24 +6,18 @@ import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.xlpagingbypagenumber.Listing
-import com.xmartlabs.xlpagingbypagenumber.common.IoExecutors
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import java.util.concurrent.Executor
 
-object ServiceAndDatabasePagedListingCreator {
-  private const val DEFAULT_NETWORK_PAGE_SIZE = 30
-  internal val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
-      .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
-      .build()
-
+internal object ServiceAndDatabasePagedListingCreator {
   fun <Value, ServiceResponse> createListing(
-      dataSourceFactory: DataSource.Factory<*, Value>,
-      pagingHandler: PagingHandler<out ServiceResponse>,
       databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
-      ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
-      ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
-      firstPage: Int = 1,
-      pagedListConfig: PagedList.Config = PagedList.Config.Builder().setPageSize(DEFAULT_NETWORK_PAGE_SIZE).build()
+      dataSourceFactory: DataSource.Factory<*, Value>,
+      firstPage: Int,
+      ioDatabaseExecutor: Executor,
+      ioServiceExecutor: Executor,
+      pagedListConfig: PagedList.Config,
+      pagingHandler: PagingHandler<out ServiceResponse>
   ): Listing<Value> {
 
     val boundaryCallback = BoundaryCallback<Value, ServiceResponse>(
