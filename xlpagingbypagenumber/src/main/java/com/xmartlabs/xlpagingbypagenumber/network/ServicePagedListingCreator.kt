@@ -20,7 +20,12 @@ object ServicePagedListingCreator {
       pagedListConfig: PagedList.Config = ServiceAndDatabasePagedListingCreator.DEFAULT_PAGED_LIST_CONFIG,
       pageFetcher: ListResponsePageFetcher<T>
   ): Listing<T> {
-    val sourceFactory = ServicePagedDataSourceFactory(pageFetcher = pageFetcher, firstPage = firstPage, ioServiceExecutor = ioServiceExecutor)
+    val sourceFactory = ServicePagedDataSourceFactory(
+        firstPage = firstPage,
+        ioServiceExecutor = ioServiceExecutor,
+        pagedListConfig = pagedListConfig,
+        pageFetcher = pageFetcher
+    )
     val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
         .build()
 

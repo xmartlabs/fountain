@@ -2,6 +2,7 @@ package com.xmartlabs.xlpagingbypagenumber.network
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
+import android.arch.paging.PagedList
 import com.xmartlabs.xlpagingbypagenumber.ListResponse
 import com.xmartlabs.xlpagingbypagenumber.NetworkState
 import com.xmartlabs.xlpagingbypagenumber.common.ListResponsePageFetcher
@@ -13,6 +14,7 @@ import java.util.concurrent.Executor
 internal class PagedDataSource<T>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
+    private val pagedListConfig: PagedList.Config,
     private val pageFetcher: ListResponsePageFetcher<T>
 ) : PageKeyedDataSource<Int, T>() {
 
@@ -27,10 +29,7 @@ internal class PagedDataSource<T>(
     prevRetry?.invoke()
   }
 
-  override fun loadBefore(
-      params: LoadParams<Int>,
-      callback: LoadCallback<Int, T>) {
-  }
+  override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {}
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
     synchronized(this) {
@@ -45,9 +44,7 @@ internal class PagedDataSource<T>(
                 networkState.postValue(NetworkState.LOADED)
               }
 
-              override fun onSubscribe(d: Disposable) {
-
-              }
+              override fun onSubscribe(d: Disposable) {}
 
               override fun onError(t: Throwable) {
                 retry = {
@@ -80,7 +77,8 @@ internal class PagedDataSource<T>(
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
                 onInitialDataLoaded()
-                callback.onResult(data.getElements(), -1, 2)
+                val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
+                callback.onResult(data.getElements(), -1, nextPage)
               }
 
               override fun onSubscribe(d: Disposable) {}
