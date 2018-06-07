@@ -1,7 +1,14 @@
 package com.xmartlabs.sample.model.service
 
-import com.xmartlabs.xlpagingbypagenumber.ListResponse
+import com.google.gson.annotations.SerializedName
+import com.xmartlabs.xlpagingbypagenumber.ListResponseWithEntityCount
 
-data class GhListResponse<T>(val total_count: Long, private val items: List<T>) : ListResponse<T> {
+data class GhListResponse<T>(
+    @SerializedName("total_count") private val totalCount: Long,
+    private val items: List<T>)
+  : ListResponseWithEntityCount<T> {
+
+  override fun getEntityCount() = totalCount
+
   override fun getElements(): List<T> = items
 }

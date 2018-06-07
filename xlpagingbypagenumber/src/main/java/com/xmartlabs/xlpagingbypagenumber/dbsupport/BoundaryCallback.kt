@@ -7,16 +7,16 @@ import android.arch.paging.PagingRequestHelper
 import android.support.annotation.AnyThread
 import android.support.annotation.MainThread
 import com.xmartlabs.xlpagingbypagenumber.NetworkState
-import com.xmartlabs.xlpagingbypagenumber.common.PageFetcher
 import com.xmartlabs.xlpagingbypagenumber.common.observeOn
 import com.xmartlabs.xlpagingbypagenumber.common.subscribeOn
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 
-internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PageFetcher<out ServiceResponse>,
+internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PagingHandler<out ServiceResponse>,
                                                     private val databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
                                                     private val pagedListConfig: PagedList.Config,
                                                     private val ioServiceExecutor: Executor,
@@ -33,7 +33,7 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
   init {
     helper.addListener(networkStateListener)
     helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-      pageFetcher.getPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
+      pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
           .createWebserviceCallback(it, true)
     }
   }
@@ -43,9 +43,9 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
 
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: T) {
-    if (pageFetcher.canFetch(page)) {
+    if (pageFetcher.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
       helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-        pageFetcher.getPage(page = page, pageSize = pagedListConfig.pageSize)
+        pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
             .createWebserviceCallback(it)
       }
     }
@@ -57,33 +57,29 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
   @AnyThread
   fun resetData(): LiveData<NetworkState> {
     val networkState = MutableLiveData<NetworkState>()
-    if (pageFetcher.canFetch(firstPage)) {
-      networkState.postValue(NetworkState.LOADING)
-      pageFetcher.getPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
-          .subscribeOn(ioServiceExecutor)
-          .observeOn(ioDatabaseExecutor)
-          .subscribe(object : SingleObserver<ServiceResponse> {
-            override fun onSuccess(t: ServiceResponse) {
-              page = firstPage + 1
-              databaseEntityHandler.runInTransaction {
-                databaseEntityHandler.dropEntities()
-                databaseEntityHandler.saveEntities(t)
-              }
-              helper.removeListener(networkStateListener)
-              helper = PagingRequestHelper(ioServiceExecutor)
-              helper.addListener(networkStateListener)
-              networkState.postValue(NetworkState.LOADED)
+    networkState.postValue(NetworkState.LOADING)
+    pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
+        .subscribeOn(ioServiceExecutor)
+        .observeOn(ioDatabaseExecutor)
+        .subscribe(object : SingleObserver<ServiceResponse> {
+          override fun onSuccess(t: ServiceResponse) {
+            page = firstPage + 1
+            databaseEntityHandler.runInTransaction {
+              databaseEntityHandler.dropEntities()
+              databaseEntityHandler.saveEntities(t)
             }
+            helper.removeListener(networkStateListener)
+            helper = PagingRequestHelper(ioServiceExecutor)
+            helper.addListener(networkStateListener)
+            networkState.postValue(NetworkState.LOADED)
+          }
 
-            override fun onSubscribe(d: Disposable) {}
+          override fun onSubscribe(d: Disposable) {}
 
-            override fun onError(e: Throwable) {
-              networkState.postValue(NetworkState.error(e))
-            }
-          })
-    } else {
-      networkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
-    }
+          override fun onError(e: Throwable) {
+            networkState.postValue(NetworkState.error(e))
+          }
+        })
     return networkState
   }
 
@@ -104,9 +100,7 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
             callback.recordSuccess()
           }
 
-          override fun onSubscribe(d: Disposable) {
-
-          }
+          override fun onSubscribe(d: Disposable) {}
 
           override fun onError(t: Throwable) {
             callback.recordFailure(t)
