@@ -10,9 +10,6 @@ import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListi
 import com.xmartlabs.xlpagingbypagenumber.network.ServicePagedDataSourceFactory
 import java.util.concurrent.Executor
 
-/**
- * Created by mirland on 28/05/18.
- */
 object ServicePagedListingCreator {
   fun <T> createListing(
       firstPage: Int = 1,
