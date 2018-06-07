@@ -7,15 +7,15 @@ import android.arch.paging.PagingRequestHelper
 import android.support.annotation.AnyThread
 import android.support.annotation.MainThread
 import com.xmartlabs.xlpagingbypagenumber.NetworkState
-import com.xmartlabs.xlpagingbypagenumber.common.PageFetcher
 import com.xmartlabs.xlpagingbypagenumber.common.observeOn
 import com.xmartlabs.xlpagingbypagenumber.common.subscribeOn
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
-internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PageFetcher<out ServiceResponse>,
+internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PagingHandler<out ServiceResponse>,
                                                     private val databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
                                                     private val pagedListConfig: PagedList.Config,
                                                     private val ioServiceExecutor: Executor,
@@ -33,7 +33,7 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
     synchronized(this) {
       isLoadingInitialData = true
       helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-        pageFetcher.getPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
+        pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
             .createWebserviceCallback(it, pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize, true)
       }
     }
@@ -44,11 +44,11 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
 
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: T) {
-    if (pageFetcher.canFetch(page)) {
-      synchronized(this) {
+      if (pageFetcher.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
+        synchronized(this) {
         if (!isLoadingInitialData) {
           helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            pageFetcher.getPage(page = page, pageSize = pagedListConfig.pageSize)
+            pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
                 .createWebserviceCallback(it, 1)
           }
         }
@@ -63,10 +63,10 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
   fun resetData(): LiveData<NetworkState> {
     val networkState = MutableLiveData<NetworkState>()
     synchronized(this) {
-      if (pageFetcher.canFetch(firstPage) && !isLoadingInitialData) {
+      if (!isLoadingInitialData) {
         isLoadingInitialData = true
         networkState.postValue(NetworkState.LOADING)
-        pageFetcher.getPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
+        pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
             .subscribeOn(ioServiceExecutor)
             .observeOn(ioDatabaseExecutor)
             .subscribe(object : SingleObserver<ServiceResponse> {

@@ -3,14 +3,14 @@ package com.xmartlabs.xlpagingbypagenumber.network
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.DataSource
 import android.arch.paging.PagedList
-import com.xmartlabs.xlpagingbypagenumber.common.ListResponsePageFetcher
+import com.xmartlabs.xlpagingbypagenumber.fetcher.ListResponsePagingHandler
 import java.util.concurrent.Executor
 
 internal class ServicePagedDataSourceFactory<T>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
-    private val pageFetcher: ListResponsePageFetcher<T>
+    private val pagingHandler: ListResponsePagingHandler<T>
 ) : DataSource.Factory<Int, T>() {
   val sourceLiveData = MutableLiveData<PagedDataSource<T>>()
 
@@ -19,7 +19,7 @@ internal class ServicePagedDataSourceFactory<T>(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,
         pagedListConfig = pagedListConfig,
-        pageFetcher = pageFetcher
+        pagingHandler = pagingHandler
     )
     sourceLiveData.postValue(source)
     return source

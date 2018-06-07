@@ -7,7 +7,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.common.IoExecutors
-import com.xmartlabs.xlpagingbypagenumber.common.PageFetcher
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import java.util.concurrent.Executor
 
 object ServiceAndDatabasePagedListingCreator {
@@ -18,7 +18,7 @@ object ServiceAndDatabasePagedListingCreator {
 
   fun <Value, ServiceResponse> createListing(
       dataSourceFactory: DataSource.Factory<*, Value>,
-      pageFetcher: PageFetcher<out ServiceResponse>,
+      pagingHandler: PagingHandler<out ServiceResponse>,
       databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
@@ -27,7 +27,7 @@ object ServiceAndDatabasePagedListingCreator {
   ): Listing<Value> {
 
     val boundaryCallback = BoundaryCallback<Value, ServiceResponse>(
-        pageFetcher = pageFetcher,
+        pageFetcher = pagingHandler,
         firstPage = firstPage,
         databaseEntityHandler = databaseEntityHandler,
         pagedListConfig = pagedListConfig,

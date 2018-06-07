@@ -5,7 +5,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.common.IoExecutors
-import com.xmartlabs.xlpagingbypagenumber.common.ListResponsePageFetcher
+import com.xmartlabs.xlpagingbypagenumber.fetcher.ListResponsePagingHandler
 import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListingCreator
 import com.xmartlabs.xlpagingbypagenumber.network.ServicePagedDataSourceFactory
 import java.util.concurrent.Executor
@@ -18,13 +18,13 @@ object ServicePagedListingCreator {
       firstPage: Int = 1,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = ServiceAndDatabasePagedListingCreator.DEFAULT_PAGED_LIST_CONFIG,
-      pageFetcher: ListResponsePageFetcher<T>
+      pagingHandler: ListResponsePagingHandler<T>
   ): Listing<T> {
     val sourceFactory = ServicePagedDataSourceFactory(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,
         pagedListConfig = pagedListConfig,
-        pageFetcher = pageFetcher
+        pagingHandler = pagingHandler
     )
     val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
         .build()

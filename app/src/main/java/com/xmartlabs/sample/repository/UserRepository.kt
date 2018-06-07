@@ -11,8 +11,8 @@ import com.xmartlabs.template.model.UserSearch
 import com.xmartlabs.template.repository.common.ServicePagedListingCreator
 import com.xmartlabs.xlpagingbypagenumber.ListResponse
 import com.xmartlabs.xlpagingbypagenumber.Listing
-import com.xmartlabs.xlpagingbypagenumber.common.ListResponsePageFetcher
-import com.xmartlabs.xlpagingbypagenumber.common.PageFetcher
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandlerWithTotalEntityCount
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PageFetcher
 import com.xmartlabs.xlpagingbypagenumber.dbsupport.DatabaseEntityHandler
 import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListingCreator
 import io.reactivex.Single
@@ -27,24 +27,25 @@ class UserRepository @Inject constructor(
 ) {
   @MainThread
   fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : ListResponsePageFetcher<User> {
-      override fun canFetch(page: Int): Boolean = true //todo:
-
-      override fun getPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
+    val pageFetcher = (object : PageFetcher<GhListResponse<User>> {
+      override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    return ServicePagedListingCreator.createListing(pageFetcher = pageFetcher, pagedListConfig = pagedListConfig)
+    val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
+    return ServicePagedListingCreator.createListing(
+        pagingHandler = pagingHandler,
+        pagedListConfig = pagedListConfig
+    )
   }
 
   @MainThread
   fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher: PageFetcher<GhListResponse<User>> = (object : PageFetcher<GhListResponse<User>> {
-      override fun canFetch(page: Int): Boolean = true //todo:
-
-      override fun getPage(page: Int, pageSize: Int) =
+    val pageFetcher = (object : PageFetcher<GhListResponse<User>> {
+      override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
+    val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
 
     val databaseFunctionsHandler = object : DatabaseEntityHandler<ListResponse<User>> {
       override fun runInTransaction(transaction: () -> Unit) {
@@ -71,7 +72,7 @@ class UserRepository @Inject constructor(
         databaseEntityHandler = databaseFunctionsHandler,
         dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,
-        pageFetcher = pageFetcher
+        pagingHandler = pagingHandler
     )
   }
 }
