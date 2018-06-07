@@ -13,7 +13,7 @@ import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.XlPaging
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandlerWithTotalEntityCount
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PageFetcher
-import com.xmartlabs.xlpagingbypagenumber.dbsupport.DatabaseEntityHandler
+import com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork.DataSourceEntityHandler
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,7 +46,7 @@ class UserRepository @Inject constructor(
     })
     val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
 
-    val databaseFunctionsHandler = object : DatabaseEntityHandler<ListResponse<User>> {
+    val databaseFunctionsHandler = object : DataSourceEntityHandler<ListResponse<User>> {
       override fun runInTransaction(transaction: () -> Unit) {
         db.runInTransaction(transaction)
       }
@@ -67,8 +67,8 @@ class UserRepository @Inject constructor(
         userDao.deleteUserSearch(userName)
       }
     }
-    return XlPaging.createNetworkAndDatabaseListing(
-        databaseEntityHandler = databaseFunctionsHandler,
+    return XlPaging.createNetworkWithCacheSupportListing(
+        dataSourceEntityHandler = databaseFunctionsHandler,
         dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,
         pagingHandler = pagingHandler

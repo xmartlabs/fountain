@@ -1,4 +1,4 @@
-package com.xmartlabs.xlpagingbypagenumber.network
+package com.xmartlabs.xlpagingbypagenumber.feature.network
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
@@ -11,7 +11,7 @@ import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
-internal class PagedDataSource<T>(
+internal class NetworkPagedDataSource<T>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,

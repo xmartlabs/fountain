@@ -1,4 +1,4 @@
-package com.xmartlabs.xlpagingbypagenumber.dbsupport
+package com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -16,7 +16,7 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
 internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: PagingHandler<out ServiceResponse>,
-                                                    private val databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
+                                                    private val dataSourceEntityHandler: DataSourceEntityHandler<ServiceResponse>,
                                                     private val pagedListConfig: PagedList.Config,
                                                     private val ioServiceExecutor: Executor,
                                                     private val ioDatabaseExecutor: Executor,
@@ -72,9 +72,9 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
             .subscribe(object : SingleObserver<ServiceResponse> {
               override fun onSuccess(t: ServiceResponse) {
                 page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
-                databaseEntityHandler.runInTransaction {
-                  databaseEntityHandler.dropEntities()
-                  databaseEntityHandler.saveEntities(t)
+                dataSourceEntityHandler.runInTransaction {
+                  dataSourceEntityHandler.dropEntities()
+                  dataSourceEntityHandler.saveEntities(t)
                 }
                 onInitialDataLoaded()
                 helper.removeListener(networkStateListener)
@@ -112,11 +112,11 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(data: ServiceResponse) {
             page += requestedPages
-            databaseEntityHandler.runInTransaction {
+            dataSourceEntityHandler.runInTransaction {
               if (initialData) {
-                databaseEntityHandler.dropEntities()
+                dataSourceEntityHandler.dropEntities()
               }
-              databaseEntityHandler.saveEntities(data)
+              dataSourceEntityHandler.saveEntities(data)
             }
             if (initialData) {
               onInitialDataLoaded()
