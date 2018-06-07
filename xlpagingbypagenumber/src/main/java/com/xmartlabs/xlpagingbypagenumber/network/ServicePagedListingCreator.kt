@@ -4,17 +4,15 @@ import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.xlpagingbypagenumber.Listing
-import com.xmartlabs.xlpagingbypagenumber.common.IoExecutors
 import com.xmartlabs.xlpagingbypagenumber.fetcher.ListResponsePagingHandler
-import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListingCreator
 import com.xmartlabs.xlpagingbypagenumber.network.ServicePagedDataSourceFactory
 import java.util.concurrent.Executor
 
-object ServicePagedListingCreator {
+internal object ServicePagedListingCreator {
   fun <T> createListing(
-      firstPage: Int = 1,
-      ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
-      pagedListConfig: PagedList.Config = ServiceAndDatabasePagedListingCreator.DEFAULT_PAGED_LIST_CONFIG,
+      firstPage: Int,
+      ioServiceExecutor: Executor,
+      pagedListConfig: PagedList.Config,
       pagingHandler: ListResponsePagingHandler<T>
   ): Listing<T> {
     val sourceFactory = ServicePagedDataSourceFactory(

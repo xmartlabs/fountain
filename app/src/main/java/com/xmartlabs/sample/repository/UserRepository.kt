@@ -8,13 +8,12 @@ import com.xmartlabs.sample.service.UserService
 import com.xmartlabs.template.db.AppDb
 import com.xmartlabs.template.model.User
 import com.xmartlabs.template.model.UserSearch
-import com.xmartlabs.template.repository.common.ServicePagedListingCreator
 import com.xmartlabs.xlpagingbypagenumber.ListResponse
 import com.xmartlabs.xlpagingbypagenumber.Listing
+import com.xmartlabs.xlpagingbypagenumber.XlPaging
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandlerWithTotalEntityCount
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PageFetcher
 import com.xmartlabs.xlpagingbypagenumber.dbsupport.DatabaseEntityHandler
-import com.xmartlabs.xlpagingbypagenumber.dbsupport.ServiceAndDatabasePagedListingCreator
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,7 +32,7 @@ class UserRepository @Inject constructor(
     })
 
     val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
-    return ServicePagedListingCreator.createListing(
+    return XlPaging.createNetworkListing(
         pagingHandler = pagingHandler,
         pagedListConfig = pagedListConfig
     )
@@ -68,7 +67,7 @@ class UserRepository @Inject constructor(
         userDao.deleteUserSearch(userName)
       }
     }
-    return ServiceAndDatabasePagedListingCreator.createListing(
+    return XlPaging.createNetworkAndDatabaseListing(
         databaseEntityHandler = databaseFunctionsHandler,
         dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,
