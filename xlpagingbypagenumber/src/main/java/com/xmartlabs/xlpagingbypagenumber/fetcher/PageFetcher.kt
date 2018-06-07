@@ -28,7 +28,7 @@ abstract class PagingHandlerWithKnownEntityCount<T>(private val firstPage: Int =
 
     val pageCount = if (firstPage == 0) page + 1 else page
     val firstEntityOfPagePosition = (pageCount - 1) * pageSize + 1
-    return firstEntityOfPagePosition >= totalEntities!!
+    return firstEntityOfPagePosition <= totalEntities!!
   }
 }
 

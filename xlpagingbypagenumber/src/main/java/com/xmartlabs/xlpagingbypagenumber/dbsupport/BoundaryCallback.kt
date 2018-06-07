@@ -7,9 +7,9 @@ import android.arch.paging.PagingRequestHelper
 import android.support.annotation.AnyThread
 import android.support.annotation.MainThread
 import com.xmartlabs.xlpagingbypagenumber.NetworkState
-import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import com.xmartlabs.xlpagingbypagenumber.common.observeOn
 import com.xmartlabs.xlpagingbypagenumber.common.subscribeOn
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
@@ -57,33 +57,29 @@ internal class BoundaryCallback<T, ServiceResponse>(private val pageFetcher: Pag
   @AnyThread
   fun resetData(): LiveData<NetworkState> {
     val networkState = MutableLiveData<NetworkState>()
-    if (pageFetcher.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
-      networkState.postValue(NetworkState.LOADING)
-      pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
-          .subscribeOn(ioServiceExecutor)
-          .observeOn(ioDatabaseExecutor)
-          .subscribe(object : SingleObserver<ServiceResponse> {
-            override fun onSuccess(t: ServiceResponse) {
-              page = firstPage + 1
-              databaseEntityHandler.runInTransaction {
-                databaseEntityHandler.dropEntities()
-                databaseEntityHandler.saveEntities(t)
-              }
-              helper.removeListener(networkStateListener)
-              helper = PagingRequestHelper(ioServiceExecutor)
-              helper.addListener(networkStateListener)
-              networkState.postValue(NetworkState.LOADED)
+    networkState.postValue(NetworkState.LOADING)
+    pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
+        .subscribeOn(ioServiceExecutor)
+        .observeOn(ioDatabaseExecutor)
+        .subscribe(object : SingleObserver<ServiceResponse> {
+          override fun onSuccess(t: ServiceResponse) {
+            page = firstPage + 1
+            databaseEntityHandler.runInTransaction {
+              databaseEntityHandler.dropEntities()
+              databaseEntityHandler.saveEntities(t)
             }
+            helper.removeListener(networkStateListener)
+            helper = PagingRequestHelper(ioServiceExecutor)
+            helper.addListener(networkStateListener)
+            networkState.postValue(NetworkState.LOADED)
+          }
 
-            override fun onSubscribe(d: Disposable) {}
+          override fun onSubscribe(d: Disposable) {}
 
-            override fun onError(e: Throwable) {
-              networkState.postValue(NetworkState.error(e))
-            }
-          })
-    } else {
-      networkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
-    }
+          override fun onError(e: Throwable) {
+            networkState.postValue(NetworkState.error(e))
+          }
+        })
     return networkState
   }
 
