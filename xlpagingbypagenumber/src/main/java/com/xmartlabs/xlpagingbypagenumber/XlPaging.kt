@@ -12,16 +12,16 @@ import java.util.concurrent.Executor
 
 object XlPaging {
   private const val DEFAULT_FIRST_PAGE = 1
-  private const val DEFAULT_NETWORK_PAGE_SIZE = 30
+  private const val DEFAULT_NETWORK_PAGE_SIZE = 20
   private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
       .build()
 
-  fun <T> createNetworkListing(
+  fun <Value> createNetworkListing(
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG,
-      pagingHandler: ListResponsePagingHandler<T>
+      pagingHandler: ListResponsePagingHandler<Value>
   ) = ServicePagedListingCreator.createListing(
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,
