@@ -2,18 +2,18 @@ package com.xmartlabs.sample.repository
 
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
-import com.android.example.github.db.UserDao
+import com.xmartlabs.sample.db.AppDb
+import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.service.GhListResponse
 import com.xmartlabs.sample.service.UserService
-import com.xmartlabs.template.db.AppDb
 import com.xmartlabs.template.model.User
 import com.xmartlabs.template.model.UserSearch
 import com.xmartlabs.xlpagingbypagenumber.ListResponse
 import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.XlPaging
-import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandlerWithTotalEntityCount
-import com.xmartlabs.xlpagingbypagenumber.fetcher.PageFetcher
 import com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork.DataSourceEntityHandler
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PageFetcher
+import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandlerWithTotalEntityCount
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,7 +46,7 @@ class UserRepository @Inject constructor(
     })
     val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
 
-    val databaseFunctionsHandler = object : DataSourceEntityHandler<ListResponse<User>> {
+    val dataSourceEntityHandler = object : DataSourceEntityHandler<ListResponse<User>> {
       override fun runInTransaction(transaction: () -> Unit) {
         db.runInTransaction(transaction)
       }
@@ -68,7 +68,7 @@ class UserRepository @Inject constructor(
       }
     }
     return XlPaging.createNetworkWithCacheSupportListing(
-        dataSourceEntityHandler = databaseFunctionsHandler,
+        dataSourceEntityHandler = dataSourceEntityHandler,
         dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,
         pagingHandler = pagingHandler

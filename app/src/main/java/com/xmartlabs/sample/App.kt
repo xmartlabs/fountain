@@ -18,7 +18,7 @@ open class App : Application(), HasActivityInjector {
     super.onCreate()
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
-      Stetho.initializeWithDefaults(this);
+      Stetho.initializeWithDefaults(this)
     }
     AppInjector.init(this)
   }
