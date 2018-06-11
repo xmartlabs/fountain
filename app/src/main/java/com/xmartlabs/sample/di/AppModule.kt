@@ -6,7 +6,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.xmartlabs.template.db.AppDb
+import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.service.UserService
 import dagger.Module
 import dagger.Provides

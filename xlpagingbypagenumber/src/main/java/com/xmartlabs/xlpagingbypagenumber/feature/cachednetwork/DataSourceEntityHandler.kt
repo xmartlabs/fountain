@@ -1,8 +1,8 @@
-package com.xmartlabs.xlpagingbypagenumber.dbsupport
+package com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork
 
 import android.support.annotation.WorkerThread
 
-interface DatabaseEntityHandler<T> {
+interface DataSourceEntityHandler<T> {
   @WorkerThread
   fun saveEntities(response: T?)
 

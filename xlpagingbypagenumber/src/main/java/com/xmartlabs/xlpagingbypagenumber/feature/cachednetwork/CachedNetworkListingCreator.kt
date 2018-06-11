@@ -1,4 +1,4 @@
-package com.xmartlabs.xlpagingbypagenumber.dbsupport
+package com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
@@ -9,9 +9,9 @@ import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import java.util.concurrent.Executor
 
-internal object ServiceAndDatabasePagedListingCreator {
+internal object CachedNetworkListingCreator {
   fun <Value, ServiceResponse> createListing(
-      databaseEntityHandler: DatabaseEntityHandler<ServiceResponse>,
+      dataSourceEntityHandler: DataSourceEntityHandler<ServiceResponse>,
       dataSourceFactory: DataSource.Factory<*, Value>,
       firstPage: Int,
       ioDatabaseExecutor: Executor,
@@ -23,7 +23,7 @@ internal object ServiceAndDatabasePagedListingCreator {
     val boundaryCallback = BoundaryCallback<Value, ServiceResponse>(
         pageFetcher = pagingHandler,
         firstPage = firstPage,
-        databaseEntityHandler = databaseEntityHandler,
+        dataSourceEntityHandler = dataSourceEntityHandler,
         pagedListConfig = pagedListConfig,
         ioDatabaseExecutor = ioDatabaseExecutor,
         ioServiceExecutor = ioServiceExecutor

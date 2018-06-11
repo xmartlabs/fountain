@@ -5,17 +5,17 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.fetcher.ListResponsePagingHandler
-import com.xmartlabs.xlpagingbypagenumber.network.ServicePagedDataSourceFactory
+import com.xmartlabs.xlpagingbypagenumber.feature.network.NetworkPagedDataSourceFactory
 import java.util.concurrent.Executor
 
-internal object ServicePagedListingCreator {
+internal object NetworkPagedListingCreator {
   fun <T> createListing(
       firstPage: Int,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
       pagingHandler: ListResponsePagingHandler<T>
   ): Listing<T> {
-    val sourceFactory = ServicePagedDataSourceFactory(
+    val sourceFactory = NetworkPagedDataSourceFactory(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,
         pagedListConfig = pagedListConfig,

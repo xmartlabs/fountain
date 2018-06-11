@@ -1,6 +1,5 @@
 package com.xmartlabs.xlpagingbypagenumber.common
 
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 /**

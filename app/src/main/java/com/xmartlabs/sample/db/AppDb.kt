@@ -1,11 +1,8 @@
-package com.xmartlabs.template.db
+package com.xmartlabs.sample.db
 
 
 import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
-import android.content.Context
-import com.android.example.github.db.UserDao
 import com.xmartlabs.template.model.User
 import com.xmartlabs.template.model.UserSearch
 
