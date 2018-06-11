@@ -9,7 +9,7 @@ import com.xmartlabs.xlpagingbypagenumber.Listing
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import java.util.concurrent.Executor
 
-internal object CacheNetworkListingCreator {
+internal object CachedNetworkListingCreator {
   fun <Value, ServiceResponse> createListing(
       dataSourceEntityHandler: DataSourceEntityHandler<ServiceResponse>,
       dataSourceFactory: DataSource.Factory<*, Value>,

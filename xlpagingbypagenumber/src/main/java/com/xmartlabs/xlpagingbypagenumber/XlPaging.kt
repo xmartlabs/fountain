@@ -4,8 +4,8 @@ import android.arch.paging.DataSource
 import android.arch.paging.PagedList
 import com.xmartlabs.template.repository.common.NetworkPagedListingCreator
 import com.xmartlabs.xlpagingbypagenumber.common.IoExecutors
+import com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork.DataSourceEntityHandler
-import com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork.CacheNetworkListingCreator
 import com.xmartlabs.xlpagingbypagenumber.fetcher.ListResponsePagingHandler
 import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandler
 import java.util.concurrent.Executor
@@ -37,7 +37,7 @@ object XlPaging {
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
-  ) = CacheNetworkListingCreator.createListing(
+  ) = CachedNetworkListingCreator.createListing(
       dataSourceEntityHandler = dataSourceEntityHandler,
       dataSourceFactory = dataSourceFactory,
       firstPage = firstPage,
