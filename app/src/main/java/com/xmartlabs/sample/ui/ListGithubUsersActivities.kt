@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.R
 import com.xmartlabs.template.model.User
-import com.xmartlabs.xlpagingbypagenumber.NetworkState
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_list_github_users_activities.*

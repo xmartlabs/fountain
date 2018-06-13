@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/XLPaging
+    working_directory: ~/Fountain
     docker:
       - image: circleci/android:api-26-alpha
     environment:
@@ -24,10 +24,10 @@ jobs:
           name: Build Project
           command: ./gradlew build
       - store_artifacts:
-          path: xlpagingbypagenumber/build/reports
+          path: fountain/build/reports
           destination: reports
   test_api_v16:
-      working_directory: ~/XLPaging
+      working_directory: ~/Fountain
       docker:
           - image: circleci/android:api-26-alpha
       environment:
@@ -57,12 +57,12 @@ jobs:
               adb shell input keyevent 82
         - run:
             name: Run Tests
-            command: ./gradlew :xlpagingbypagenumber:connectedAndroidTest
+            command: ./gradlew :fountain:connectedAndroidTest
         - store_artifacts:
-            path: xlpagingbypagenumber/build/reports
+            path: fountain/build/reports
             destination: reports
         - store_test_results:
-            path: xlpagingbypagenumber/build/test-results
+            path: fountain/build/test-results
 workflows:
   version: 2
   build_and_test:
