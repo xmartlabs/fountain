@@ -33,25 +33,25 @@ abstract class PagingHandlerWithKnownEntityCount<T>(private val firstPage: Int =
 }
 
 class PagingHandlerWithTotalEntityCount<T>(
-    private val firstPage: Int = 1,
-    private val pageFetcher: PageFetcher<out ListResponseWithEntityCount<T>>
+    private val pageFetcher: PageFetcher<out ListResponseWithEntityCount<T>>,
+    firstPage: Int = 1
 ) : PagingHandlerWithKnownEntityCount<T>(firstPage) {
 
   @CheckResult
   override fun fetchPage(page: Int, pageSize: Int): Single<out ListResponseWithEntityCount<T>> {
     return pageFetcher.fetchPage(page = page, pageSize = pageSize)
-        .doOnSuccess({ response -> totalEntities = response.getEntityCount() })
+        .doOnSuccess { response -> totalEntities = response.getEntityCount() }
   }
 }
 
 class PagingHandlerWithTotalPageCount<T>(
-    private val firstPage: Int = 1,
-    private val pageFetcher: PageFetcher<out ListResponseWithPageCount<T>>
+    private val pageFetcher: PageFetcher<out ListResponseWithPageCount<T>>,
+    firstPage: Int = 1
 ) : PagingHandlerWithKnownEntityCount<T>(firstPage) {
 
   @CheckResult
   override fun fetchPage(page: Int, pageSize: Int): Single<out ListResponseWithPageCount<T>> {
     return pageFetcher.fetchPage(page = page, pageSize = pageSize)
-        .doOnSuccess({ response -> totalEntities = (pageSize.toLong() * response.getPageCount()) })
+        .doOnSuccess { response -> totalEntities = (pageSize.toLong() * response.getPageCount()) }
   }
 }

@@ -18,10 +18,10 @@ object Fountain {
       .build()
 
   fun <Value> createNetworkListing(
+      pagingHandler: ListResponsePagingHandler<Value>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
-      pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG,
-      pagingHandler: ListResponsePagingHandler<Value>
+      pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
   ) = NetworkPagedListingCreator.createListing(
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,
