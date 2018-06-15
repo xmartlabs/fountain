@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.Status
 import com.xmartlabs.sample.R
-import com.xmartlabs.xlpagingbypagenumber.NetworkState
-import com.xmartlabs.xlpagingbypagenumber.Status
 
 /**
  * A View Holder that can display a loading view or have click action.

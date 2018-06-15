@@ -1,7 +1,7 @@
 package com.xmartlabs.sample.model.service
 
 import com.google.gson.annotations.SerializedName
-import com.xmartlabs.xlpagingbypagenumber.ListResponseWithEntityCount
+import com.xmartlabs.fountain.ListResponseWithEntityCount
 
 data class GhListResponse<T>(
     @SerializedName("total_count") private val totalCount: Long,

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import com.facebook.stetho.Stetho
 import com.xmartlabs.sample.di.AppInjector
-import com.xmartlabs.xlpagingbypagenumber.BuildConfig
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import timber.log.Timber
