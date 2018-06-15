@@ -7,7 +7,7 @@ import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.cachednetwork.DataSourceEntityHandler
 import com.xmartlabs.fountain.fetcher.ListResponsePagingHandler
 import com.xmartlabs.fountain.fetcher.PagingHandler
-import com.xmartlabs.template.repository.common.NetworkPagedListingCreator
+import com.xmartlabs.sample.repository.common.NetworkPagedListingCreator
 import java.util.concurrent.Executor
 
 object Fountain {

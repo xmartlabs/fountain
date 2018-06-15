@@ -5,8 +5,8 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.xmartlabs.template.model.User
-import com.xmartlabs.template.model.UserSearch
+import com.xmartlabs.sample.model.User
+import com.xmartlabs.sample.model.UserSearch
 
 /** Interface for database access for User related operations. */
 @Dao
