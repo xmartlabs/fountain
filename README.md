@@ -1,5 +1,6 @@
-# Fountain
-<p align="left">
+![Fountain](images/banner.png)
+
+<p align="center">
 <a href="https://github.com/xmartlabs/fountain/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 </p>
 
