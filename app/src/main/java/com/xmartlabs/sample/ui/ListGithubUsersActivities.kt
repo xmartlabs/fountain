@@ -12,6 +12,7 @@ import com.xmartlabs.sample.R
 import com.xmartlabs.sample.model.User
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import kotlinx.android.synthetic.main.activity_list_github_users_activities.*
 import javax.inject.Inject
 
 class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjector {
