@@ -1,17 +1,17 @@
-# XlPaging
-<p align="center">
-<a href="https://github.com/xmartlabs/xlpaging/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
+# Fountain
+<p align="left">
+<a href="https://github.com/xmartlabs/fountain/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 </p>
 
 A smart and simple way to work with paged endpoints.
 
 ## Overview
 
-Xlpaging is a Kotlin library conceived to make your life easier when dealing with paged endpoint services, where the paging is based on incremental page numbers (e.g. 1, 2, 3, ...).
+Fountain is an Android Kotlin library conceived to make your life easier when dealing with paged endpoint services, where the paging is based on incremental page numbers (e.g. 1, 2, 3, ...).
 It uses the [Google Android Architecture Components](https://developer.android.com/topic/libraries/architecture/), mainly the [Android Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) to make easier to work with paged services.
 
-The main goal of the library is to easily provide a [Listing](xlpagingbypagenumber/src/main/java/com/xmartlabs/xlpagingbypagenumber/Listing.kt) component from a common service specification.
-[Listing](xlpagingbypagenumber/src/main/java/com/xmartlabs/xlpagingbypagenumber/Listing.kt) provides mainly five elements to take control of the paged list.
+The main goal of the library is to easily provide a [Listing](fountain/src/main/java/com/xmartlabs/fountain/Listing.kt) component from a common service specification.
+[Listing](fountain/src/main/java/com/xmartlabs/fountain/Listing.kt) provides mainly five elements to take control of the paged list.
 
 ```kotlin
 data class Listing<T>(
@@ -31,7 +31,7 @@ data class Listing<T>(
 Basically, you could manage all data stream with a `Listing` component, which is awesome!
 It's really flexible and useful to display the paged list entities and reflect the network status changes in the UI.
 
-XlPaging provides two ways to generate a `Listing` component from paged services:    
+Fountain provides two ways to generate a `Listing` component from paged services:    
 1. **Network support:** Provides a `Listing` based on a service that uses Retrofit and RxJava. Note entities won't be saved in memory nor disk.
 1. **Cache + Network support:** Provides a `Listing` with cache support using for service based on Retrofit and RxJava, and a [`DataSource`](https://developer.android.com/reference/android/arch/paging/DataSource) for caching the data.
 We recommend you to use [Room](https://developer.android.com/topic/libraries/architecture/room) to provide the `DataSource`, because it will be easier. However, you could use any other `DataSource`.
@@ -57,7 +57,7 @@ You can read the documentation [here]().
 
 The `Listing` with network support can be obtained using:
 ```kotlin
-XlPaging.createNetworkListing(pagingHandler = pagingHandler)
+Fountain.createNetworkListing(pagingHandler = pagingHandler)
 ```
 
 There's only one required structure, `PagingHandler<ListResponse<T>>`, which this library uses to handle the paging.
@@ -79,7 +79,7 @@ interface PagingHandler<T> : PageFetcher<T> {
 The `Listing` with network and cache support can be obtained using:
 
 ```kotlin
-XlPaging.createNetworkWithCacheSupportListing(
+Fountain.createNetworkWithCacheSupportListing(
     dataSourceEntityHandler = dataSourceEntityHandler,
     dataSourceFactory = dataSourceFactory,
     pagingHandler = pagingHandler
