@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.R
 import com.xmartlabs.template.model.User
-import com.xmartlabs.xlpagingbypagenumber.NetworkState
 
 class ListUsersAdapter(private val retryCallback: () -> Unit)
   : PagedListAdapter<User, RecyclerView.ViewHolder>(USER_COMPARATOR) {

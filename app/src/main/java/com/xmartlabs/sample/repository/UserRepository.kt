@@ -2,18 +2,18 @@ package com.xmartlabs.sample.repository
 
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
+import com.xmartlabs.fountain.Fountain
+import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.Listing
+import com.xmartlabs.fountain.feature.cachednetwork.DataSourceEntityHandler
+import com.xmartlabs.fountain.fetcher.PageFetcher
+import com.xmartlabs.fountain.fetcher.PagingHandlerWithTotalEntityCount
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.service.GhListResponse
 import com.xmartlabs.sample.service.UserService
 import com.xmartlabs.template.model.User
 import com.xmartlabs.template.model.UserSearch
-import com.xmartlabs.xlpagingbypagenumber.ListResponse
-import com.xmartlabs.xlpagingbypagenumber.Listing
-import com.xmartlabs.xlpagingbypagenumber.XlPaging
-import com.xmartlabs.xlpagingbypagenumber.feature.cachednetwork.DataSourceEntityHandler
-import com.xmartlabs.xlpagingbypagenumber.fetcher.PageFetcher
-import com.xmartlabs.xlpagingbypagenumber.fetcher.PagingHandlerWithTotalEntityCount
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ class UserRepository @Inject constructor(
     })
 
     val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
-    return XlPaging.createNetworkListing(
+    return Fountain.createNetworkListing(
         pagingHandler = pagingHandler,
         pagedListConfig = pagedListConfig
     )
@@ -67,7 +67,7 @@ class UserRepository @Inject constructor(
         userDao.deleteUserSearch(userName)
       }
     }
-    return XlPaging.createNetworkWithCacheSupportListing(
+    return Fountain.createNetworkWithCacheSupportListing(
         dataSourceEntityHandler = dataSourceEntityHandler,
         dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,

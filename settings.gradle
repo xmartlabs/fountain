@@ -1,1 +1,1 @@
-include ':app', ':xlpagingbypagenumber'
+include ':app', ':fountain'

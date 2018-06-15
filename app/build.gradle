@@ -7,7 +7,7 @@ android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
     defaultConfig {
-        applicationId "com.xmartlabs.xlpagingbypagenumber"
+        applicationId "com.xmartlabs.fountain"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
         versionCode 1
@@ -29,7 +29,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    implementation project(':xlpagingbypagenumber')
+    implementation project(':fountain')
 
     implementation "android.arch.paging:runtime:${libraryVersion.paging}"
     implementation "android.arch.persistence.room:runtime:${libraryVersion.room}"
