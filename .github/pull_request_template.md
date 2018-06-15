@@ -1,4 +1,4 @@
-Thank you for contributing to XlPaging. Before pressing the "Create Pull Request" button, please consider the following points:
+Thank you for contributing to Fountain. Before pressing the "Create Pull Request" button, please consider the following points:
 
   - [ ] Please give a description about what and why you are contributing, even if it's trivial.
 
