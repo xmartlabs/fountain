@@ -8,17 +8,18 @@ import android.support.annotation.AnyThread
 import android.support.annotation.MainThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.observeOn
 import com.xmartlabs.fountain.common.subscribeOn
-import com.xmartlabs.fountain.fetcher.PagingHandler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
 internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
-    private val pageFetcher: PagingHandler<out ServiceResponse>,
-    private val dataSourceEntityHandler: DataSourceEntityHandler<Value>,
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ServiceResponse>,
+    private val cachedDataSourceAdapter: CachedDataSourceAdapter<Value>,
     private val pagedListConfig: PagedList.Config,
     private val ioServiceExecutor: Executor,
     private val ioDatabaseExecutor: Executor,
@@ -35,7 +36,7 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
     synchronized(this) {
       isLoadingInitialData = true
       helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-        pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
+        networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
             .createWebserviceCallback(it, pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize, true)
       }
     }
@@ -46,11 +47,11 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
 
   @MainThread
   override fun onItemAtEndLoaded(itemAtEnd: Value) {
-    if (pageFetcher.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
+    if (networkDataSourceAdapter.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
       synchronized(this) {
         if (!isLoadingInitialData) {
           helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
+            networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
                 .createWebserviceCallback(it, 1)
           }
         }
@@ -68,15 +69,15 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
         networkState.postValue(NetworkState.LOADING)
-        pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
+        networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
             .subscribeOn(ioServiceExecutor)
             .observeOn(ioDatabaseExecutor)
             .subscribe(object : SingleObserver<ServiceResponse> {
               override fun onSuccess(serviceResponse: ServiceResponse) {
                 page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
-                dataSourceEntityHandler.runInTransaction {
-                  dataSourceEntityHandler.dropEntities()
-                  dataSourceEntityHandler.saveEntities(serviceResponse.getElements())
+                cachedDataSourceAdapter.runInTransaction {
+                  cachedDataSourceAdapter.dropEntities()
+                  cachedDataSourceAdapter.saveEntities(serviceResponse.getElements())
                 }
                 onInitialDataLoaded()
                 helper.removeListener(networkStateListener)
@@ -114,11 +115,11 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(response: ServiceResponse) {
             page += requestedPages
-            dataSourceEntityHandler.runInTransaction {
+            cachedDataSourceAdapter.runInTransaction {
               if (initialData) {
-                dataSourceEntityHandler.dropEntities()
+                cachedDataSourceAdapter.dropEntities()
               }
-              dataSourceEntityHandler.saveEntities(response.getElements())
+              cachedDataSourceAdapter.saveEntities(response.getElements())
             }
             if (initialData) {
               onInitialDataLoaded()

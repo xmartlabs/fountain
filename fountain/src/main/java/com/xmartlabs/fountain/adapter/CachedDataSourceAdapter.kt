@@ -1,9 +1,9 @@
-package com.xmartlabs.fountain.feature.cachednetwork
+package com.xmartlabs.fountain.adapter
 
 import android.arch.paging.DataSource
 import android.support.annotation.WorkerThread
 
-interface DataSourceEntityHandler<T> {
+interface CachedDataSourceAdapter<T> {
   fun getDataSourceFactory(): DataSource.Factory<*, T>
 
   @WorkerThread

@@ -5,7 +5,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
-import com.xmartlabs.fountain.fetcher.PagingHandler
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 internal object NetworkPagedListingCreator {
@@ -13,13 +13,13 @@ internal object NetworkPagedListingCreator {
       firstPage: Int,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
-      pagingHandler: PagingHandler<out ListResponse<Value>>
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>
   ): Listing<Value> {
     val sourceFactory = NetworkPagedDataSourceFactory(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,
         pagedListConfig = pagedListConfig,
-        pagingHandler = pagingHandler
+        networkDataSourceAdapter = networkDataSourceAdapter
     )
     val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
         .build()

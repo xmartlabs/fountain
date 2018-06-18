@@ -4,9 +4,9 @@ import android.arch.paging.PagedList
 import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.Listing
-import com.xmartlabs.fountain.feature.cachednetwork.DataSourceEntityHandler
-import com.xmartlabs.fountain.fetcher.PageFetcher
-import com.xmartlabs.fountain.fetcher.PagingHandlerWithTotalEntityCount
+import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
+import com.xmartlabs.fountain.adapter.NetworkDataSourceWithTotalEntityCountAdapter
+import com.xmartlabs.fountain.adapter.PageFetcher
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.User
@@ -30,9 +30,9 @@ class UserRepository @Inject constructor(
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
+    val networkDataSourceAdapter = NetworkDataSourceWithTotalEntityCountAdapter(pageFetcher = pageFetcher)
     return Fountain.createNetworkListing(
-        pagingHandler = pagingHandler,
+        networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
     )
   }
@@ -43,9 +43,9 @@ class UserRepository @Inject constructor(
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
-    val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
+    val networkDataSourceAdapter = NetworkDataSourceWithTotalEntityCountAdapter(pageFetcher = pageFetcher)
 
-    val dataSourceEntityHandler = object : DataSourceEntityHandler<User> {
+    val cachedDataSourceAdapter = object : CachedDataSourceAdapter<User> {
       override fun getDataSourceFactory() = userDao.findUsersByName(userName)
 
       override fun saveEntities(response: List<User>) {
@@ -67,9 +67,9 @@ class UserRepository @Inject constructor(
       }
     }
     return Fountain.createNetworkWithCacheSupportListing(
-        dataSourceEntityHandler = dataSourceEntityHandler,
-        pagedListConfig = pagedListConfig,
-        pagingHandler = pagingHandler
+        networkDataSourceAdapter = networkDataSourceAdapter,
+        cachedDataSourceAdapter = cachedDataSourceAdapter,
+        pagedListConfig = pagedListConfig
     )
   }
 }

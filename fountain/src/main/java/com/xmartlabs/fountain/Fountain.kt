@@ -1,11 +1,11 @@
 package com.xmartlabs.fountain
 
 import android.arch.paging.PagedList
+import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.IoExecutors
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
-import com.xmartlabs.fountain.feature.cachednetwork.DataSourceEntityHandler
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
-import com.xmartlabs.fountain.fetcher.PagingHandler
 import java.util.concurrent.Executor
 
 object Fountain {
@@ -16,7 +16,7 @@ object Fountain {
       .build()
 
   fun <Value> createNetworkListing(
-      pagingHandler: PagingHandler<out ListResponse<Value>>,
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
@@ -24,22 +24,22 @@ object Fountain {
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      pagingHandler = pagingHandler
+      networkDataSourceAdapter = networkDataSourceAdapter
   )
 
   fun <Value> createNetworkWithCacheSupportListing(
-      pagingHandler: PagingHandler<out ListResponse<Value>>,
-      dataSourceEntityHandler: DataSourceEntityHandler<Value>,
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
+      cachedDataSourceAdapter: CachedDataSourceAdapter<Value>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
   ) = CachedNetworkListingCreator.createListing(
-      dataSourceEntityHandler = dataSourceEntityHandler,
+      cachedDataSourceAdapter = cachedDataSourceAdapter,
       firstPage = firstPage,
       ioDatabaseExecutor = ioDatabaseExecutor,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      pagingHandler = pagingHandler
+      networkDataSourceAdapter = networkDataSourceAdapter
   )
 }
