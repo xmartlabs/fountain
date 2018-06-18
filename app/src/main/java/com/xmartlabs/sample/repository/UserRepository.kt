@@ -3,7 +3,6 @@ package com.xmartlabs.sample.repository
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Fountain
-import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.feature.cachednetwork.DataSourceEntityHandler
 import com.xmartlabs.fountain.fetcher.PageFetcher
@@ -46,21 +45,21 @@ class UserRepository @Inject constructor(
     })
     val pagingHandler = PagingHandlerWithTotalEntityCount(pageFetcher = pageFetcher)
 
-    val dataSourceEntityHandler = object : DataSourceEntityHandler<ListResponse<User>> {
-      override fun runInTransaction(transaction: () -> Unit) {
-        db.runInTransaction(transaction)
+    val dataSourceEntityHandler = object : DataSourceEntityHandler<User> {
+      override fun getDataSourceFactory() = userDao.findUsersByName(userName)
+
+      override fun saveEntities(response: List<User>) {
+        val start = userDao.getNextIndexInUserSearch(userName)
+        val relationItems = response
+            .mapIndexed { index, user ->
+              UserSearch(search = userName, userId = user.id, searchPosition = start + index)
+            }
+        userDao.insert(response)
+        userDao.insertUserSearch(relationItems)
       }
 
-      override fun saveEntities(response: ListResponse<User>?) {
-        response?.getElements()?.let { users ->
-          val start = userDao.getNextIndexInUserSearch(userName)
-          val relationItems = users
-              .mapIndexed { index, user ->
-                UserSearch(search = userName, userId = user.id, searchPosition = start + index)
-              }
-          userDao.insert(users)
-          userDao.insertUserSearch(relationItems)
-        }
+      override fun runInTransaction(transaction: () -> Unit) {
+        db.runInTransaction(transaction)
       }
 
       override fun dropEntities() {
@@ -69,7 +68,6 @@ class UserRepository @Inject constructor(
     }
     return Fountain.createNetworkWithCacheSupportListing(
         dataSourceEntityHandler = dataSourceEntityHandler,
-        dataSourceFactory = userDao.findUsersByName(userName),
         pagedListConfig = pagedListConfig,
         pagingHandler = pagingHandler
     )

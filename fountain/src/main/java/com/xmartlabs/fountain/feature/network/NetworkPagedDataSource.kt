@@ -6,7 +6,7 @@ import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.common.subscribeOn
-import com.xmartlabs.fountain.fetcher.ListResponsePagingHandler
+import com.xmartlabs.fountain.fetcher.PagingHandler
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
@@ -15,7 +15,7 @@ internal class NetworkPagedDataSource<T>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
-    private val pagingHandler: ListResponsePagingHandler<T>
+    private val pagingHandler: PagingHandler<out ListResponse<T>>
 ) : PageKeyedDataSource<Int, T>() {
 
   private var isLoadingInitialData = false

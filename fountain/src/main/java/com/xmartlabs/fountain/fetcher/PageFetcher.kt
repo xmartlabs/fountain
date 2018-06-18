@@ -6,8 +6,6 @@ import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import io.reactivex.Single
 
-typealias ListResponsePagingHandler<T> = PagingHandler<ListResponse<T>>
-
 interface PageFetcher<T> {
   @CheckResult
   fun fetchPage(page: Int, pageSize: Int): Single<out T>
@@ -18,7 +16,7 @@ interface PagingHandler<T> : PageFetcher<T> {
   fun canFetch(page: Int, pageSize: Int): Boolean
 }
 
-abstract class PagingHandlerWithKnownEntityCount<T>(private val firstPage: Int = 1) : ListResponsePagingHandler<T> {
+abstract class PagingHandlerWithKnownEntityCount<T>(private val firstPage: Int = 1) : PagingHandler<ListResponse<T>> {
   var totalEntities: Long? = null
 
   override fun canFetch(page: Int, pageSize: Int): Boolean {
