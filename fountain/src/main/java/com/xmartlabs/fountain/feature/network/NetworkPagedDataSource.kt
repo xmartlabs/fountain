@@ -5,8 +5,8 @@ import android.arch.paging.PageKeyedDataSource
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.subscribeOn
-import com.xmartlabs.fountain.fetcher.ListResponsePagingHandler
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
@@ -15,7 +15,7 @@ internal class NetworkPagedDataSource<T>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
-    private val pagingHandler: ListResponsePagingHandler<T>
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<T>>
 ) : PageKeyedDataSource<Int, T>() {
 
   private var isLoadingInitialData = false
@@ -33,9 +33,9 @@ internal class NetworkPagedDataSource<T>(
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
     synchronized(this) {
-      if (pagingHandler.canFetch(page = params.key, pageSize = params.requestedLoadSize) && !isLoadingInitialData) {
+      if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize) && !isLoadingInitialData) {
         networkState.postValue(NetworkState.LOADING)
-        pagingHandler.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
+        networkDataSourceAdapter.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
             .subscribe(object : SingleObserver<ListResponse<T>> {
               override fun onSuccess(data: ListResponse<T>) {
@@ -68,7 +68,7 @@ internal class NetworkPagedDataSource<T>(
         isLoadingInitialData = true
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
-      pagingHandler.fetchPage(page = firstPage, pageSize = params.requestedLoadSize)
+      networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
             .subscribe(object : SingleObserver<ListResponse<T>> {
               override fun onSuccess(data: ListResponse<T>) {

@@ -1,4 +1,4 @@
-package com.xmartlabs.fountain.fetcher
+package com.xmartlabs.fountain.adapter
 
 import android.support.annotation.CheckResult
 import com.xmartlabs.fountain.ListResponse
@@ -6,19 +6,17 @@ import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import io.reactivex.Single
 
-typealias ListResponsePagingHandler<T> = PagingHandler<ListResponse<T>>
-
 interface PageFetcher<T> {
   @CheckResult
   fun fetchPage(page: Int, pageSize: Int): Single<out T>
 }
 
-interface PagingHandler<T> : PageFetcher<T> {
+interface NetworkDataSourceAdapter<T> : PageFetcher<T> {
   @CheckResult
   fun canFetch(page: Int, pageSize: Int): Boolean
 }
 
-abstract class PagingHandlerWithKnownEntityCount<T>(private val firstPage: Int = 1) : ListResponsePagingHandler<T> {
+abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val firstPage: Int = 1) : NetworkDataSourceAdapter<ListResponse<T>> {
   var totalEntities: Long? = null
 
   override fun canFetch(page: Int, pageSize: Int): Boolean {
@@ -32,10 +30,10 @@ abstract class PagingHandlerWithKnownEntityCount<T>(private val firstPage: Int =
   }
 }
 
-class PagingHandlerWithTotalEntityCount<T>(
+class NetworkDataSourceWithTotalEntityCountAdapter<T>(
     private val pageFetcher: PageFetcher<out ListResponseWithEntityCount<T>>,
     firstPage: Int = 1
-) : PagingHandlerWithKnownEntityCount<T>(firstPage) {
+) : NetworkDataSourceWithKnownEntityCountAdapter<T>(firstPage) {
 
   @CheckResult
   override fun fetchPage(page: Int, pageSize: Int): Single<out ListResponseWithEntityCount<T>> {
@@ -44,10 +42,10 @@ class PagingHandlerWithTotalEntityCount<T>(
   }
 }
 
-class PagingHandlerWithTotalPageCount<T>(
+class NetworkDataSourceWithTotalPageCountAdapter<T>(
     private val pageFetcher: PageFetcher<out ListResponseWithPageCount<T>>,
     firstPage: Int = 1
-) : PagingHandlerWithKnownEntityCount<T>(firstPage) {
+) : NetworkDataSourceWithKnownEntityCountAdapter<T>(firstPage) {
 
   @CheckResult
   override fun fetchPage(page: Int, pageSize: Int): Single<out ListResponseWithPageCount<T>> {

@@ -1,25 +1,25 @@
-package com.xmartlabs.sample.repository.common
+package com.xmartlabs.fountain.feature.network
 
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
-import com.xmartlabs.fountain.feature.network.NetworkPagedDataSourceFactory
-import com.xmartlabs.fountain.fetcher.ListResponsePagingHandler
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 internal object NetworkPagedListingCreator {
-  fun <T> createListing(
+  fun <Value> createListing(
       firstPage: Int,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
-      pagingHandler: ListResponsePagingHandler<T>
-  ): Listing<T> {
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>
+  ): Listing<Value> {
     val sourceFactory = NetworkPagedDataSourceFactory(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,
         pagedListConfig = pagedListConfig,
-        pagingHandler = pagingHandler
+        networkDataSourceAdapter = networkDataSourceAdapter
     )
     val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
         .build()
@@ -29,9 +29,9 @@ internal object NetworkPagedListingCreator {
     }
     return Listing(
         pagedList = livePagedList,
-        networkState = Transformations.switchMap(sourceFactory.sourceLiveData, {
+        networkState = Transformations.switchMap(sourceFactory.sourceLiveData) {
           it.networkState
-        }),
+        },
         retry = {
           sourceFactory.sourceLiveData.value?.retryAllFailed()
         },
