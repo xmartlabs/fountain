@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.R
-import com.xmartlabs.template.model.User
+import com.xmartlabs.sample.model.User
 
 class ListUsersAdapter(private val retryCallback: () -> Unit)
   : PagedListAdapter<User, RecyclerView.ViewHolder>(USER_COMPARATOR) {

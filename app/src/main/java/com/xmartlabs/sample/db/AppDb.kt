@@ -3,8 +3,8 @@ package com.xmartlabs.sample.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import com.xmartlabs.template.model.User
-import com.xmartlabs.template.model.UserSearch
+import com.xmartlabs.sample.model.User
+import com.xmartlabs.sample.model.UserSearch
 
 @Database(
     entities = [User::class, UserSearch::class],
