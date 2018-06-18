@@ -1,7 +1,7 @@
 package com.xmartlabs.sample.service
 
+import com.xmartlabs.sample.model.User
 import com.xmartlabs.sample.model.service.GhListResponse
-import com.xmartlabs.template.model.User
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,4 +1,4 @@
-package com.xmartlabs.template.model
+package com.xmartlabs.sample.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey

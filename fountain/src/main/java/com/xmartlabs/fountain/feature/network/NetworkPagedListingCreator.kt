@@ -1,4 +1,4 @@
-package com.xmartlabs.template.repository.common
+package com.xmartlabs.sample.repository.common
 
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder

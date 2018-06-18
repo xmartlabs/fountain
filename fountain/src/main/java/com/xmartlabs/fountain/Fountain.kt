@@ -7,7 +7,7 @@ import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.cachednetwork.DataSourceEntityHandler
 import com.xmartlabs.fountain.fetcher.ListResponsePagingHandler
 import com.xmartlabs.fountain.fetcher.PagingHandler
-import com.xmartlabs.template.repository.common.NetworkPagedListingCreator
+import com.xmartlabs.sample.repository.common.NetworkPagedListingCreator
 import java.util.concurrent.Executor
 
 object Fountain {
@@ -18,10 +18,10 @@ object Fountain {
       .build()
 
   fun <Value> createNetworkListing(
+      pagingHandler: ListResponsePagingHandler<Value>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
-      pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG,
-      pagingHandler: ListResponsePagingHandler<Value>
+      pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
   ) = NetworkPagedListingCreator.createListing(
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,

@@ -10,10 +10,10 @@ import com.xmartlabs.fountain.fetcher.PageFetcher
 import com.xmartlabs.fountain.fetcher.PagingHandlerWithTotalEntityCount
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
+import com.xmartlabs.sample.model.User
+import com.xmartlabs.sample.model.UserSearch
 import com.xmartlabs.sample.model.service.GhListResponse
 import com.xmartlabs.sample.service.UserService
-import com.xmartlabs.template.model.User
-import com.xmartlabs.template.model.UserSearch
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
