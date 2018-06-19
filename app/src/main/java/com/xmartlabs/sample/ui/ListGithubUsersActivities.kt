@@ -12,7 +12,6 @@ import com.xmartlabs.sample.R
 import com.xmartlabs.sample.model.User
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_list_github_users_activities.*
 import javax.inject.Inject
 
 class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjector {
@@ -52,22 +51,22 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
   }
 
   private fun initSearch() {
-    input.setOnEditorActionListener({ _, actionId, _ ->
+    input.setOnEditorActionListener { _, actionId, _ ->
       if (actionId == EditorInfo.IME_ACTION_GO) {
         updatedUsernameFromInput()
         true
       } else {
         false
       }
-    })
-    input.setOnKeyListener({ _, keyCode, event ->
+    }
+    input.setOnKeyListener { _, keyCode, event ->
       if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
         updatedUsernameFromInput()
         true
       } else {
         false
       }
-    })
+    }
   }
 
   private fun updatedUsernameFromInput() {
