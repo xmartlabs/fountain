@@ -15,9 +15,20 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
   }
 
   private val userName = MutableLiveData<String>()
+  var mode = Mode.NETWORK_AND_DATA_SOURCE
+    set(mode) {
+      if (mode != field) {
+        field = mode
+        if (!userName.value.isNullOrBlank()){
+          userName.value = userName.value
+        }
+      }
+    }
   private val repoResult = Transformations.map(userName) {
-    //    userRepository.searchServiceUsers(it, 30)
-    userRepository.searchServiceAndDbUsers(it, pagedListConfig)
+    if (mode == Mode.NETWORK)
+      userRepository.searchServiceUsers(it, pagedListConfig)
+    else
+      userRepository.searchServiceAndDbUsers(it, pagedListConfig)
   }
   val posts = Transformations.switchMap(repoResult) { it.pagedList }!!
   val networkState = Transformations.switchMap(repoResult) { it.networkState }!!
@@ -31,12 +42,21 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
     if (userName.value == username) {
       return false
     }
-    userName.value = username
-    return true
+    if (!username.isBlank()){
+      userName.value = username
+      return true
+    }
+    return false
   }
 
   fun retry() {
     val listing = repoResult?.value
     listing?.retry?.invoke()
   }
+
+  private fun changeMode(mode: Mode) {
+
+  }
+
+  fun currentUser(): String? = userName.value
 }

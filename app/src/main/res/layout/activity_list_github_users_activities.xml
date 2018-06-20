@@ -7,28 +7,48 @@
     android:orientation="vertical"
     >
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         >
 
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="match_parent"
+        <Switch
+            android:id="@+id/networkAndDataSourceModeSwitch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="User name"
-            android:imeOptions="actionSearch"
-            android:inputType="textNoSuggestions"
+            android:checked="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="Net + DS"
             />
 
-    </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/networkAndDataSourceModeSwitch"
+            android:layout_toStartOf="@+id/networkAndDataSourceModeSwitch"
+            >
+
+            <EditText
+                android:id="@+id/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="User name"
+                android:imeOptions="actionSearch"
+                android:inputType="textNoSuggestions"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
