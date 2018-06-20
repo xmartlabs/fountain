@@ -52,22 +52,22 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
   }
 
   private fun initSearch() {
-    input.setOnEditorActionListener({ _, actionId, _ ->
+    input.setOnEditorActionListener { _, actionId, _ ->
       if (actionId == EditorInfo.IME_ACTION_GO) {
         updatedUsernameFromInput()
         true
       } else {
         false
       }
-    })
-    input.setOnKeyListener({ _, keyCode, event ->
+    }
+    input.setOnKeyListener { _, keyCode, event ->
       if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
         updatedUsernameFromInput()
         true
       } else {
         false
       }
-    })
+    }
   }
 
   private fun updatedUsernameFromInput() {
