@@ -1,6 +1,7 @@
 package com.xmartlabs.fountain
 
 import android.arch.paging.PagedList
+import android.support.annotation.VisibleForTesting
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.IoExecutors
@@ -10,7 +11,8 @@ import java.util.concurrent.Executor
 
 object Fountain {
   private const val DEFAULT_FIRST_PAGE = 1
-  private const val DEFAULT_NETWORK_PAGE_SIZE = 20
+  @VisibleForTesting
+  internal const val DEFAULT_NETWORK_PAGE_SIZE = 20
   private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
       .build()
