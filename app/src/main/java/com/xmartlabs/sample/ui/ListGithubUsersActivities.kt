@@ -41,23 +41,22 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
     model.showUsers(userName)
     initSwitchMode()
     model.mode = savedInstanceState?.getSerializable(KEY_MODE_NAME) as? Mode ?: DEFAULT_MODE
-
   }
 
   private fun initSwitchMode() {
     networkAndDataSourceModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+      list.adapter = ListUsersAdapter { model.retry() }
       model.mode = (if (isChecked) Mode.NETWORK_AND_DATA_SOURCE else Mode.NETWORK)
     }
   }
 
   private fun initAdapter() {
-    val adapter = ListUsersAdapter { model.retry() }
-    list.adapter = adapter
+    list.adapter = ListUsersAdapter { model.retry() }
     model.posts.observe(this, Observer<PagedList<User>> {
-      adapter.submitList(it)
+      (list.adapter as ListUsersAdapter).submitList(it)
     })
     model.networkState.observe(this, Observer {
-      adapter.setNetworkState(it)
+      (list.adapter as ListUsersAdapter).setNetworkState(it)
     })
   }
 

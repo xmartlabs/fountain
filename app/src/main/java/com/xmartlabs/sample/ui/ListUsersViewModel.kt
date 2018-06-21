@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
   companion object {
-    val pagedListConfig = PagedList.Config.Builder().setPageSize(10).build()
+    val pagedListConfig = PagedList.Config.Builder().setPageSize(10).build()!!
   }
 
   private val userName = MutableLiveData<String>()
@@ -52,10 +52,6 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
   fun retry() {
     val listing = repoResult?.value
     listing?.retry?.invoke()
-  }
-
-  private fun changeMode(mode: Mode) {
-
   }
 
   fun currentUser(): String? = userName.value

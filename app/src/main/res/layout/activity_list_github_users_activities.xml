@@ -20,7 +20,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="Net + DS"
+            android:text="@string/net_plus_ds"
             />
 
         <android.support.design.widget.TextInputLayout
@@ -38,7 +38,7 @@
                 android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="User name"
+                android:hint="@string/user_name"
                 android:imeOptions="actionSearch"
                 android:inputType="textNoSuggestions"
                 />
