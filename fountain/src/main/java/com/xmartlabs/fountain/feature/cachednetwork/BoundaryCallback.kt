@@ -64,11 +64,11 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
 
   @AnyThread
   fun resetData(): LiveData<NetworkState> {
-    val networkState = MutableLiveData<NetworkState>()
+    val resetNetworkState = MutableLiveData<NetworkState>()
     synchronized(this) {
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
-        networkState.postValue(NetworkState.LOADING)
+        resetNetworkState.postValue(NetworkState.LOADING)
         networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
             .subscribeOn(ioServiceExecutor)
             .observeOn(ioDatabaseExecutor)
@@ -83,21 +83,21 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
                 helper.removeListener(networkStateListener)
                 helper = PagingRequestHelper(ioServiceExecutor)
                 helper.addListener(networkStateListener)
-                networkState.postValue(NetworkState.LOADED)
+                resetNetworkState.postValue(NetworkState.LOADED)
               }
 
               override fun onSubscribe(d: Disposable) {}
 
               override fun onError(e: Throwable) {
                 onInitialDataLoaded()
-                networkState.postValue(NetworkState.error(e))
+                resetNetworkState.postValue(NetworkState.error(e))
               }
             })
       } else {
-        networkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
+        resetNetworkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
       }
     }
-    return networkState
+    return resetNetworkState
   }
 
   private fun onInitialDataLoaded() {

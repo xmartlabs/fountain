@@ -1,11 +1,12 @@
-package com.xmartlabs.fountain.networkstate
+package com.xmartlabs.fountain.retry
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
+import com.xmartlabs.fountain.common.extensions.generateIntPageResponseList
+import com.xmartlabs.fountain.common.extensions.getPagedList
 import com.xmartlabs.fountain.common.extensions.mockLifecycleEvents
 import com.xmartlabs.fountain.common.extensions.sendPageResponse
 import org.junit.Assert.assertEquals
@@ -13,35 +14,32 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 
-abstract class NetworkStatusUnitTest {
+abstract class RetryUnitTest {
   @get:Rule
   var rule: TestRule = InstantTaskExecutorRule()
 
   @Test
-  fun testLoadingOnePage() {
+  fun testRetryFirstCall() {
     val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
     assertEquals(NetworkState.LOADING, listing.networkState.value)
-  }
 
-  @Test
-  fun testLoadingTwoPages() {
-    val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
-    val listing = createListing(mockedNetworkDataSourceAdapter)
-        .mockLifecycleEvents()
+    val exception = Exception()
+    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
+    assertEquals(NetworkState.error(exception), listing.networkState.value)
+
+    listing.retry.invoke()
     assertEquals(NetworkState.LOADING, listing.networkState.value)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
-    listing.pagedList.value!!.loadAround(Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1)
-
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 
   @Test
-  fun testSuccessOnePage() {
+  fun testRetrySecondFirstCall() {
     val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
@@ -50,41 +48,22 @@ abstract class NetworkStatusUnitTest {
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
-  }
+    assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
-  @Test
-  fun testSuccessTwoPages() {
-    val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
-    val listing = createListing(mockedNetworkDataSourceAdapter)
-        .mockLifecycleEvents()
+    val exception = Exception()
+    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
+    assertEquals(NetworkState.error(exception), listing.networkState.value)
 
+    listing.retry.invoke()
     assertEquals(NetworkState.LOADING, listing.networkState.value)
-
-    mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
-
-    listing.pagedList.value!!.loadAround(Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1)
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
-
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
     assertEquals(NetworkState.LOADED, listing.networkState.value)
+
+    assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
 
   @Test
-  fun testErrorFirstPage() {
-    val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
-    val listing = createListing(mockedNetworkDataSourceAdapter)
-        .mockLifecycleEvents()
-
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
-
-    val exception = Exception()
-    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
-    assertEquals(NetworkState.error(exception), listing.networkState.value)
-  }
-
-  @Test
-  fun testErrorInSecondPage() {
+  fun testRetryTwoTimes() {
     val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
@@ -93,34 +72,20 @@ abstract class NetworkStatusUnitTest {
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
-
-    listing.pagedList.value!!.loadAround(Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1)
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
     assertEquals(NetworkState.error(exception), listing.networkState.value)
-  }
 
-  @Test
-  fun testErrorRefresh() {
-    val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
-    val listing = createListing(mockedNetworkDataSourceAdapter)
-        .mockLifecycleEvents()
-
+    listing.retry.invoke()
     assertEquals(NetworkState.LOADING, listing.networkState.value)
-
-    mockedNetworkDataSourceAdapter.sendPageResponse()
+    mockedNetworkDataSourceAdapter.sendPageResponse(1)
     assertEquals(NetworkState.LOADED, listing.networkState.value)
 
-    listing.refresh.invoke()
-    assertEquals(NetworkState.LOADING, listing.refreshState.value)
+    listing.retry.invoke()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
-
-    val exception = Exception()
-    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
-    assertEquals(NetworkState.error(exception), listing.refreshState.value)
+    assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
 
   protected abstract fun createListing(
