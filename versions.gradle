@@ -8,7 +8,7 @@ ext {
     libraryVersion = [
             androidSupport: '27.1.1',
             archPaging    : '1.0.0',
-            archRoom      : "1.1.1",
+            archRoom      : '1.1.1',
             archTesting   : '1.1.1',
             dagger        : '2.15',
             espresso      : '3.0.2',
@@ -24,6 +24,6 @@ ext {
             stetho        : '1.5.0',
             stream        : '1.1.6',
             testRunner    : '1.0.2',
-            timber        : '4.7.0'
+            timber        : '4.7.0',
     ]
 }
