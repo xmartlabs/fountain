@@ -1,6 +1,6 @@
 ![Fountain](images/banner.png)
 
-<p align="center">
+<p align="left">
 <a href="https://github.com/xmartlabs/fountain/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 <a href="https://circleci.com/gh/xmartlabs/fountain"><img src="https://circleci.com/gh/xmartlabs/fountain.svg?style=svg&circle-token=1e75c337f032689a108f3c0f7a144aec1bb14bbf"></a>
 </p>
@@ -48,7 +48,7 @@ repositories {
 }
 
 dependencies {
-    implementation '' //todo: Complete with the right package
+    implementation 'com.github.xmartlabs:fountain:${fountain_version}'
 }
 ```
 
@@ -60,7 +60,7 @@ You can read the documentation [here]().
 
 The `Listing` with network support can be obtained using:
 ```kotlin
-Fountain.createNetworkListing(networkDataSourceAdapter = networkDataSourceAdapter)
+Fountain.createNetworkListing(networkDataSourceAdapter)
 ```
 
 There's only one required structure, `NetworkDataSourceAdapter<out ListResponse<Value>>`, which this library uses to handle the paging.
