@@ -31,9 +31,10 @@ dependencies {
 
     implementation project(':fountain')
 
-    implementation "android.arch.paging:runtime:${libraryVersion.paging}"
-    implementation "android.arch.persistence.room:runtime:${libraryVersion.room}"
+    implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
+    implementation "android.arch.persistence.room:runtime:${libraryVersion.archRoom}"
     implementation "com.android.support:appcompat-v7:${libraryVersion.androidSupport}"
+    implementation "com.android.support:exifinterface:${libraryVersion.androidSupport}"
     implementation "com.android.support:design:${libraryVersion.androidSupport}"
     implementation "com.facebook.stetho:stetho-okhttp3:${libraryVersion.stetho}"
     implementation "com.facebook.stetho:stetho:${libraryVersion.stetho}"
@@ -51,7 +52,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
 
-    kapt "android.arch.persistence.room:compiler:${libraryVersion.room}"
+    kapt "android.arch.persistence.room:compiler:${libraryVersion.archRoom}"
     kapt "com.google.dagger:dagger-android-processor:${libraryVersion.dagger}"
     kapt "com.google.dagger:dagger-compiler:${libraryVersion.dagger}"
 
