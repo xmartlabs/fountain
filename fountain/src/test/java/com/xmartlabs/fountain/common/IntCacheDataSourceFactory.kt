@@ -5,21 +5,21 @@ import android.arch.paging.ItemKeyedDataSource
 
 class IntCacheDataSourceFactory : DataSource.Factory<Int, Int>() {
   private val items: MutableList<Int> = ArrayList()
-  private var dataSource: MockSequentialIntDataSource? = null
+  private lateinit var dataSource: MockIntDataSource
 
-  fun clearData() = dataSource!!.clearData()
+  fun clearData() = dataSource.clearData()
 
-  fun addData(items: List<Int>) = dataSource!!.addData(items)
+  fun addData(items: List<Int>) = dataSource.addData(items)
 
-  fun invalidate() = dataSource!!.invalidate()
+  fun invalidate() = dataSource.invalidate()
 
   override fun create(): DataSource<Int, Int> {
-    dataSource = MockSequentialIntDataSource(items)
-    return dataSource!!
+    dataSource = MockIntDataSource(items)
+    return dataSource
   }
 }
 
-class MockSequentialIntDataSource(private val items: MutableList<Int>) : ItemKeyedDataSource<Int, Int>() {
+class MockIntDataSource(private val items: MutableList<Int>) : ItemKeyedDataSource<Int, Int>() {
   fun clearData() = items.clear()
 
   fun addData(items: List<Int>) = this.items.addAll(items)
