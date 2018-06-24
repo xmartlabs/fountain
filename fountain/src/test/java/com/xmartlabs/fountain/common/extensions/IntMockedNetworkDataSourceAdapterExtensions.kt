@@ -1,7 +1,7 @@
 package com.xmartlabs.fountain.common.extensions
 
-import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 
 fun MockedNetworkDataSourceAdapter<ListResponse<Int>>.sendPageResponse(page: Int = 0) {
@@ -15,8 +15,8 @@ fun generateIntPageResponseList(vararg pages: Int): List<Int> {
       .distinct()
       .sorted()
       .flatMap {
-        val start = it * Fountain.DEFAULT_NETWORK_PAGE_SIZE
-        val end = (it + 1) * Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1
+        val start = it * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE
+        val end = (it + 1) * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1
         (start..end).toList()
       }
 }

@@ -14,14 +14,19 @@ internal class NetworkPagedDataSourceFactory<T>(
     private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<T>>
 ) : DataSource.Factory<Int, T>() {
   val sourceLiveData = MutableLiveData<NetworkPagedDataSource<T>>()
+  private val resetDataList = MutableLiveData<List<T>>()
+
+  fun resetData() = sourceLiveData.value?.resetData(resetDataList)
 
   override fun create(): DataSource<Int, T> {
     val source = NetworkPagedDataSource(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,
         pagedListConfig = pagedListConfig,
-        networkDataSourceAdapter = networkDataSourceAdapter
+        networkDataSourceAdapter = networkDataSourceAdapter,
+        initData = resetDataList.value
     )
+    resetDataList.postValue(null)
     sourceLiveData.postValue(source)
     return source
   }

@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.Status
 import com.xmartlabs.sample.R
 import com.xmartlabs.sample.model.User
 import dagger.android.DispatchingAndroidInjector
@@ -45,6 +47,9 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
   private fun initSwipeToRefresh() {
     model.refreshState.observe(this, Observer {
       swipe_refresh.isRefreshing = it == NetworkState.LOADING
+      if (it?.status == Status.FAILED) {
+        Toast.makeText(this, "Refresh error", Toast.LENGTH_LONG).show()
+      }
     })
     swipe_refresh.setOnRefreshListener {
       model.refresh()

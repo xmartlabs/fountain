@@ -1,10 +1,10 @@
 package com.xmartlabs.fountain.networkstate
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.extensions.mockLifecycleEvents
 import com.xmartlabs.fountain.common.extensions.sendPageResponse
@@ -35,7 +35,7 @@ abstract class NetworkStatusUnitTest {
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
-    listing.pagedList.value!!.loadAround(Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1)
+    listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
 
     assertEquals(NetworkState.LOADING, listing.networkState.value)
   }
@@ -63,7 +63,7 @@ abstract class NetworkStatusUnitTest {
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
 
-    listing.pagedList.value!!.loadAround(Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1)
+    listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
     assertEquals(NetworkState.LOADING, listing.networkState.value)
 
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
@@ -94,7 +94,7 @@ abstract class NetworkStatusUnitTest {
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
 
-    listing.pagedList.value!!.loadAround(Fountain.DEFAULT_NETWORK_PAGE_SIZE - 1)
+    listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
     assertEquals(NetworkState.LOADING, listing.networkState.value)
 
     val exception = Exception()

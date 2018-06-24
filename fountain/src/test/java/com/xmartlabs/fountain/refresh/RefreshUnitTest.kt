@@ -1,10 +1,10 @@
 package com.xmartlabs.fountain.refresh
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.extensions.*
 import org.junit.Assert.assertEquals
@@ -27,13 +27,13 @@ abstract class RefreshUnitTest {
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assertEquals(NetworkState.LOADED, listing.networkState.value)
 
-    assertEquals(Fountain.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     listing.refresh.invoke()
     mockedNetworkDataSourceAdapter.sendPageResponse(page = 1)
 
-    assertEquals(Fountain.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     assertEquals(generateIntPageResponseList(1), listing.getPagedList())
   }
 
