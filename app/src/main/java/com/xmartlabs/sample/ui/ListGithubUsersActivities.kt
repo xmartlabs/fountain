@@ -52,7 +52,7 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
 
   private fun initAdapter() {
     list.adapter = ListUsersAdapter { model.retry() }
-    model.posts.observe(this, Observer<PagedList<User>> {
+    model.users.observe(this, Observer<PagedList<User>> {
       (list.adapter as ListUsersAdapter).submitList(it)
     })
     model.networkState.observe(this, Observer {

@@ -19,30 +19,30 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
     set(mode) {
       if (mode != field) {
         field = mode
-        if (!userName.value.isNullOrBlank()){
+        if (!userName.value.isNullOrBlank()) {
           userName.value = userName.value
         }
       }
     }
-  private val repoResult = Transformations.map(userName) {
+  private val userResult = Transformations.map(userName) {
     if (mode == Mode.NETWORK)
       userRepository.searchServiceUsers(it, pagedListConfig)
     else
       userRepository.searchServiceAndDbUsers(it, pagedListConfig)
   }
-  val posts = Transformations.switchMap(repoResult) { it.pagedList }!!
-  val networkState = Transformations.switchMap(repoResult) { it.networkState }!!
-  val refreshState = Transformations.switchMap(repoResult) { it.refreshState }!!
+  val users = Transformations.switchMap(userResult) { it.pagedList }!!
+  val networkState = Transformations.switchMap(userResult) { it.networkState }!!
+  val refreshState = Transformations.switchMap(userResult) { it.refreshState }!!
 
   fun refresh() {
-    repoResult.value?.refresh?.invoke()
+    userResult.value?.refresh?.invoke()
   }
 
   fun showUsers(username: String): Boolean {
     if (userName.value == username) {
       return false
     }
-    if (!username.isBlank()){
+    if (!username.isBlank()) {
       userName.value = username
       return true
     }
@@ -50,7 +50,7 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
   }
 
   fun retry() {
-    val listing = repoResult?.value
+    val listing = userResult?.value
     listing?.retry?.invoke()
   }
 
