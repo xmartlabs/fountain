@@ -25,7 +25,7 @@ class MockIntDataSource(private val items: MutableList<Int>) : ItemKeyedDataSour
   fun addData(items: List<Int>) {
     this.items.addAll(items)
 
-    if (this.items.distinct() != this.items){
+    if (this.items.distinct() != this.items) {
       throw IllegalStateException("There are duplicate elements")
     }
   }
