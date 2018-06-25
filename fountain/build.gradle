@@ -23,9 +23,11 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    implementation "android.arch.paging:runtime:${libraryVersion.paging}"
+    implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
     implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
 
+    testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
     testImplementation "junit:junit:${libraryVersion.junit}"
+    testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
 }
