@@ -25,6 +25,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        checkAllWarnings true
+        warningsAsErrors true
+        ignore 'GradleDependency', 'GoogleAppIndexingWarning', 'NewerVersionAvailable', 'UnusedIds'
+    }
 }
 dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"

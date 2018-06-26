@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables"
     >
 
     <ImageView
@@ -13,7 +14,6 @@
         android:layout_height="60dp"
         android:contentDescription="@string/user_image"
         android:src="@android:color/black"
-        tools:ignore="ContentDescription"
         />
 
     <TextView
