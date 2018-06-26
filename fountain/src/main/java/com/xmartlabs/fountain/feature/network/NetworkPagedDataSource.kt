@@ -33,7 +33,8 @@ internal class NetworkPagedDataSource<T>(
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
     synchronized(this) {
-      if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize) && !isLoadingInitialData) {
+      if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize)
+          && !isLoadingInitialData) {
         networkState.postValue(NetworkState.LOADING)
         networkDataSourceAdapter.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
@@ -65,33 +66,33 @@ internal class NetworkPagedDataSource<T>(
 
   override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
     synchronized(this) {
-        isLoadingInitialData = true
-        networkState.postValue(NetworkState.LOADING)
-        initialLoad.postValue(NetworkState.LOADING)
+      isLoadingInitialData = true
+      networkState.postValue(NetworkState.LOADING)
+      initialLoad.postValue(NetworkState.LOADING)
       networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = params.requestedLoadSize)
-            .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
-                retry = null
-                networkState.postValue(NetworkState.LOADED)
-                initialLoad.postValue(NetworkState.LOADED)
-                onInitialDataLoaded()
-                val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
-                callback.onResult(data.getElements(), -1, nextPage)
-              }
+          .subscribeOn(ioServiceExecutor)
+          .subscribe(object : SingleObserver<ListResponse<T>> {
+            override fun onSuccess(data: ListResponse<T>) {
+              retry = null
+              networkState.postValue(NetworkState.LOADED)
+              initialLoad.postValue(NetworkState.LOADED)
+              onInitialDataLoaded()
+              val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
+              callback.onResult(data.getElements(), -1, nextPage)
+            }
 
-              override fun onSubscribe(d: Disposable) {}
+            override fun onSubscribe(d: Disposable) {}
 
-              override fun onError(t: Throwable) {
-                onInitialDataLoaded()
-                retry = {
-                  loadInitial(params, callback)
-                }
-                val error = NetworkState.error(t)
-                networkState.postValue(error)
-                initialLoad.postValue(error)
+            override fun onError(t: Throwable) {
+              onInitialDataLoaded()
+              retry = {
+                loadInitial(params, callback)
               }
-            })
-      }
+              val error = NetworkState.error(t)
+              networkState.postValue(error)
+              initialLoad.postValue(error)
+            }
+          })
+    }
   }
 }

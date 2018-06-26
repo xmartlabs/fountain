@@ -1,0 +1,8 @@
+detekt {
+    version = "1.0.0.RC7-2"
+    defaultProfile {
+        config = "detekt-config.yml"
+        input = file("src/main/java")
+        filters = ".*/resources/.*,.*/build/.*"
+    }
+}
