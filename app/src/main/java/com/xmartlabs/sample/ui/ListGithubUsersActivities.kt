@@ -16,6 +16,13 @@ import kotlinx.android.synthetic.main.activity_list_github_users_activities.*
 import javax.inject.Inject
 
 class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjector {
+  companion object {
+    const val KEY_USER_NAME = "key.username"
+    const val KEY_MODE_NAME = "key.mode"
+    const val DEFAULT_USER_NAME = ""
+    val DEFAULT_MODE = Mode.NETWORK_AND_DATA_SOURCE
+  }
+
   @Inject
   lateinit var model: ListUsersViewModel
   @Inject
@@ -29,24 +36,35 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
     initAdapter()
     initSwipeToRefresh()
     initSearch()
+
+    val userName = savedInstanceState?.getString(KEY_USER_NAME) ?: DEFAULT_USER_NAME
+    model.showUsers(userName)
+    initSwitchMode()
+    model.mode = savedInstanceState?.getSerializable(KEY_MODE_NAME) as? Mode ?: DEFAULT_MODE
+  }
+
+  private fun initSwitchMode() {
+    networkAndDataSourceModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+      list.adapter = ListUsersAdapter { model.retry() }
+      model.mode = (if (isChecked) Mode.NETWORK_AND_DATA_SOURCE else Mode.NETWORK)
+    }
   }
 
   private fun initAdapter() {
-    val adapter = ListUsersAdapter { model.retry() }
-    list.adapter = adapter
-    model.posts.observe(this, Observer<PagedList<User>> {
-      adapter.submitList(it)
+    list.adapter = ListUsersAdapter { model.retry() }
+    model.users.observe(this, Observer<PagedList<User>> {
+      (list.adapter as ListUsersAdapter).submitList(it)
     })
     model.networkState.observe(this, Observer {
-      adapter.setNetworkState(it)
+      (list.adapter as ListUsersAdapter).setNetworkState(it)
     })
   }
 
   private fun initSwipeToRefresh() {
     model.refreshState.observe(this, Observer {
-      swipe_refresh.isRefreshing = it == NetworkState.LOADING
+      swipeRefresh.isRefreshing = it == NetworkState.LOADING
     })
-    swipe_refresh.setOnRefreshListener {
+    swipeRefresh.setOnRefreshListener {
       model.refresh()
     }
   }
@@ -68,6 +86,12 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
         false
       }
     }
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    outState.putString(KEY_USER_NAME, model.currentUser())
+    outState.putSerializable(KEY_MODE_NAME, model.mode)
   }
 
   private fun updatedUsernameFromInput() {

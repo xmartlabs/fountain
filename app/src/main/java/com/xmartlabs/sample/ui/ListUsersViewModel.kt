@@ -11,32 +11,48 @@ import javax.inject.Singleton
 @Singleton
 class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
   companion object {
-    val pagedListConfig = PagedList.Config.Builder().setPageSize(10).build()
+    val pagedListConfig = PagedList.Config.Builder().setPageSize(10).build()!!
   }
 
   private val userName = MutableLiveData<String>()
-  private val repoResult = Transformations.map(userName) {
-    //    userRepository.searchServiceUsers(it, 30)
-    userRepository.searchServiceAndDbUsers(it, pagedListConfig)
+  var mode = Mode.NETWORK_AND_DATA_SOURCE
+    set(mode) {
+      if (mode != field) {
+        field = mode
+        if (!userName.value.isNullOrBlank()) {
+          userName.value = userName.value
+        }
+      }
+    }
+  private val userResult = Transformations.map(userName) {
+    if (mode == Mode.NETWORK)
+      userRepository.searchServiceUsers(it, pagedListConfig)
+    else
+      userRepository.searchServiceAndDbUsers(it, pagedListConfig)
   }
-  val posts = Transformations.switchMap(repoResult) { it.pagedList }!!
-  val networkState = Transformations.switchMap(repoResult) { it.networkState }!!
-  val refreshState = Transformations.switchMap(repoResult) { it.refreshState }!!
+  val users = Transformations.switchMap(userResult) { it.pagedList }!!
+  val networkState = Transformations.switchMap(userResult) { it.networkState }!!
+  val refreshState = Transformations.switchMap(userResult) { it.refreshState }!!
 
   fun refresh() {
-    repoResult.value?.refresh?.invoke()
+    userResult.value?.refresh?.invoke()
   }
 
   fun showUsers(username: String): Boolean {
     if (userName.value == username) {
       return false
     }
-    userName.value = username
-    return true
+    if (!username.isBlank()) {
+      userName.value = username
+      return true
+    }
+    return false
   }
 
   fun retry() {
-    val listing = repoResult?.value
+    val listing = userResult?.value
     listing?.retry?.invoke()
   }
+
+  fun currentUser(): String? = userName.value
 }
