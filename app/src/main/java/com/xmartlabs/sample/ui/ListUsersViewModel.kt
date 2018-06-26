@@ -41,10 +41,9 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
   fun showUsers(username: String): Boolean {
     if (userName.value == username || username.isBlank()) {
       return false
-    } else {
-      userName.value = username
-      return true
     }
+    userName.value = username
+    return true
   }
 
   fun retry() {
