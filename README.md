@@ -10,10 +10,10 @@ A smart and simple way to work with paged endpoints.
 ## Overview
 
 Fountain is an Android Kotlin library conceived to make your life easier when dealing with paged endpoint services, where the paging is based on incremental page numbers (e.g. 1, 2, 3, ...).
-It uses the [Google Android Architecture Components](https://developer.android.com/topic/libraries/architecture/), mainly the [Android Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) to make easier to work with paged services.
+It uses the [Google Android Architecture Components](https://developer.android.com/topic/libraries/architecture/), mainly the [Android Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) to make it easier to work with paged services.
 
 The main goal of the library is to easily provide a [Listing](fountain/src/main/java/com/xmartlabs/fountain/Listing.kt) component from a common service specification.
-[Listing](fountain/src/main/java/com/xmartlabs/fountain/Listing.kt) provides mainly five elements to take control of the paged list.
+[Listing](fountain/src/main/java/com/xmartlabs/fountain/Listing.kt) provides essentially five elements to take control of the paged list:
 
 ```kotlin
 data class Listing<T>(
@@ -26,18 +26,18 @@ data class Listing<T>(
 ```
 
 1. **pagedList:** A changing data stream of type `T` represented as a [`LiveData`](https://developer.android.com/topic/libraries/architecture/livedata) of a [`PagedList`](https://developer.android.com/reference/android/arch/paging/PagedList).
-1. **networkState:** A stream that notifies network state changes, such as when a new page started loading (and hence you can show a spinner in the UI).
+1. **networkState:** A stream that notifies network state changes, such as when a new page started loading (so you can show a spinner in the UI).
 1. **refresh:** A refresh function, to refresh all data.
 1. **refreshState:** A stream that notifies the status of the refresh request.
 1. **retry:** A retry function to execute if something failed.
 
-Basically, you could manage all data stream with a `Listing` component, which is awesome!
+Basically, you could manage all data streams with a `Listing` component, which is awesome!
 It's really flexible and useful to display the paged list entities and reflect the network status changes in the UI.
 
 Fountain provides two ways to generate a `Listing` component from paged services:    
 1. **Network support:** Provides a `Listing` based on a service that uses Retrofit and RxJava. Note entities won't be saved in memory nor disk.
-1. **Cache + Network support:** Provides a `Listing` with cache support using for service based on Retrofit and RxJava, and a [`DataSource`](https://developer.android.com/reference/android/arch/paging/DataSource) for caching the data.
-We recommend you to use [Room](https://developer.android.com/topic/libraries/architecture/room) to provide the `DataSource`, because it will be easier. However, you could use any other `DataSource`.
+1. **Cache + Network support:** Provides a `Listing` with cache support using a service based on Retrofit and RxJava, and a [`DataSource`](https://developer.android.com/reference/android/arch/paging/DataSource) for caching the data.
+We recommend you use [Room](https://developer.android.com/topic/libraries/architecture/room) to provide the `DataSource`, because it will be easier. However, you could use any other `DataSource`.
 
 ## Download
 
@@ -121,7 +121,7 @@ This will be executed in a transaction.
 * If you **want to contribute** please feel free to **submit pull requests**.
 * If you **have a feature request** please **open an issue**.
 * If you **found a bug** check older issues before submitting a new one.
-* If you **need help** or would like to **ask a general question**, use [StackOverflow]. (Tag `xmart-recyclerview`).
+* If you **need help** or would like to **ask a general question**, use [StackOverflow]. (Tag `fountain`).
 
 **Before contributing, please check the [CONTRIBUTING](CONTRIBUTING.md) file.**
 
