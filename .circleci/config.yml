@@ -23,9 +23,18 @@ jobs:
       - run:
           name: Build Project
           command: ./gradlew build
+      - run:
+          name: Run detektCheck
+          command: ./gradlew detektCheck
+      - store_artifacts:
+          path: build/reports
+          destination: reports
       - store_artifacts:
           path: fountain/build/reports
-          destination: reports
+          destination: reports/fountain
+      - store_artifacts:
+          path: app/build/reports
+          destination: reports/app
   test_api_v16:
       working_directory: ~/Fountain
       docker:

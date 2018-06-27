@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textIsSelectable="true"
         tools:text="Error Message"
         />
 
@@ -29,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Retry"
+        android:text="@string/retry"
         style="@style/Widget.AppCompat.Button.Colored"
         />
 

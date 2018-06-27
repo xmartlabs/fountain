@@ -16,7 +16,8 @@ interface NetworkDataSourceAdapter<T> : PageFetcher<T> {
   fun canFetch(page: Int, pageSize: Int): Boolean
 }
 
-abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val firstPage: Int = 1) : NetworkDataSourceAdapter<ListResponse<T>> {
+abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val firstPage: Int = 1)
+  : NetworkDataSourceAdapter<ListResponse<T>> {
   var totalEntities: Long? = null
 
   override fun canFetch(page: Int, pageSize: Int): Boolean {

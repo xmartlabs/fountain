@@ -3,4 +3,6 @@
     <string name="title_activity_list_github_users_activities">Search Github Users</string>
     <string name="net_plus_ds">Net + DS</string>
     <string name="user_name">User name</string>
+    <string name="user_image">User Image</string>
+    <string name="retry">Retry</string>
 </resources>

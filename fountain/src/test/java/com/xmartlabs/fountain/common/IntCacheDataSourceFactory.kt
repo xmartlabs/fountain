@@ -25,9 +25,11 @@ class MockIntDataSource(private val items: MutableList<Int>) : ItemKeyedDataSour
   fun addData(items: List<Int>) = this.items.addAll(items)
 
   private fun inRange(position: Int, start: Int, end: Int): Int {
-    if (position < start) return start
-    if (position > end) return end
-    return position
+    return when {
+      position < start -> start
+      position > end -> end
+      else -> position
+    }
   }
 
   override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int>) {
