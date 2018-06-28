@@ -5,11 +5,13 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libraryVersion.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${libraryVersion.kotlin}"
+        classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0"
     }
 }
 
@@ -17,11 +19,14 @@ plugins {
     id "io.gitlab.arturbosch.detekt" version "1.0.0.RC7-2"
 }
 
+apply plugin: "com.vanniktech.android.junit.jacoco"
+
 allprojects {
     repositories {
         google()
         jcenter()
         mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 
@@ -37,4 +42,11 @@ detekt {
         filters = ".*/resources/.*,.*/build/.*"
         output = file("build/reports/detekt")
     }
+}
+
+junitJacoco {
+    jacocoVersion = '0.8.2-SNAPSHOT' // https://github.com/jacoco/jacoco/issues/552
+    ignoreProjects = ['app']
+    excludes
+    includeNoLocationClasses = false
 }
