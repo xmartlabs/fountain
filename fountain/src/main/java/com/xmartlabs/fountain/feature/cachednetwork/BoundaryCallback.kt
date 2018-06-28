@@ -29,7 +29,9 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
   private var page = firstPage
   var helper = PagingRequestHelper(ioServiceExecutor)
   val networkState = MutableLiveData<NetworkState>()
-  val networkStateListener = PagingRequestHelper.Listener { report -> networkState.postValue(report.createNetworkState()) }
+  val networkStateListener = PagingRequestHelper.Listener { report ->
+    networkState.postValue(report.createNetworkState())
+  }
 
   init {
     helper.addListener(networkStateListener)

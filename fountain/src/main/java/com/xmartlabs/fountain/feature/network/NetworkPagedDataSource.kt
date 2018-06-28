@@ -36,7 +36,8 @@ internal class NetworkPagedDataSource<T>(
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
     synchronized(this) {
-      if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize) && !isLoadingInitialData) {
+      if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize)
+          && !isLoadingInitialData) {
         networkState.postValue(NetworkState.LOADING)
         networkDataSourceAdapter.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
@@ -84,7 +85,7 @@ internal class NetworkPagedDataSource<T>(
                 callback.onResult(data.getElements(), -1, nextPage)
               }
 
-              override fun onSubscribe(d: Disposable) {}
+            override fun onSubscribe(d: Disposable) {}
 
               override fun onError(t: Throwable) {
                 onInitialDataLoaded()

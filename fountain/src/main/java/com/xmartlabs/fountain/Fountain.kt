@@ -15,6 +15,7 @@ object Fountain {
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
       .build()
 
+  @Suppress("LongParameterList")
   fun <Value> createNetworkListing(
       networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
@@ -27,6 +28,7 @@ object Fountain {
       networkDataSourceAdapter = networkDataSourceAdapter
   )
 
+  @Suppress("LongParameterList")
   fun <Value> createNetworkWithCacheSupportListing(
       networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<Value>,
