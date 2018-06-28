@@ -22,7 +22,13 @@ class IntCacheDataSourceFactory : DataSource.Factory<Int, Int>() {
 class MockIntDataSource(private val items: MutableList<Int>) : ItemKeyedDataSource<Int, Int>() {
   fun clearData() = items.clear()
 
-  fun addData(items: List<Int>) = this.items.addAll(items)
+  fun addData(items: List<Int>) {
+    this.items.addAll(items)
+
+    if (this.items.distinct() != this.items) {
+      throw IllegalStateException("There are duplicate elements")
+    }
+  }
 
   private fun inRange(position: Int, start: Int, end: Int): Int {
     return when {
@@ -51,11 +57,11 @@ class MockIntDataSource(private val items: MutableList<Int>) : ItemKeyedDataSour
   }
 
   override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int>) {
-    val lastItem = inRange(params.key - 1, 0, items.size)
+    val lastItem = inRange(params.key, 0, items.size)
     val firstItem = inRange(lastItem - params.requestedLoadSize, 0, items.size)
     val data = if (firstItem == lastItem) emptyList<Int>() else items.subList(firstItem, lastItem)
     callback.onResult(data)
   }
 
-  override fun getKey(item: Int): Int = item
+  override fun getKey(item: Int): Int = items.indexOfFirst { it == item }
 }

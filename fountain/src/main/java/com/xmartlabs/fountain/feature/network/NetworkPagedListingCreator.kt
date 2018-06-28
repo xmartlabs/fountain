@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.feature.network
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
@@ -24,9 +25,11 @@ internal object NetworkPagedListingCreator {
     val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
         .build()
 
-    val refreshState = Transformations.switchMap(sourceFactory.sourceLiveData) {
-      it.initialLoad
+    val refreshTrigger = MutableLiveData<Unit>()
+    val refreshState = Transformations.switchMap(refreshTrigger) {
+      sourceFactory.resetData()
     }
+
     return Listing(
         pagedList = livePagedList,
         networkState = Transformations.switchMap(sourceFactory.sourceLiveData) {
@@ -36,7 +39,7 @@ internal object NetworkPagedListingCreator {
           sourceFactory.sourceLiveData.value?.retryAllFailed()
         },
         refresh = {
-          sourceFactory.sourceLiveData.value?.invalidate()
+          refreshTrigger.value = null
         },
         refreshState = refreshState
     )

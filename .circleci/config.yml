@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "library/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "fountain/build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Accept licenses
           command: yes | sdkmanager --licenses || true
@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "library/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "fountain/build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Build Project
           command: ./gradlew build
