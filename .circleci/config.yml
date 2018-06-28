@@ -26,6 +26,12 @@ jobs:
       - run:
           name: Run detektCheck
           command: ./gradlew detektCheck
+      - run:
+          name: Generate Coverage
+          command: ./gradlew jacocoTestReportDebug
+      - run:
+          name: Upload Coverage
+          command: bash <(curl -s https://codecov.io/bash) -t "447db542-cda6-4358-9691-082e9104d6d6"
       - store_artifacts:
           path: build/reports
           destination: reports
