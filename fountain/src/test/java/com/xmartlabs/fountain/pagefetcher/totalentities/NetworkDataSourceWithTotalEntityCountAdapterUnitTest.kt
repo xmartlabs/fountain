@@ -18,9 +18,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 
-/**
- * Created by matias on 01/07/18.
- */
 abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
   @get:Rule
   var rule: TestRule = InstantTaskExecutorRule()
@@ -85,7 +82,6 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
     pageFetcher.sendListResponseWithEntityCountResponse(entityCount.toLong(), response)
     Assert.assertEquals(entityCount, listing.getPagedListSize())
     Assert.assertEquals((0..entityCount -1).toList(), listing.getPagedList())
-
   }
 
   abstract fun createListing(mockedNetworkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Int>>)
