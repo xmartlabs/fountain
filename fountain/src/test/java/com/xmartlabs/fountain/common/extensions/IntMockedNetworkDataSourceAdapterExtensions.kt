@@ -6,7 +6,6 @@ import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.MockedNetworkDataSourcePageFetcher
-import java.security.PrivateKey
 
 fun MockedNetworkDataSourceAdapter<ListResponse<Int>>.sendPageResponse(page: Int = 0) {
   emitter?.onSuccess(object : ListResponse<Int> {

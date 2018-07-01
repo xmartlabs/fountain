@@ -1,14 +1,8 @@
 package com.xmartlabs.fountain.networkstate
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.xmartlabs.fountain.ListResponse
-import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.Status
-import com.xmartlabs.fountain.common.IntMockedListingCreator
-import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.extensions.mockLifecycleEvents
-import com.xmartlabs.fountain.common.extensions.sendPageResponse
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
