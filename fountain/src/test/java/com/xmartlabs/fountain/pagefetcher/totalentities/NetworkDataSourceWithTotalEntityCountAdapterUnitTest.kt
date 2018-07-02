@@ -76,12 +76,12 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
     val response =  (start..(entityCount - 1)).toList()
     pageFetcher.sendListResponseWithEntityCountResponse(entityCount.toLong(), response)
     Assert.assertEquals(entityCount, listing.getPagedListSize())
-    Assert.assertEquals((0..entityCount -1).toList(), listing.getPagedList())
+    Assert.assertEquals((0 until entityCount).toList(), listing.getPagedList())
 
     pageFetcher.sendListResponseWithEntityCountResponse(entityCount.toLong(), 6)
     pageFetcher.sendListResponseWithEntityCountResponse(entityCount.toLong(), response)
     Assert.assertEquals(entityCount, listing.getPagedListSize())
-    Assert.assertEquals((0..entityCount -1).toList(), listing.getPagedList())
+    Assert.assertEquals((0 until entityCount).toList(), listing.getPagedList())
   }
 
   abstract fun createListing(mockedNetworkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Int>>)
