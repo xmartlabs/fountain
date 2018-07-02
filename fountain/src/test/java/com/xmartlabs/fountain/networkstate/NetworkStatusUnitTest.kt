@@ -79,7 +79,7 @@ abstract class NetworkStatusUnitTest {
     assertEquals(NetworkState.LOADING, listing.networkState.value)
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
+    mockedNetworkDataSourceAdapter.emitter?.onError(exception)
     assertEquals(NetworkState.error(exception), listing.networkState.value)
   }
 
@@ -98,7 +98,7 @@ abstract class NetworkStatusUnitTest {
     assertEquals(NetworkState.LOADING, listing.networkState.value)
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
+    mockedNetworkDataSourceAdapter.emitter?.onError(exception)
     assertEquals(NetworkState.error(exception), listing.networkState.value)
   }
 
@@ -118,7 +118,7 @@ abstract class NetworkStatusUnitTest {
     assertEquals(NetworkState.LOADED, listing.networkState.value)
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.emmiter?.onError(exception)
+    mockedNetworkDataSourceAdapter.emitter?.onError(exception)
     assertEquals(NetworkState.LOADED, listing.networkState.value)
     assertEquals(NetworkState.error(exception), listing.refreshState.value)
   }

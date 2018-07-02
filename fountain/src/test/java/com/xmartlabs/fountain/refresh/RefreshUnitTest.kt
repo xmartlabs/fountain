@@ -6,7 +6,11 @@ import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.extensions.*
+import com.xmartlabs.fountain.common.extensions.generateIntPageResponseList
+import com.xmartlabs.fountain.common.extensions.getPagedList
+import com.xmartlabs.fountain.common.extensions.getPagedListSize
+import com.xmartlabs.fountain.common.extensions.mockLifecycleEvents
+import com.xmartlabs.fountain.common.extensions.sendPageResponse
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

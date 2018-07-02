@@ -47,6 +47,6 @@ detekt {
 junitJacoco {
     jacocoVersion = '0.8.2-SNAPSHOT' // https://github.com/jacoco/jacoco/issues/552
     ignoreProjects = ['app']
-    excludes
+    excludes = ["**/android/arch/paging/**"]
     includeNoLocationClasses = false
 }
