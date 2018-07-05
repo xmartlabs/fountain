@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain
 
+import android.arch.paging.DataSource
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
@@ -8,6 +9,7 @@ import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import java.util.concurrent.Executor
 
+/** A [Listing] factory */
 object Fountain {
   private const val DEFAULT_FIRST_PAGE = 1
   private const val DEFAULT_NETWORK_PAGE_SIZE = 20
@@ -15,6 +17,20 @@ object Fountain {
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
       .build()
 
+  /**
+   * Creates a [Listing] with Network support.
+   *
+   * @param Value The listed entity type.
+   * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
+   * The default value is 1.
+   * @param firstPage The first page number, defined by the service.
+   * @param ioServiceExecutor The [Executor] with which the service call will be made.
+   * By default, it is a pool of 5 threads.
+   * @param pagedListConfig The paged list configuration.
+   * In this object you can specify several options, for example the [pageSize][PagedList.Config.pageSize]
+   * and the [initialPageSize][PagedList.Config.initialLoadSizeHint].
+   * @return A [Listing] structure with Network Support.
+   */
   @Suppress("LongParameterList")
   fun <Value> createNetworkListing(
       networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
@@ -28,6 +44,23 @@ object Fountain {
       networkDataSourceAdapter = networkDataSourceAdapter
   )
 
+  /**
+   * Creates a [Listing] with Cache + Network Support.
+   *
+   * @param Value The listed entity type.
+   * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
+   * @param cachedDataSourceAdapter The [CachedDataSourceAdapter] to take control of the [DataSource].
+   * The default value is 1.
+   * @param firstPage The first page number, defined by the service.
+   * @param ioServiceExecutor The [Executor] with which the service call will be made.
+   * By default, it is a pool of 5 threads.
+   * @param ioDatabaseExecutor The [Executor] through which the database transactions will be made.
+   * By default the library will use a single thread executor.
+   * @param pagedListConfig The paged list configuration.
+   * In this object you can specify several options, for example the [pageSize][PagedList.Config.pageSize]
+   * and the [initialPageSize][PagedList.Config.initialLoadSizeHint].
+   * @return A [Listing] structure with Cache + Network Support.
+   */
   @Suppress("LongParameterList")
   fun <Value> createNetworkWithCacheSupportListing(
       networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,

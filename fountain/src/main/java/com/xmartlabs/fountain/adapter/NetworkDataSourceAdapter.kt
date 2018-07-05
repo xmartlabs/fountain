@@ -6,12 +6,22 @@ import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import io.reactivex.Single
 
+/** It is used to fetch each page from the service. */
 interface PageFetcher<T> {
+  /**
+   * Fetches the page [page] with a size [pageSize] from the service.
+   *
+   * @param page The page number to fetch.
+   * @param pageSize The page size to fetch.
+   * @return A [Single] of the type [T] that represent the service call.
+   */
   @CheckResult
   fun fetchPage(page: Int, pageSize: Int): Single<out T>
 }
 
+/** It is used to handle the paging state */
 interface NetworkDataSourceAdapter<T> : PageFetcher<T> {
+  /** Returns `true` if the page [page] with a size [pageSize] can be fetched */
   @CheckResult
   fun canFetch(page: Int, pageSize: Int): Boolean
 }
@@ -31,6 +41,10 @@ abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val first
   }
 }
 
+/**
+ * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
+ * It is used when the service returns the entity count in the response.
+ */
 class NetworkDataSourceWithTotalEntityCountAdapter<T>(
     private val pageFetcher: PageFetcher<out ListResponseWithEntityCount<T>>,
     firstPage: Int = 1
@@ -43,6 +57,10 @@ class NetworkDataSourceWithTotalEntityCountAdapter<T>(
   }
 }
 
+/**
+ * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithPageCount] response.
+ * It is used when the service returns the page count in the response.
+ */
 class NetworkDataSourceWithTotalPageCountAdapter<T>(
     private val pageFetcher: PageFetcher<out ListResponseWithPageCount<T>>,
     firstPage: Int = 1

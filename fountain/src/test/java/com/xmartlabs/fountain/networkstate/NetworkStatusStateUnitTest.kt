@@ -23,7 +23,6 @@ class NetworkStatusStateUnitTest {
     val exception = Exception(exceptionMessage)
     val errorState = NetworkState.error(exception)
     assertEquals(Status.FAILED, errorState.status)
-    assertEquals(exceptionMessage, errorState.msg)
     assertEquals(errorState.throwable, exception)
   }
 
