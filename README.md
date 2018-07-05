@@ -56,10 +56,9 @@ dependencies {
 ```
 
 ## Usage
-You should read the documentation to use it, but the `Listing` can be provided by two methods.
+You can also read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
 
 ### Network support
-You can read the documentation [here]().
 
 The `Listing` with network support can be obtained using:
 ```kotlin
