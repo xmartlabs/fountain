@@ -21,7 +21,7 @@ interface PageFetcher<T> {
 
 /** It is used to handle the paging state */
 interface NetworkDataSourceAdapter<T> : PageFetcher<T> {
-  /** Returns if the page [page] with a size [pageSize] can be fetched */
+  /** Returns `true` if the page [page] with a size [pageSize] can be fetched */
   @CheckResult
   fun canFetch(page: Int, pageSize: Int): Boolean
 }
