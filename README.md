@@ -1,6 +1,7 @@
 ![Fountain](images/banner.png)
 
 <p align="left">
+<a href="https://jitpack.io/#xmartlabs/fountain"><img alt="Release" src="https://jitpack.io/v/xmartlabs/fountain.svg"></a>
 <a href="https://github.com/xmartlabs/fountain/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 <a href="https://circleci.com/gh/xmartlabs/fountain"><img src="https://circleci.com/gh/xmartlabs/fountain.svg?style=svg&circle-token=1e75c337f032689a108f3c0f7a144aec1bb14bbf"></a>
 <a href="https://codecov.io/gh/xmartlabs/fountain"><img src="https://codecov.io/gh/xmartlabs/fountain/branch/master/graph/badge.svg?token=YRqkbAIatc" /></a>
