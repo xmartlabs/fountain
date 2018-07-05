@@ -54,7 +54,7 @@ dependencies {
 ```
 
 ## Usage
-You can read the full documentation [here](https://xmartlabs.gitbook.io/fountain/).
+You can also read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
 
 ### Network support
 
