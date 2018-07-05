@@ -1,6 +1,6 @@
 package com.xmartlabs.fountain
 
-/** Represents the possible status of a service call */
+/** Represents the possible status of a service call. */
 enum class Status {
   /** Represents that the service call is running. */
   RUNNING,
@@ -11,7 +11,7 @@ enum class Status {
 }
 
 /**
- * It's a structure to handle the different network states.
+ * A structure to handle the network states.
  *
  * @property status The [Status] of the network request.
  * @property throwable The error of the network state.

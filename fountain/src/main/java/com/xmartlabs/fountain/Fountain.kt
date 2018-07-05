@@ -9,10 +9,7 @@ import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import java.util.concurrent.Executor
 
-/**
- * It is a [Listing] factory, that provides two static methods:
- * one for **Network support** and another one for **Cache + Network support**.
- */
+/** A [Listing] factory */
 object Fountain {
   private const val DEFAULT_FIRST_PAGE = 1
   private const val DEFAULT_NETWORK_PAGE_SIZE = 20
@@ -23,7 +20,7 @@ object Fountain {
   /**
    * Creates a [Listing] with Network support.
    *
-   * @param Value the listed entity type.
+   * @param Value The listed entity type.
    * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
    * The default value is 1.
    * @param firstPage The first page number, defined by the service.
@@ -50,7 +47,7 @@ object Fountain {
   /**
    * Creates a [Listing] with Cache + Network Support.
    *
-   * @param Value the listed entity type.
+   * @param Value The listed entity type.
    * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
    * @param cachedDataSourceAdapter The [CachedDataSourceAdapter] to take control of the [DataSource].
    * The default value is 1.
