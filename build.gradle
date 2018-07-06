@@ -6,21 +6,22 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+        classpath "com.android.tools.build:gradle:${libraryVersion.gradle}"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:${libraryVersion.mavenPlugin}"
         classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:${libraryVersion.jacoco}"
+        classpath "gradle.plugin.io.gitlab.arturbosch:detekt-gradle-plugin:${libraryVersion.detekt}"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${libraryVersion.dokka}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${libraryVersion.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libraryVersion.kotlin}"
-        classpath "com.android.tools.build:gradle:${libraryVersion.gradle}"
     }
 }
 
-plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC7-2"
-}
-
 apply plugin: "com.vanniktech.android.junit.jacoco"
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "io.gitlab.arturbosch.detekt"
 
 allprojects {
     repositories {
@@ -31,12 +32,8 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 detekt {
-    version = "1.0.0.RC7-2"
+    version = "1.0.0.RC7-3"
     defaultProfile {
         config = "$project.rootDir/detekt-config.yml"
         input = file("$projectDir")

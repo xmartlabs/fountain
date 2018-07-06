@@ -2,13 +2,11 @@ package com.xmartlabs.fountain.adapter
 
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
-import android.support.annotation.AnyThread
 import android.support.annotation.WorkerThread
 
 /** Adapter used to cache the entities in the [DataSource]. */
 interface CachedDataSourceAdapter<T> {
   /** Returns the [DataSource.Factory] that will be used to create the [LivePagedListBuilder]. */
-  @AnyThread
   fun getDataSourceFactory(): DataSource.Factory<*, T>
 
   /**
