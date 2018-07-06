@@ -55,7 +55,7 @@ dependencies {
 }
 ```
 
-_Despite Fountain is in an experimental state, we believe the API won't receive major changes._
+> Despite Fountain is in experimental state, we believe the API won't receive major changes.
 
 ## Usage
 You can also read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
