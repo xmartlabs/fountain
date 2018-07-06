@@ -1,9 +1,11 @@
 ![Fountain](images/banner.png)
 
 <p align="left">
+<a href="https://jitpack.io/#xmartlabs/fountain"><img alt="Release" src="https://jitpack.io/v/xmartlabs/fountain.svg"></a>
 <a href="https://github.com/xmartlabs/fountain/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 <a href="https://circleci.com/gh/xmartlabs/fountain"><img src="https://circleci.com/gh/xmartlabs/fountain.svg?style=svg&circle-token=1e75c337f032689a108f3c0f7a144aec1bb14bbf"></a>
 <a href="https://codecov.io/gh/xmartlabs/fountain"><img src="https://codecov.io/gh/xmartlabs/fountain/branch/master/graph/badge.svg?token=YRqkbAIatc" /></a>
+<a href="https://codebeat.co/projects/github-com-xmartlabs-fountain-master"><img alt="codebeat badge" src="https://codebeat.co/badges/48c653b0-a48f-4615-b3b1-617f3a55292f" /></a>
 </p>
 
 A smart and simple way to work with paged endpoints.
