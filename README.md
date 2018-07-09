@@ -51,9 +51,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.xmartlabs:fountain:${fountain_version}'
+    implementation 'com.github.xmartlabs:fountain:0.1.0'
 }
 ```
+
+> Despite Fountain is in experimental state, we believe the API won't receive major changes.
 
 ## Usage
 You can also read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
