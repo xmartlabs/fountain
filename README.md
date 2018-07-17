@@ -9,6 +9,8 @@
 </p>
 
 A smart and simple way to work with paged endpoints.
+To see an example of how to use it, check out the [introducing Fountain post](https://blog.xmartlabs.com/2018/07/16/Introducing-Fountain-Part-One/).  
+
 
 ## Overview
 
@@ -59,7 +61,6 @@ dependencies {
 
 ## Usage
 You can read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
-To see an example of how to use it, check out the [introducing Fountain post](https://blog.xmartlabs.com/2018/07/16/Introducing-Fountain-Part-One/).  
 
 ### Network support
 
