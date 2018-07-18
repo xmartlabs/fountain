@@ -1,5 +1,6 @@
 package com.xmartlabs.sample.ui
 
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
@@ -11,31 +12,39 @@ import javax.inject.Singleton
 @Singleton
 class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
   companion object {
-    val pagedListConfig = PagedList.Config.Builder().setPageSize(10).build()!!
+    val pagedListConfig: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
   }
+
+  //It's just to combine the mode with the username, in a real case use, it's not needed
+  private val usernameModeMediator = MediatorLiveData<Pair<Mode, String>>()
 
   private val userName = MutableLiveData<String>()
-  var mode = Mode.NETWORK_AND_DATA_SOURCE
-    set(mode) {
-      if (mode != field) {
-        field = mode
-        if (!userName.value.isNullOrBlank()) {
-          userName.value = userName.value
-        }
+  private val mode = MutableLiveData<Mode>()
+  private val usersListing = Transformations.map(usernameModeMediator) {
+    if (it.first == Mode.NETWORK)
+      userRepository.searchServiceUsers(it.second, pagedListConfig)
+    else
+      userRepository.searchServiceAndDbUsers(it.second, pagedListConfig)
+  }
+  val users = Transformations.switchMap(usersListing) { it.pagedList }!!
+  val networkState = Transformations.switchMap(usersListing) { it.networkState }!!
+  val refreshState = Transformations.switchMap(usersListing) { it.refreshState }!!
+
+  init {
+    mode.value = Mode.NETWORK_AND_DATA_SOURCE
+    usernameModeMediator.addSource(mode) {
+      val userNameValue = userName.value.orEmpty()
+      if (it != null && userNameValue.isNotBlank()) {
+        usernameModeMediator.value = Pair(it, userNameValue)
       }
     }
-  private val userResult = Transformations.map(userName) {
-    if (mode == Mode.NETWORK)
-      userRepository.searchServiceUsers(it, pagedListConfig)
-    else
-      userRepository.searchServiceAndDbUsers(it, pagedListConfig)
+    usernameModeMediator.addSource(userName) { username ->
+      username?.let { usernameModeMediator.value = Pair(mode.value!!, username) }
+    }
   }
-  val users = Transformations.switchMap(userResult) { it.pagedList }!!
-  val networkState = Transformations.switchMap(userResult) { it.networkState }!!
-  val refreshState = Transformations.switchMap(userResult) { it.refreshState }!!
 
   fun refresh() {
-    userResult.value?.refresh?.invoke()
+    usersListing.value?.refresh?.invoke()
   }
 
   fun showUsers(username: String): Boolean {
@@ -46,10 +55,18 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
     return true
   }
 
+  fun changeMode(mode: Mode) {
+    if (this.mode.value != mode) {
+      this.mode.value = mode
+    }
+  }
+
   fun retry() {
-    val listing = userResult?.value
+    val listing = usersListing?.value
     listing?.retry?.invoke()
   }
+
+  fun currentMode() = this.mode.value
 
   fun currentUser(): String? = userName.value
 }
