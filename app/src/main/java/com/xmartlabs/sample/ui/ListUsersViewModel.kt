@@ -1,10 +1,13 @@
 package com.xmartlabs.sample.ui
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
+import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.sample.model.User
 import com.xmartlabs.sample.repository.UserRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,23 +15,24 @@ import javax.inject.Singleton
 @Singleton
 class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
   companion object {
-    val pagedListConfig: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
+    private val PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
   }
 
-  //It's just to combine the mode with the username, in a real case use, it's not needed
+  //It's just to combine the mode with the username, in a real case use it's not needed
   private val usernameModeMediator = MediatorLiveData<Pair<Mode, String>>()
 
   private val userName = MutableLiveData<String>()
   private val mode = MutableLiveData<Mode>()
   private val usersListing = Transformations.map(usernameModeMediator) {
     if (it.first == Mode.NETWORK)
-      userRepository.searchServiceUsers(it.second, pagedListConfig)
+      userRepository.searchServiceUsers(it.second, PAGED_LIST_CONFIG)
     else
-      userRepository.searchServiceAndDbUsers(it.second, pagedListConfig)
+      userRepository.searchServiceAndDbUsers(it.second, PAGED_LIST_CONFIG)
   }
-  val users = Transformations.switchMap(usersListing) { it.pagedList }!!
-  val networkState = Transformations.switchMap(usersListing) { it.networkState }!!
-  val refreshState = Transformations.switchMap(usersListing) { it.refreshState }!!
+
+  val users: LiveData<PagedList<User>> = Transformations.switchMap(usersListing) { it.pagedList }
+  val networkState: LiveData<NetworkState> = Transformations.switchMap(usersListing) { it.networkState }
+  val refreshState: LiveData<NetworkState> = Transformations.switchMap(usersListing) { it.refreshState }
 
   init {
     mode.value = Mode.NETWORK_AND_DATA_SOURCE
