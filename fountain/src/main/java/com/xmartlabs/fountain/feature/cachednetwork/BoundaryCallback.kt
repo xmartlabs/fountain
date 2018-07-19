@@ -17,14 +17,14 @@ import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
-internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ServiceResponse>,
-    private val cachedDataSourceAdapter: CachedDataSourceAdapter<Value>,
+internal class BoundaryCallback<NetworkValue, DataSourceValue>(
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
+    private val cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
     private val pagedListConfig: PagedList.Config,
     private val ioServiceExecutor: Executor,
     private val ioDatabaseExecutor: Executor,
     private val firstPage: Int
-) : PagedList.BoundaryCallback<Value>() {
+) : PagedList.BoundaryCallback<DataSourceValue>() {
   private var isLoadingInitialData = false
   private var page = firstPage
   var helper = PagingRequestHelper(ioServiceExecutor)
@@ -48,7 +48,7 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
   override fun onZeroItemsLoaded() {}
 
   @MainThread
-  override fun onItemAtEndLoaded(itemAtEnd: Value) {
+  override fun onItemAtEndLoaded(itemAtEnd: DataSourceValue) {
     if (networkDataSourceAdapter.canFetch(page = page, pageSize = pagedListConfig.pageSize)) {
       synchronized(this) {
         if (!isLoadingInitialData) {
@@ -62,7 +62,7 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
   }
 
   // ignored, since we only ever append to what's in the DB
-  override fun onItemAtFrontLoaded(itemAtFront: Value) {}
+  override fun onItemAtFrontLoaded(itemAtFront: DataSourceValue) {}
 
   @AnyThread
   fun resetData(): LiveData<NetworkState> {
@@ -74,8 +74,8 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
         networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
             .subscribeOn(ioServiceExecutor)
             .observeOn(ioDatabaseExecutor)
-            .subscribe(object : SingleObserver<ServiceResponse> {
-              override fun onSuccess(serviceResponse: ServiceResponse) {
+            .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
+              override fun onSuccess(serviceResponse: ListResponse<out NetworkValue>) {
                 page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
                 cachedDataSourceAdapter.runInTransaction {
                   cachedDataSourceAdapter.dropEntities()
@@ -108,14 +108,15 @@ internal class BoundaryCallback<Value, ServiceResponse : ListResponse<Value>>(
     }
   }
 
-  private fun Single<out ServiceResponse>.createWebserviceCallback(callback: PagingRequestHelper.Request.Callback,
-                                                                   requestedPages: Int,
-                                                                   initialData: Boolean = false) {
+  private fun Single<out ListResponse<out NetworkValue>>.createWebserviceCallback(
+      callback: PagingRequestHelper.Request.Callback,
+      requestedPages: Int,
+      initialData: Boolean = false) {
     this
         .subscribeOn(ioServiceExecutor)
         .observeOn(ioDatabaseExecutor)
-        .subscribe(object : SingleObserver<ServiceResponse> {
-          override fun onSuccess(response: ServiceResponse) {
+        .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
+          override fun onSuccess(response: ListResponse<out NetworkValue>) {
             page += requestedPages
             cachedDataSourceAdapter.runInTransaction {
               if (initialData) {
