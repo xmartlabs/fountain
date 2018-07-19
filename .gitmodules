@@ -1,0 +1,3 @@
+[submodule "fountain-docs"]
+	path = fountain-docs
+	url = git@github.com:xmartlabs/fountain-docs.git
