@@ -18,7 +18,7 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
     private val PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
   }
 
-  //It's just to combine the mode with the username, in a real case use it's not needed
+  //It's just to combine the mode with the username, in a real use case it's not needed
   private val usernameModeMediator = MediatorLiveData<Pair<Mode, String>>()
 
   private val userName = MutableLiveData<String>()
