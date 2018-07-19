@@ -29,7 +29,7 @@ object IntMockedListingCreator {
   fun createNetworkWithCacheSupportListing(
       mockedNetworkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
-    val dataSourceAdapter: CachedDataSourceAdapter<Int> = object : CachedDataSourceAdapter<Int> {
+    val dataSourceAdapter: CachedDataSourceAdapter<Int, Int> = object : CachedDataSourceAdapter<Int, Int> {
       val sequentialIntCacheDataSourceFactory = IntCacheDataSourceFactory()
 
       override fun getDataSourceFactory() = sequentialIntCacheDataSourceFactory

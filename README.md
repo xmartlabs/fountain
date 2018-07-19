@@ -96,15 +96,15 @@ Fountain.createNetworkWithCacheSupportListing(
 ```
 There are two required components: 
 1. A `NetworkDataSourceAdapter<out ListResponse<Value>>` to fetch all pages.
-1. A `CachedDataSourceAdapter<Value>` to update the `DataSource`.
+1. A `CachedDataSourceAdapter<NetworkValue, DataSourceValue>` to update the `DataSource`.
 It's the interface that the library will use to take control of the `DataSource`.
 
 ```kotlin
-interface CachedDataSourceAdapter<Value> {
-  fun getDataSourceFactory(): DataSource.Factory<*, Value>
+interface CachedDataSourceAdapter<NetworkValue, DataSourceValue> {
+  fun getDataSourceFactory(): DataSource.Factory<*, DataSourceValue>
 
   @WorkerThread
-  fun saveEntities(response: List<Value>)
+  fun saveEntities(response: List<NetworkValue>)
 
   @WorkerThread
   fun dropEntities()

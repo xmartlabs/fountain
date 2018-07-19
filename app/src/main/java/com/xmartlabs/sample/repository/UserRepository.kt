@@ -45,7 +45,7 @@ class UserRepository @Inject constructor(
     })
     val networkDataSourceAdapter = NetworkDataSourceWithTotalEntityCountAdapter(pageFetcher = pageFetcher)
 
-    val cachedDataSourceAdapter = object : CachedDataSourceAdapter<User> {
+    val cachedDataSourceAdapter = object : CachedDataSourceAdapter<User, User> {
       override fun getDataSourceFactory() = userDao.findUsersByName(userName)
 
       override fun saveEntities(response: List<User>) {
