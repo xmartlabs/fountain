@@ -42,13 +42,13 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
     val userName = savedInstanceState?.getString(KEY_USER_NAME) ?: DEFAULT_USER_NAME
     model.showUsers(userName)
     initSwitchMode()
-    model.mode = savedInstanceState?.getSerializable(KEY_MODE_NAME) as? Mode ?: DEFAULT_MODE
+    model.changeMode(savedInstanceState?.getSerializable(KEY_MODE_NAME) as? Mode ?: DEFAULT_MODE)
   }
 
   private fun initSwitchMode() {
     networkAndDataSourceModeSwitch.setOnCheckedChangeListener { _, isChecked ->
       list.adapter = ListUsersAdapter { model.retry() }
-      model.mode = (if (isChecked) Mode.NETWORK_AND_DATA_SOURCE else Mode.NETWORK)
+      model.changeMode(if (isChecked) Mode.NETWORK_AND_DATA_SOURCE else Mode.NETWORK)
     }
   }
 
@@ -96,7 +96,7 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     outState.putString(KEY_USER_NAME, model.currentUser())
-    outState.putSerializable(KEY_MODE_NAME, model.mode)
+    outState.putSerializable(KEY_MODE_NAME, model.currentMode())
   }
 
   private fun updatedUsernameFromInput() {
