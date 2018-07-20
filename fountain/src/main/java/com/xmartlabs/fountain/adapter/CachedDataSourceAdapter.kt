@@ -5,16 +5,16 @@ import android.arch.paging.LivePagedListBuilder
 import android.support.annotation.WorkerThread
 
 /** Adapter used to cache the entities in the [DataSource]. */
-interface CachedDataSourceAdapter<T> {
+interface CachedDataSourceAdapter<NetworkValue, DataSourceValue> {
   /** Returns the [DataSource.Factory] that will be used to create the [LivePagedListBuilder]. */
-  fun getDataSourceFactory(): DataSource.Factory<*, T>
+  fun getDataSourceFactory(): DataSource.Factory<*, DataSourceValue>
 
   /**
    * Saves all entities into the [DataSource].
    * This will be executed in a [transaction][runInTransaction].
    */
   @WorkerThread
-  fun saveEntities(response: List<T>)
+  fun saveEntities(response: List<NetworkValue>)
 
   /**
    * Deletes all cached entities from the [DataSource].
