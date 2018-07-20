@@ -76,16 +76,20 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
             .observeOn(ioDatabaseExecutor)
             .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
               override fun onSuccess(serviceResponse: ListResponse<out NetworkValue>) {
-                page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
-                cachedDataSourceAdapter.runInTransaction {
-                  cachedDataSourceAdapter.dropEntities()
-                  cachedDataSourceAdapter.saveEntities(serviceResponse.getElements())
+                try {
+                  cachedDataSourceAdapter.runInTransaction {
+                    cachedDataSourceAdapter.dropEntities()
+                    cachedDataSourceAdapter.saveEntities(serviceResponse.getElements())
+                  }
+                  page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
+                  onInitialDataLoaded()
+                  helper.removeListener(networkStateListener)
+                  helper = PagingRequestHelper(ioServiceExecutor)
+                  helper.addListener(networkStateListener)
+                  resetNetworkState.postValue(NetworkState.LOADED)
+                } catch (throwable: Throwable){
+                  onError(throwable)
                 }
-                onInitialDataLoaded()
-                helper.removeListener(networkStateListener)
-                helper = PagingRequestHelper(ioServiceExecutor)
-                helper.addListener(networkStateListener)
-                resetNetworkState.postValue(NetworkState.LOADED)
               }
 
               override fun onSubscribe(d: Disposable) {}
@@ -117,17 +121,21 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
         .observeOn(ioDatabaseExecutor)
         .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
           override fun onSuccess(response: ListResponse<out NetworkValue>) {
-            page += requestedPages
-            cachedDataSourceAdapter.runInTransaction {
-              if (initialData) {
-                cachedDataSourceAdapter.dropEntities()
+            try {
+              cachedDataSourceAdapter.runInTransaction {
+                if (initialData) {
+                  cachedDataSourceAdapter.dropEntities()
+                }
+                cachedDataSourceAdapter.saveEntities(response.getElements())
               }
-              cachedDataSourceAdapter.saveEntities(response.getElements())
+              page += requestedPages
+              callback.recordSuccess()
+              if (initialData) {
+                onInitialDataLoaded()
+              }
+            } catch (throwable: Throwable) {
+              onError(throwable)
             }
-            if (initialData) {
-              onInitialDataLoaded()
-            }
-            callback.recordSuccess()
           }
 
           override fun onSubscribe(d: Disposable) {}
