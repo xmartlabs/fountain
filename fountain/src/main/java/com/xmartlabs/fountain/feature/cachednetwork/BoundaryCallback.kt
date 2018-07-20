@@ -76,6 +76,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
             .observeOn(ioDatabaseExecutor)
             .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
               override fun onSuccess(serviceResponse: ListResponse<out NetworkValue>) {
+                @Suppress("TooGenericExceptionCaught")
                 try {
                   cachedDataSourceAdapter.runInTransaction {
                     cachedDataSourceAdapter.dropEntities()
@@ -121,6 +122,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
         .observeOn(ioDatabaseExecutor)
         .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
           override fun onSuccess(response: ListResponse<out NetworkValue>) {
+            @Suppress("TooGenericExceptionCaught")
             try {
               cachedDataSourceAdapter.runInTransaction {
                 if (initialData) {
