@@ -12,14 +12,14 @@ import java.util.concurrent.Executor
 
 internal object CachedNetworkListingCreator {
   @Suppress("LongParameterList")
-  fun <Value, ServiceResponse : ListResponse<Value>> createListing(
-      cachedDataSourceAdapter: CachedDataSourceAdapter<Value>,
+  fun <NetworkValue, DataSourceValue> createListing(
+      cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
       firstPage: Int,
       ioDatabaseExecutor: Executor,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ServiceResponse>
-  ): Listing<Value> {
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>
+  ): Listing<DataSourceValue> {
 
     val boundaryCallback = BoundaryCallback(
         networkDataSourceAdapter = networkDataSourceAdapter,

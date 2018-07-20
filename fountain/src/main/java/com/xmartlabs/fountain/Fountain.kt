@@ -20,7 +20,7 @@ object Fountain {
   /**
    * Creates a [Listing] with Network support.
    *
-   * @param Value The listed entity type.
+   * @param NetworkValue The listed entity type.
    * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
    * The default value is 1.
    * @param firstPage The first page number, defined by the service.
@@ -32,8 +32,8 @@ object Fountain {
    * @return A [Listing] structure with Network Support.
    */
   @Suppress("LongParameterList")
-  fun <Value> createNetworkListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
+  fun <NetworkValue> createNetworkListing(
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<NetworkValue>>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
@@ -47,7 +47,8 @@ object Fountain {
   /**
    * Creates a [Listing] with Cache + Network Support.
    *
-   * @param Value The listed entity type.
+   * @param NetworkValue The network entity type.
+   * @param DataSourceValue The [DataSource] entity type.
    * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
    * @param cachedDataSourceAdapter The [CachedDataSourceAdapter] to take control of the [DataSource].
    * The default value is 1.
@@ -62,9 +63,9 @@ object Fountain {
    * @return A [Listing] structure with Cache + Network Support.
    */
   @Suppress("LongParameterList")
-  fun <Value> createNetworkWithCacheSupportListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>,
-      cachedDataSourceAdapter: CachedDataSourceAdapter<Value>,
+  fun <NetworkValue, DataSourceValue> createNetworkWithCacheSupportListing(
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<NetworkValue>>,
+      cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
       firstPage: Int = DEFAULT_FIRST_PAGE,
