@@ -27,7 +27,7 @@ abstract class RetryUnitTest {
     assertEquals(NetworkState.LOADING, listing.networkState.value)
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.emitter?.onError(exception)
+    mockedNetworkDataSourceAdapter.networkResultListener?.onError(exception)
     assertEquals(NetworkState.error(exception), listing.networkState.value)
 
     listing.retry.invoke()
@@ -51,7 +51,7 @@ abstract class RetryUnitTest {
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.emitter?.onError(exception)
+    mockedNetworkDataSourceAdapter.networkResultListener?.onError(exception)
     assertEquals(NetworkState.error(exception), listing.networkState.value)
 
     listing.retry.invoke()
@@ -75,7 +75,7 @@ abstract class RetryUnitTest {
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.emitter?.onError(exception)
+    mockedNetworkDataSourceAdapter.networkResultListener?.onError(exception)
     assertEquals(NetworkState.error(exception), listing.networkState.value)
 
     listing.retry.invoke()
