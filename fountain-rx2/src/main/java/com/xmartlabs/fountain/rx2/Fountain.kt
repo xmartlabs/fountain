@@ -1,7 +1,8 @@
-package com.xmartlabs.fountain
+package com.xmartlabs.fountain.rx2
 
-import android.arch.paging.DataSource
 import android.arch.paging.PagedList
+import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.IoExecutors
@@ -9,8 +10,9 @@ import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import java.util.concurrent.Executor
 
+
 /** A [Listing] factory */
-internal object Fountain {
+object Fountain {
   private const val DEFAULT_FIRST_PAGE = 1
   private const val DEFAULT_NETWORK_PAGE_SIZE = 20
   private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
@@ -33,7 +35,7 @@ internal object Fountain {
    */
   @Suppress("LongParameterList")
   fun <NetworkValue> createNetworkListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<ListResponse<out NetworkValue>>,
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
@@ -64,7 +66,7 @@ internal object Fountain {
    */
   @Suppress("LongParameterList")
   fun <NetworkValue, DataSourceValue> createNetworkWithCacheSupportListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<ListResponse<out NetworkValue>>,
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,

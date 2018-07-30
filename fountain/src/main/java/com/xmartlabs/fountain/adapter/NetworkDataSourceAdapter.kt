@@ -4,7 +4,6 @@ import android.support.annotation.CheckResult
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
-import io.reactivex.Single
 
 /** It is used to fetch each page from the service. */
 interface PageFetcher<T> {
@@ -15,19 +14,20 @@ interface PageFetcher<T> {
    * @param pageSize The page size to fetch.
    * @return A [Single] of the type [T] that represent the service call.
    */
-  @CheckResult
-  fun fetchPage(page: Int, pageSize: Int): Single<out T>
+  fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>)
 }
 
 /** It is used to handle the paging state */
-interface NetworkDataSourceAdapter<T> : PageFetcher<T> {
+interface NetworkDataSourceAdapter<T> {
   /** Returns `true` if the page [page] with a size [pageSize] can be fetched */
   @CheckResult
   fun canFetch(page: Int, pageSize: Int): Boolean
+
+  val pageFetcher: PageFetcher<T>
 }
 
 abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val firstPage: Int = 1)
-  : NetworkDataSourceAdapter<ListResponse<T>> {
+  : NetworkDataSourceAdapter<T> {
   var totalEntities: Long? = null
 
   override fun canFetch(page: Int, pageSize: Int): Boolean {
@@ -45,15 +45,20 @@ abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val first
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the entity count in the response.
  */
-class NetworkDataSourceWithTotalEntityCountAdapter<T>(
-    private val pageFetcher: PageFetcher<out ListResponseWithEntityCount<T>>,
+class NetworkDataSourceWithTotalEntityCountAdapter<T, R : ListResponseWithEntityCount<T>>(
+    pageFetcher: PageFetcher<R>,
     firstPage: Int = 1
-) : NetworkDataSourceWithKnownEntityCountAdapter<T>(firstPage) {
+) : NetworkDataSourceWithKnownEntityCountAdapter<ListResponse<T>>(firstPage) {
+  override val pageFetcher = object : PageFetcher<ListResponse<T>> {
+    override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<ListResponse<T>>) =
+        pageFetcher.fetchPage(page, pageSize, object : NetworkResultListener<R> {
+          override fun onSuccess(response: R) {
+            totalEntities = response.getEntityCount()
+            networkResultListener.onSuccess(response)
+          }
 
-  @CheckResult
-  override fun fetchPage(page: Int, pageSize: Int): Single<out ListResponseWithEntityCount<T>> {
-    return pageFetcher.fetchPage(page = page, pageSize = pageSize)
-        .doOnSuccess { response -> totalEntities = response.getEntityCount() }
+          override fun onError(t: Throwable) = networkResultListener.onError(t)
+        })
   }
 }
 
@@ -61,14 +66,19 @@ class NetworkDataSourceWithTotalEntityCountAdapter<T>(
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithPageCount] response.
  * It is used when the service returns the page count in the response.
  */
-class NetworkDataSourceWithTotalPageCountAdapter<T>(
-    private val pageFetcher: PageFetcher<out ListResponseWithPageCount<T>>,
+class NetworkDataSourceWithTotalPageCountAdapter<T, R : ListResponseWithPageCount<T>>(
+    pageFetcher: PageFetcher<R>,
     firstPage: Int = 1
-) : NetworkDataSourceWithKnownEntityCountAdapter<T>(firstPage) {
+) : NetworkDataSourceWithKnownEntityCountAdapter<ListResponse<T>>(firstPage) {
+  override val pageFetcher = object : PageFetcher<ListResponse<T>> {
+    override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<ListResponse<T>>) =
+        pageFetcher.fetchPage(page, pageSize, object : NetworkResultListener<R> {
+          override fun onSuccess(response: R) {
+            totalEntities = (pageSize.toLong() * response.getPageCount())
+            networkResultListener.onSuccess(response)
+          }
 
-  @CheckResult
-  override fun fetchPage(page: Int, pageSize: Int): Single<out ListResponseWithPageCount<T>> {
-    return pageFetcher.fetchPage(page = page, pageSize = pageSize)
-        .doOnSuccess { response -> totalEntities = (pageSize.toLong() * response.getPageCount()) }
+          override fun onError(t: Throwable) = networkResultListener.onError(t)
+        })
   }
 }

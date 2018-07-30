@@ -8,16 +8,14 @@ import android.support.annotation.AnyThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.subscribeOn
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
+import com.xmartlabs.fountain.adapter.NetworkResultListener
 import java.util.concurrent.Executor
 
-internal class NetworkPagedDataSource<T>(
+internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<T>>,
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
     private var initData: List<T>?
 ) : PageKeyedDataSource<Int, T>() {
 
@@ -39,16 +37,13 @@ internal class NetworkPagedDataSource<T>(
       if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize)
           && !isLoadingInitialData) {
         networkState.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
-            .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
+        networkDataSourceAdapter.pageFetcher.fetchPage(page = params.key, pageSize = params.requestedLoadSize,
+            networkResultListener = object : NetworkResultListener<ServiceResponse> {
+              override fun onSuccess(response: ServiceResponse) {
                 retry = null
-                callback.onResult(data.getElements(), params.key + 1)
+                callback.onResult(response.getElements(), params.key + 1)
                 networkState.postValue(NetworkState.LOADED)
               }
-
-              override fun onSubscribe(d: Disposable) {}
 
               override fun onError(t: Throwable) {
                 retry = {
@@ -73,19 +68,16 @@ internal class NetworkPagedDataSource<T>(
         isLoadingInitialData = true
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = params.requestedLoadSize)
-            .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
+        networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage, pageSize = params.requestedLoadSize,
+            networkResultListener = object : NetworkResultListener<ServiceResponse> {
+              override fun onSuccess(response: ServiceResponse) {
                 retry = null
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
                 onInitialDataLoaded()
                 val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
-                callback.onResult(data.getElements(), -1, nextPage)
+                callback.onResult(response.getElements(), -1, nextPage)
               }
-
-            override fun onSubscribe(d: Disposable) {}
 
               override fun onError(t: Throwable) {
                 onInitialDataLoaded()
@@ -114,17 +106,14 @@ internal class NetworkPagedDataSource<T>(
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
         resetNetworkState.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
-            .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
+        networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint,
+            networkResultListener = object : NetworkResultListener<ServiceResponse> {
+              override fun onSuccess(response: ServiceResponse) {
                 onInitialDataLoaded()
                 resetNetworkState.postValue(NetworkState.LOADED)
-                resetDataCollection.postValue(data.getElements())
+                resetDataCollection.postValue(response.getElements())
                 invalidate()
               }
-
-              override fun onSubscribe(d: Disposable) {}
 
               override fun onError(t: Throwable) {
                 onInitialDataLoaded()

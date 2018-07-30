@@ -32,12 +32,14 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
+    api project(':fountain')
+    implementation "android.arch.paging:common:${libraryVersion.archPaging}"
+    implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
 
     testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
     testImplementation "junit:junit:${libraryVersion.junit}"
     testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 dokka {
@@ -69,4 +71,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+repositories {
+    mavenCentral()
 }

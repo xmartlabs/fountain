@@ -9,12 +9,12 @@ import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
-internal object NetworkPagedListingCreator {
+object NetworkPagedListingCreator {
   fun <Value> createListing(
       firstPage: Int,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Value>>
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out Value>>
   ): Listing<Value> {
     val sourceFactory = NetworkPagedDataSourceFactory(
         firstPage = firstPage,

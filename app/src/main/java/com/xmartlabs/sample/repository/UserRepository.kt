@@ -2,11 +2,11 @@ package com.xmartlabs.sample.repository
 
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
-import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceWithTotalEntityCountAdapter
-import com.xmartlabs.fountain.adapter.PageFetcher
+import com.xmartlabs.fountain.rx2.Fountain
+import com.xmartlabs.fountain.rx2.adapter.NetworkDataSourceAdapterProvider
+import com.xmartlabs.fountain.rx2.adapter.RxPageFetcher
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.User
@@ -25,12 +25,13 @@ class UserRepository @Inject constructor(
 ) {
   @MainThread
   fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : PageFetcher<GhListResponse<User>> {
+    val pageFetcher = (object : RxPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = NetworkDataSourceWithTotalEntityCountAdapter(pageFetcher = pageFetcher)
+    val networkDataSourceAdapter = NetworkDataSourceAdapterProvider.provideNetworkDataSourceWithTotalEntityCount(
+        pageFetcher = pageFetcher)
     return Fountain.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
@@ -39,11 +40,13 @@ class UserRepository @Inject constructor(
 
   @MainThread
   fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : PageFetcher<GhListResponse<User>> {
+    val pageFetcher = (object : RxPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
-    val networkDataSourceAdapter = NetworkDataSourceWithTotalEntityCountAdapter(pageFetcher = pageFetcher)
+
+    val networkDataSourceAdapter = NetworkDataSourceAdapterProvider.provideNetworkDataSourceWithTotalEntityCount(
+        pageFetcher = pageFetcher)
 
     val cachedDataSourceAdapter = object : CachedDataSourceAdapter<User, User> {
       override fun getDataSourceFactory() = userDao.findUsersByName(userName)

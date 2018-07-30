@@ -7,13 +7,13 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
-internal class NetworkPagedDataSourceFactory<T>(
+internal class NetworkPagedDataSourceFactory<T, ServiceResponse : ListResponse<out T>> (
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<T>>
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>
 ) : DataSource.Factory<Int, T>() {
-  val sourceLiveData = MutableLiveData<NetworkPagedDataSource<T>>()
+  val sourceLiveData = MutableLiveData<NetworkPagedDataSource<T, ServiceResponse>>()
   private val resetDataList = MutableLiveData<List<T>>()
 
   fun resetData() = sourceLiveData.value?.resetData(resetDataList)

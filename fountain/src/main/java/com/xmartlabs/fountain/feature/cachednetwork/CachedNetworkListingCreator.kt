@@ -10,7 +10,7 @@ import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
-internal object CachedNetworkListingCreator {
+object CachedNetworkListingCreator {
   @Suppress("LongParameterList")
   fun <NetworkValue, DataSourceValue> createListing(
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,

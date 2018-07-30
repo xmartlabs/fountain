@@ -10,15 +10,11 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.observeOn
-import com.xmartlabs.fountain.common.subscribeOn
-import io.reactivex.Single
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
+import com.xmartlabs.fountain.adapter.NetworkResultListener
 import java.util.concurrent.Executor
 
-internal class BoundaryCallback<NetworkValue, DataSourceValue>(
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
+internal class BoundaryCallback<NetworkValue, DataSourceValue, NetworkResponse : ListResponse<out NetworkValue>>(
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<NetworkResponse>,
     private val cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
     private val pagedListConfig: PagedList.Config,
     private val ioServiceExecutor: Executor,
@@ -38,8 +34,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
     synchronized(this) {
       isLoadingInitialData = true
       helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-        networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
-            .createWebserviceCallback(it, pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize, true)
+        val requestedPages = pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
+        networkDataSourceAdapter.pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint,
+            networkResultListener = createWebserviceListener(it, requestedPages, true))
       }
     }
   }
@@ -53,8 +50,8 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
       synchronized(this) {
         if (!isLoadingInitialData) {
           helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
-                .createWebserviceCallback(it, 1)
+            networkDataSourceAdapter.pageFetcher.fetchPage(page = page, pageSize = pagedListConfig.pageSize,
+                networkResultListener = createWebserviceListener(it, 1))
           }
         }
       }
@@ -71,16 +68,14 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
         resetNetworkState.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
-            .subscribeOn(ioServiceExecutor)
-            .observeOn(ioDatabaseExecutor)
-            .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
-              override fun onSuccess(serviceResponse: ListResponse<out NetworkValue>) {
+        networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint,
+            networkResultListener = object : NetworkResultListener<NetworkResponse> {
+              override fun onSuccess(response: NetworkResponse) {
                 @Suppress("TooGenericExceptionCaught")
                 try {
                   cachedDataSourceAdapter.runInTransaction {
                     cachedDataSourceAdapter.dropEntities()
-                    cachedDataSourceAdapter.saveEntities(serviceResponse.getElements())
+                    cachedDataSourceAdapter.saveEntities(response.getElements())
                   }
                   page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
                   onInitialDataLoaded()
@@ -88,16 +83,14 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
                   helper = PagingRequestHelper(ioServiceExecutor)
                   helper.addListener(networkStateListener)
                   resetNetworkState.postValue(NetworkState.LOADED)
-                } catch (throwable: Throwable){
+                } catch (throwable: Throwable) {
                   onError(throwable)
                 }
               }
 
-              override fun onSubscribe(d: Disposable) {}
-
-              override fun onError(e: Throwable) {
+              override fun onError(t: Throwable) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.error(e))
+                resetNetworkState.postValue(NetworkState.error(t))
               }
             })
       } else {
@@ -113,42 +106,35 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue>(
     }
   }
 
-  private fun Single<out ListResponse<out NetworkValue>>.createWebserviceCallback(
+  private fun createWebserviceListener(
       callback: PagingRequestHelper.Request.Callback,
       requestedPages: Int,
-      initialData: Boolean = false) {
-    this
-        .subscribeOn(ioServiceExecutor)
-        .observeOn(ioDatabaseExecutor)
-        .subscribe(object : SingleObserver<ListResponse<out NetworkValue>> {
-          override fun onSuccess(response: ListResponse<out NetworkValue>) {
-            @Suppress("TooGenericExceptionCaught")
-            try {
-              cachedDataSourceAdapter.runInTransaction {
-                if (initialData) {
-                  cachedDataSourceAdapter.dropEntities()
-                }
-                cachedDataSourceAdapter.saveEntities(response.getElements())
-              }
-              page += requestedPages
-              callback.recordSuccess()
-              if (initialData) {
-                onInitialDataLoaded()
-              }
-            } catch (throwable: Throwable) {
-              onError(throwable)
-            }
+      initialData: Boolean = false) = object : NetworkResultListener<NetworkResponse> {
+    override fun onSuccess(response: NetworkResponse) {
+      @Suppress("TooGenericExceptionCaught")
+      try {
+        cachedDataSourceAdapter.runInTransaction {
+          if (initialData) {
+            cachedDataSourceAdapter.dropEntities()
           }
+          cachedDataSourceAdapter.saveEntities(response.getElements())
+        }
+        page += requestedPages
+        callback.recordSuccess()
+        if (initialData) {
+          onInitialDataLoaded()
+        }
+      } catch (throwable: Throwable) {
+        onError(throwable)
+      }
+    }
 
-          override fun onSubscribe(d: Disposable) {}
-
-          override fun onError(t: Throwable) {
-            if (initialData) {
-              onInitialDataLoaded()
-            }
-            callback.recordFailure(t)
-          }
-        })
+    override fun onError(t: Throwable) {
+      if (initialData) {
+        onInitialDataLoaded()
+      }
+      callback.recordFailure(t)
+    }
   }
 
   private fun PagingRequestHelper.StatusReport.getError(): Throwable = PagingRequestHelper.RequestType.values()
