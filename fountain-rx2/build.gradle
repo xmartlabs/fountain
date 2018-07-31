@@ -35,11 +35,11 @@ dependencies {
     api project(':fountain')
     implementation "android.arch.paging:common:${libraryVersion.archPaging}"
     implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
     testImplementation "junit:junit:${libraryVersion.junit}"
     testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 dokka {
@@ -57,7 +57,7 @@ task sourcesJar(type: Jar) {
 }
 
 task javadoc(type: Javadoc) {
-    failOnError  false
+    failOnError false
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile

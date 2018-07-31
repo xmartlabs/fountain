@@ -16,7 +16,7 @@ fun MockedNetworkDataSourceAdapter<ListResponse<Int>>.sendPageResponse(page: Int
 fun MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>.sendListResponseWithEntityCountResponse(
     entityCount: Long,
     page: Int = 0) {
-  networkResultListener?.onSuccess(object : ListResponseWithEntityCount<Int> {
+  networkResultListener.onSuccess(object : ListResponseWithEntityCount<Int> {
     override fun getEntityCount() = entityCount
     override fun getElements() = generateIntPageResponseList(page)
   })
@@ -25,26 +25,26 @@ fun MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>.sendLis
 fun MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>.sendListResponseWithEntityCountResponse(
     entityCount: Long,
     elements: List<Int>) {
-  networkResultListener?.onSuccess(object : ListResponseWithEntityCount<Int> {
+  networkResultListener.onSuccess(object : ListResponseWithEntityCount<Int> {
     override fun getEntityCount() = entityCount
     override fun getElements() = elements
   })
 }
 
-fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponse(
+fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponseIfIsRequired(
     pageCount: Long,
     page: Int = 0) {
-  networkResultListener?.onSuccess(object : ListResponseWithPageCount<Int> {
+  networkResultListener.onSuccess(object : ListResponseWithPageCount<Int> {
     override fun getPageCount() = pageCount
 
     override fun getElements() = generateIntPageResponseList(page)
   })
 }
 
-fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponse(
+fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponseIfIsRequired(
     pageCount: Long,
     elements: List<Int>) {
-  networkResultListener?.onSuccess(object : ListResponseWithPageCount<Int> {
+  networkResultListener.onSuccess(object : ListResponseWithPageCount<Int> {
     override fun getPageCount() = pageCount
 
     override fun getElements() = elements
