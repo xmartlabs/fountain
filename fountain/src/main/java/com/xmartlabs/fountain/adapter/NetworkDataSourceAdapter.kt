@@ -1,9 +1,16 @@
 package com.xmartlabs.fountain.adapter
 
 import android.support.annotation.CheckResult
+import android.support.annotation.NonNull
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
+
+interface NetworkResultListener<T> {
+  fun onSuccess(@NonNull response: T)
+
+  fun onError(@NonNull t: Throwable)
+}
 
 /** It is used to fetch each page from the service. */
 interface PageFetcher<T> {

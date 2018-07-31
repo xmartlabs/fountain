@@ -33,25 +33,27 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
   override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {}
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
-    synchronized(this) {
-      if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize)
-          && !isLoadingInitialData) {
-        networkState.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.pageFetcher.fetchPage(page = params.key, pageSize = params.requestedLoadSize,
-            networkResultListener = object : NetworkResultListener<ServiceResponse> {
-              override fun onSuccess(response: ServiceResponse) {
-                retry = null
-                callback.onResult(response.getElements(), params.key + 1)
-                networkState.postValue(NetworkState.LOADED)
-              }
-
-              override fun onError(t: Throwable) {
-                retry = {
-                  loadAfter(params, callback)
+    ioServiceExecutor.execute {
+      synchronized(this) {
+        if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize)
+            && !isLoadingInitialData) {
+          networkState.postValue(NetworkState.LOADING)
+          networkDataSourceAdapter.pageFetcher.fetchPage(page = params.key, pageSize = params.requestedLoadSize,
+              networkResultListener = object : NetworkResultListener<ServiceResponse> {
+                override fun onSuccess(response: ServiceResponse) {
+                  retry = null
+                  callback.onResult(response.getElements(), params.key + 1)
+                  networkState.postValue(NetworkState.LOADED)
                 }
-                networkState.postValue(NetworkState.error(t))
-              }
-            })
+
+                override fun onError(t: Throwable) {
+                  retry = {
+                    loadAfter(params, callback)
+                  }
+                  networkState.postValue(NetworkState.error(t))
+                }
+              })
+        }
       }
     }
   }
@@ -64,31 +66,33 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
 
   override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, T>) {
     if (initData == null) {
-      synchronized(this) {
-        isLoadingInitialData = true
-        networkState.postValue(NetworkState.LOADING)
-        initialLoad.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage, pageSize = params.requestedLoadSize,
-            networkResultListener = object : NetworkResultListener<ServiceResponse> {
-              override fun onSuccess(response: ServiceResponse) {
-                retry = null
-                networkState.postValue(NetworkState.LOADED)
-                initialLoad.postValue(NetworkState.LOADED)
-                onInitialDataLoaded()
-                val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
-                callback.onResult(response.getElements(), -1, nextPage)
-              }
-
-              override fun onError(t: Throwable) {
-                onInitialDataLoaded()
-                retry = {
-                  loadInitial(params, callback)
+      ioServiceExecutor.execute {
+        synchronized(this) {
+          isLoadingInitialData = true
+          networkState.postValue(NetworkState.LOADING)
+          initialLoad.postValue(NetworkState.LOADING)
+          networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage, pageSize = params.requestedLoadSize,
+              networkResultListener = object : NetworkResultListener<ServiceResponse> {
+                override fun onSuccess(response: ServiceResponse) {
+                  retry = null
+                  networkState.postValue(NetworkState.LOADED)
+                  initialLoad.postValue(NetworkState.LOADED)
+                  onInitialDataLoaded()
+                  val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
+                  callback.onResult(response.getElements(), -1, nextPage)
                 }
-                val error = NetworkState.error(t)
-                networkState.postValue(error)
-                initialLoad.postValue(error)
-              }
-            })
+
+                override fun onError(t: Throwable) {
+                  onInitialDataLoaded()
+                  retry = {
+                    loadInitial(params, callback)
+                  }
+                  val error = NetworkState.error(t)
+                  networkState.postValue(error)
+                  initialLoad.postValue(error)
+                }
+              })
+        }
       }
     } else {
       retry = null
@@ -102,26 +106,29 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
   @AnyThread
   fun resetData(resetDataCollection: MutableLiveData<List<T>>): LiveData<NetworkState> {
     val resetNetworkState = MutableLiveData<NetworkState>()
-    synchronized(this) {
-      if (!isLoadingInitialData) {
-        isLoadingInitialData = true
-        resetNetworkState.postValue(NetworkState.LOADING)
-        networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint,
-            networkResultListener = object : NetworkResultListener<ServiceResponse> {
-              override fun onSuccess(response: ServiceResponse) {
-                onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.LOADED)
-                resetDataCollection.postValue(response.getElements())
-                invalidate()
-              }
+    ioServiceExecutor.execute {
+      synchronized(this) {
+        if (!isLoadingInitialData) {
+          isLoadingInitialData = true
+          resetNetworkState.postValue(NetworkState.LOADING)
+          networkDataSourceAdapter.pageFetcher.fetchPage(page = firstPage,
+              pageSize = pagedListConfig.initialLoadSizeHint,
+              networkResultListener = object : NetworkResultListener<ServiceResponse> {
+                override fun onSuccess(response: ServiceResponse) {
+                  onInitialDataLoaded()
+                  resetNetworkState.postValue(NetworkState.LOADED)
+                  resetDataCollection.postValue(response.getElements())
+                  invalidate()
+                }
 
-              override fun onError(t: Throwable) {
-                onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.error(t))
-              }
-            })
-      } else {
-        resetNetworkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
+                override fun onError(t: Throwable) {
+                  onInitialDataLoaded()
+                  resetNetworkState.postValue(NetworkState.error(t))
+                }
+              })
+        } else {
+          resetNetworkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
+        }
       }
     }
     return resetNetworkState
