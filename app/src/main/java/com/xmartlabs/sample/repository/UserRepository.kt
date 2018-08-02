@@ -4,8 +4,8 @@ import android.arch.paging.PagedList
 import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.rx2.Fountain
-import com.xmartlabs.fountain.rx2.adapter.NetworkDataSourceAdapterProvider
+import com.xmartlabs.fountain.rx2.FountainRxSupport
+import com.xmartlabs.fountain.rx2.adapter.NetworkDataSourceAdapterFactory
 import com.xmartlabs.fountain.rx2.adapter.RxPageFetcher
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
@@ -30,9 +30,9 @@ class UserRepository @Inject constructor(
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = NetworkDataSourceAdapterProvider.provideNetworkDataSourceWithTotalEntityCount(
+    val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.provideNetworkDataSourceWithTotalEntityCount(
         pageFetcher = pageFetcher)
-    return Fountain.createNetworkListing(
+    return FountainRxSupport.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
     )
@@ -45,7 +45,7 @@ class UserRepository @Inject constructor(
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = NetworkDataSourceAdapterProvider.provideNetworkDataSourceWithTotalEntityCount(
+    val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.provideNetworkDataSourceWithTotalEntityCount(
         pageFetcher = pageFetcher)
 
     val cachedDataSourceAdapter = object : CachedDataSourceAdapter<User, User> {
@@ -69,7 +69,7 @@ class UserRepository @Inject constructor(
         userDao.deleteUserSearch(userName)
       }
     }
-    return Fountain.createNetworkWithCacheSupportListing(
+    return FountainRxSupport.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         cachedDataSourceAdapter = cachedDataSourceAdapter,
         pagedListConfig = pagedListConfig

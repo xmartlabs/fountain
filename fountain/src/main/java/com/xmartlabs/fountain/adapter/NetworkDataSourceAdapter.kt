@@ -5,6 +5,7 @@ import android.support.annotation.NonNull
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
+import com.xmartlabs.fountain.common.FountainConstants
 
 interface NetworkResultListener<T> {
   fun onSuccess(@NonNull response: T)
@@ -33,11 +34,18 @@ interface NetworkDataSourceAdapter<T> {
   val pageFetcher: PageFetcher<T>
 }
 
-abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val firstPage: Int = 1)
-  : NetworkDataSourceAdapter<T> {
-  var totalEntities: Long? = null
+class KnownSizeResponseManager(private val firstPage : Int) {
+  private var totalEntities: Long? = null
 
-  override fun canFetch(page: Int, pageSize: Int): Boolean {
+  fun onTotalEntityResponseArrived(response: ListResponseWithEntityCount<*>) {
+    totalEntities = response.getEntityCount()
+  }
+
+  fun onTotalPageCountResponseArrived(requestedPageSize: Int, response: ListResponseWithPageCount<*>) {
+    totalEntities = requestedPageSize * response.getPageCount()
+  }
+
+  fun canFetch(page: Int, pageSize: Int): Boolean {
     if (totalEntities == null) {
       return true
     }
@@ -54,13 +62,17 @@ abstract class NetworkDataSourceWithKnownEntityCountAdapter<T>(private val first
  */
 class NetworkDataSourceWithTotalEntityCountAdapter<T, R : ListResponseWithEntityCount<T>>(
     pageFetcher: PageFetcher<R>,
-    firstPage: Int = 1
-) : NetworkDataSourceWithKnownEntityCountAdapter<ListResponse<T>>(firstPage) {
+    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+) : NetworkDataSourceAdapter<ListResponse<T>> {
+  private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
+
+  override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)
+
   override val pageFetcher = object : PageFetcher<ListResponse<T>> {
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<ListResponse<T>>) =
         pageFetcher.fetchPage(page, pageSize, object : NetworkResultListener<R> {
           override fun onSuccess(response: R) {
-            totalEntities = response.getEntityCount()
+            knownSizeResponseManager.onTotalEntityResponseArrived(response)
             networkResultListener.onSuccess(response)
           }
 
@@ -75,13 +87,17 @@ class NetworkDataSourceWithTotalEntityCountAdapter<T, R : ListResponseWithEntity
  */
 class NetworkDataSourceWithTotalPageCountAdapter<T, R : ListResponseWithPageCount<T>>(
     pageFetcher: PageFetcher<R>,
-    firstPage: Int = 1
-) : NetworkDataSourceWithKnownEntityCountAdapter<ListResponse<T>>(firstPage) {
+    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+) : NetworkDataSourceAdapter<ListResponse<T>> {
+  private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
+
+  override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)
+
   override val pageFetcher = object : PageFetcher<ListResponse<T>> {
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<ListResponse<T>>) =
         pageFetcher.fetchPage(page, pageSize, object : NetworkResultListener<R> {
           override fun onSuccess(response: R) {
-            totalEntities = (pageSize.toLong() * response.getPageCount())
+            knownSizeResponseManager.onTotalPageCountResponseArrived(pageSize, response)
             networkResultListener.onSuccess(response)
           }
 

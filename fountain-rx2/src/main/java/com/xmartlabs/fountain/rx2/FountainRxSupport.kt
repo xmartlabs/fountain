@@ -5,20 +5,16 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.IoExecutors
+import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
+import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
+import com.xmartlabs.fountain.rx2.adapter.toNetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 
 /** A [Listing] factory */
-object Fountain {
-  private const val DEFAULT_FIRST_PAGE = 1
-  private const val DEFAULT_NETWORK_PAGE_SIZE = 20
-  private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
-      .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
-      .build()
-
+object FountainRxSupport {
   /**
    * Creates a [Listing] with Network support.
    *
@@ -35,15 +31,15 @@ object Fountain {
    */
   @Suppress("LongParameterList")
   fun <NetworkValue> createNetworkListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
-      firstPage: Int = DEFAULT_FIRST_PAGE,
-      ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
-      pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
+      networkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
+      firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE,
+      ioServiceExecutor: Executor = FountainConstants.NETWORK_EXECUTOR,
+      pagedListConfig: PagedList.Config = FountainConstants.DEFAULT_PAGED_LIST_CONFIG
   ) = NetworkPagedListingCreator.createListing(
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter
+      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
   )
 
   /**
@@ -66,18 +62,18 @@ object Fountain {
    */
   @Suppress("LongParameterList")
   fun <NetworkValue, DataSourceValue> createNetworkWithCacheSupportListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
+      networkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
-      ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
-      ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,
-      firstPage: Int = DEFAULT_FIRST_PAGE,
-      pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
+      ioServiceExecutor: Executor = FountainConstants.NETWORK_EXECUTOR,
+      ioDatabaseExecutor: Executor = FountainConstants.DATABASE_EXECUTOR,
+      firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE,
+      pagedListConfig: PagedList.Config = FountainConstants.DEFAULT_PAGED_LIST_CONFIG
   ) = CachedNetworkListingCreator.createListing(
       cachedDataSourceAdapter = cachedDataSourceAdapter,
       firstPage = firstPage,
       ioDatabaseExecutor = ioDatabaseExecutor,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter
+      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
   )
 }
