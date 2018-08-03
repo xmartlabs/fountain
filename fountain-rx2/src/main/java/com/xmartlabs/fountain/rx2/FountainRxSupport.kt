@@ -4,7 +4,6 @@ import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
@@ -19,9 +18,9 @@ object FountainRxSupport {
    * Creates a [Listing] with Network support.
    *
    * @param NetworkValue The listed entity type.
-   * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
-   * The default value is 1.
+   * @param networkDataSourceAdapter The [RxNetworkDataSourceAdapter] to manage the paged service endpoint.
    * @param firstPage The first page number, defined by the service.
+   * The default value is 1.
    * @param ioServiceExecutor The [Executor] with which the service call will be made.
    * By default, it is a pool of 5 threads.
    * @param pagedListConfig The paged list configuration.
@@ -47,10 +46,10 @@ object FountainRxSupport {
    *
    * @param NetworkValue The network entity type.
    * @param DataSourceValue The [DataSource] entity type.
-   * @param networkDataSourceAdapter The [NetworkDataSourceAdapter] to manage the paged service endpoint.
+   * @param networkDataSourceAdapter The [RxNetworkDataSourceAdapter] to manage the paged service endpoint.
    * @param cachedDataSourceAdapter The [CachedDataSourceAdapter] to take control of the [DataSource].
-   * The default value is 1.
    * @param firstPage The first page number, defined by the service.
+   * The default value is 1.
    * @param ioServiceExecutor The [Executor] with which the service call will be made.
    * By default, it is a pool of 5 threads.
    * @param ioDatabaseExecutor The [Executor] through which the database transactions will be made.

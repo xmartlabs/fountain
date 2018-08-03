@@ -7,11 +7,7 @@ import com.xmartlabs.fountain.adapter.KnownSizeResponseManager
 import com.xmartlabs.fountain.common.FountainConstants
 import io.reactivex.Single
 
-/**
- * Created by matias on 21/07/18.
- */
-
-/** It is used to fetch each page from the service. */
+/** It is used to fetch each page from the service using [RxJava](https://github.com/ReactiveX/RxJava). */
 interface RxPageFetcher<T> {
   /**
    * Fetches the page [page] with a size [pageSize] from the service.

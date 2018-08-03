@@ -60,7 +60,7 @@ class KnownSizeResponseManager(private val firstPage : Int) {
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the entity count in the response.
  */
-class NetworkDataSourceWithTotalEntityCountAdapter<T, R : ListResponseWithEntityCount<T>>(
+internal class NetworkDataSourceWithTotalEntityCountAdapter<T, R : ListResponseWithEntityCount<T>>(
     pageFetcher: PageFetcher<R>,
     firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) : NetworkDataSourceAdapter<ListResponse<T>> {
@@ -85,7 +85,7 @@ class NetworkDataSourceWithTotalEntityCountAdapter<T, R : ListResponseWithEntity
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithPageCount] response.
  * It is used when the service returns the page count in the response.
  */
-class NetworkDataSourceWithTotalPageCountAdapter<T, R : ListResponseWithPageCount<T>>(
+internal class NetworkDataSourceWithTotalPageCountAdapter<T, R : ListResponseWithPageCount<T>>(
     pageFetcher: PageFetcher<R>,
     firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) : NetworkDataSourceAdapter<ListResponse<T>> {

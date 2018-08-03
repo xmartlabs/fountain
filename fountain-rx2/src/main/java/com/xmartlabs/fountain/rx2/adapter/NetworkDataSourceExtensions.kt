@@ -33,6 +33,3 @@ internal fun <T> RxNetworkDataSourceAdapter<T>.toNetworkDataSourceAdapter()
         this@toNetworkDataSourceAdapter.canFetch(page = page, pageSize = pageSize)
   }
 }
-
-
-
