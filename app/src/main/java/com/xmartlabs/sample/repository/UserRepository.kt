@@ -30,7 +30,7 @@ class UserRepository @Inject constructor(
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.provideNetworkDataSourceWithTotalEntityCount(
+    val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(
         pageFetcher = pageFetcher)
     return FountainRxSupport.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
@@ -45,7 +45,7 @@ class UserRepository @Inject constructor(
           userService.searchUsers(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.provideNetworkDataSourceWithTotalEntityCount(
+    val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(
         pageFetcher = pageFetcher)
 
     val cachedDataSourceAdapter = object : CachedDataSourceAdapter<User, User> {

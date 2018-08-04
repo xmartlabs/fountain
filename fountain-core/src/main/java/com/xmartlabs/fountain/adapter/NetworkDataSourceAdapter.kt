@@ -6,10 +6,14 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.common.FountainConstants
+import com.xmartlabs.fountain.common.KnownSizeResponseManager
 
+
+/** It is used to get notify the service response. */
 interface NetworkResultListener<T> {
+  /** Invoked when the service returned a valid response. */
   fun onSuccess(@NonNull response: T)
-
+  /** Invoked when the service request thrown an error. */
   fun onError(@NonNull t: Throwable)
 }
 
@@ -32,28 +36,6 @@ interface NetworkDataSourceAdapter<T> {
   fun canFetch(page: Int, pageSize: Int): Boolean
 
   val pageFetcher: PageFetcher<T>
-}
-
-class KnownSizeResponseManager(private val firstPage : Int) {
-  private var totalEntities: Long? = null
-
-  fun onTotalEntityResponseArrived(response: ListResponseWithEntityCount<*>) {
-    totalEntities = response.getEntityCount()
-  }
-
-  fun onTotalPageCountResponseArrived(requestedPageSize: Int, response: ListResponseWithPageCount<*>) {
-    totalEntities = requestedPageSize * response.getPageCount()
-  }
-
-  fun canFetch(page: Int, pageSize: Int): Boolean {
-    if (totalEntities == null) {
-      return true
-    }
-
-    val pageCount = if (firstPage == 0) page + 1 else page
-    val firstEntityOfPagePosition = (pageCount - 1) * pageSize + 1
-    return firstEntityOfPagePosition <= totalEntities!!
-  }
 }
 
 /**

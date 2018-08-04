@@ -1,11 +1,12 @@
 package com.xmartlabs.fountain.common
 
 import android.arch.paging.PagedList
-import com.xmartlabs.fountain.Fountain
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
+import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
+import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 
 object IntMockedListingCreator {
   private const val DEFAULT_FIRST_PAGE = 1
@@ -18,7 +19,7 @@ object IntMockedListingCreator {
   fun createNetworkListing(
       mockedNetworkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
-    return Fountain.createNetworkListing(
+    return NetworkPagedListingCreator.createListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),
         firstPage = DEFAULT_FIRST_PAGE,
@@ -55,7 +56,7 @@ object IntMockedListingCreator {
       }
     }
 
-    return Fountain.createNetworkWithCacheSupportListing(
+    return CachedNetworkListingCreator.createListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),

@@ -13,5 +13,4 @@ object FountainConstants{
   val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
       .build()
-
 }

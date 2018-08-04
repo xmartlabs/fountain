@@ -32,10 +32,10 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    api project(':fountain')
+    api project(':fountain-core')
     implementation "android.arch.paging:common:${libraryVersion.archPaging}"
     implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
 
     testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
     testImplementation "junit:junit:${libraryVersion.junit}"
