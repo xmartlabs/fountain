@@ -38,6 +38,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
 
     testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
+    testImplementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
     testImplementation "junit:junit:${libraryVersion.junit}"
     testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
 }
