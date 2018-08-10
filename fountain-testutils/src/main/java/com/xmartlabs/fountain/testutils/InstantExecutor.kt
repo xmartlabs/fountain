@@ -1,4 +1,4 @@
-package com.xmartlabs.fountain.common
+package com.xmartlabs.fountain.testutils
 
 import java.util.concurrent.Executor
 

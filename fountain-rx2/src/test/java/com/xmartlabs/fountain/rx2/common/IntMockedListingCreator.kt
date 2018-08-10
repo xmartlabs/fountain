@@ -6,6 +6,8 @@ import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.rx2.FountainRxSupport
 import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.InstantExecutor
+import com.xmartlabs.fountain.testutils.IntCacheDataSourceFactory
 
 object IntMockedListingCreator {
   private const val DEFAULT_FIRST_PAGE = 1

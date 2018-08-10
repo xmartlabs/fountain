@@ -4,11 +4,11 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
-import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.extensions.generateIntPageResponseList
-import com.xmartlabs.fountain.common.extensions.getPagedList
-import com.xmartlabs.fountain.common.extensions.mockLifecycleEvents
-import com.xmartlabs.fountain.common.extensions.sendPageResponse
+import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
+import com.xmartlabs.fountain.testutils.extensions.getPagedList
+import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
+import com.xmartlabs.fountain.testutils.extensions.sendPageResponse
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

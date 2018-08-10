@@ -1,4 +1,4 @@
-package com.xmartlabs.fountain.common
+package com.xmartlabs.fountain.testutils
 
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener

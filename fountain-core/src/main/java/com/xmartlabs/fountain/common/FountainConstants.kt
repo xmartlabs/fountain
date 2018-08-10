@@ -3,7 +3,7 @@ package com.xmartlabs.fountain.common
 import android.arch.paging.PagedList
 import java.util.concurrent.Executors
 
-object FountainConstants{
+object FountainConstants {
   @Suppress("MagicNumber")
   val NETWORK_EXECUTOR by lazy { Executors.newFixedThreadPool(5) }
   val DATABASE_EXECUTOR by lazy { Executors.newSingleThreadExecutor() }

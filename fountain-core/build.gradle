@@ -38,6 +38,7 @@ dependencies {
     testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
     testImplementation "junit:junit:${libraryVersion.junit}"
     testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
+    testImplementation project(':fountain-testutils')
 }
 
 dokka {

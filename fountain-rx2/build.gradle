@@ -41,6 +41,7 @@ dependencies {
     testImplementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
     testImplementation "junit:junit:${libraryVersion.junit}"
     testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
+    testImplementation project(':fountain-testutils')
 }
 
 dokka {

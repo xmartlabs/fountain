@@ -28,7 +28,6 @@ object NetworkDataSourceAdapterFactory {
         override fun fetchPage(page: Int, pageSize: Int): Single<ListResponseValue> =
             pageFetcher.fetchPage(page, pageSize)
                 .doOnSuccess { knownSizeResponseManager.onTotalEntityResponseArrived(it) }
-
       }
 
     override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)
@@ -54,7 +53,6 @@ object NetworkDataSourceAdapterFactory {
         override fun fetchPage(page: Int, pageSize: Int): Single<ListResponseValue> =
             pageFetcher.fetchPage(page, pageSize)
                 .doOnSuccess { knownSizeResponseManager.onTotalPageCountResponseArrived(pageSize, it) }
-
       }
 
     override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)

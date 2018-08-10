@@ -1,11 +1,11 @@
-package com.xmartlabs.fountain.common.extensions
+package com.xmartlabs.fountain.testutils.extensions
 
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
-import com.xmartlabs.fountain.common.IntMockedListingCreator
-import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.MockedNetworkDataSourcePageFetcher
+import com.xmartlabs.fountain.common.FountainConstants
+import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.MockedNetworkDataSourcePageFetcher
 
 fun MockedNetworkDataSourceAdapter<ListResponse<Int>>.sendPageResponse(page: Int = 0) {
   networkResultListener?.onSuccess(object : ListResponse<Int> {
@@ -56,8 +56,8 @@ fun generateIntPageResponseList(vararg pages: Int): List<Int> {
       .distinct()
       .sorted()
       .flatMap {
-        val start = it * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE
-        val end = (it + 1) * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1
+        val start = it * FountainConstants.DEFAULT_NETWORK_PAGE_SIZE
+        val end = (it + 1) * FountainConstants.DEFAULT_NETWORK_PAGE_SIZE - 1
         (start..end).toList()
       }
 }

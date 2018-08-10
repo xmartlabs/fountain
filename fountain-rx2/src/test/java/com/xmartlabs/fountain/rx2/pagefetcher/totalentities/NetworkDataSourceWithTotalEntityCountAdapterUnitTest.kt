@@ -7,11 +7,13 @@ import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.rx2.adapter.NetworkDataSourceAdapterFactory
 import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
 import com.xmartlabs.fountain.rx2.common.IntMockedListingCreator
-import com.xmartlabs.fountain.rx2.common.extensions.generateIntPageResponseList
-import com.xmartlabs.fountain.rx2.common.extensions.getPagedList
-import com.xmartlabs.fountain.rx2.common.extensions.getPagedListSize
-import com.xmartlabs.fountain.rx2.common.extensions.mockLifecycleEvents
-import com.xmartlabs.fountain.rx2.common.extensions.sendListResponseWithEntityCountResponse
+import com.xmartlabs.fountain.rx2.common.toRxPageFetcher
+import com.xmartlabs.fountain.testutils.MockedNetworkDataSourcePageFetcher
+import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
+import com.xmartlabs.fountain.testutils.extensions.getPagedList
+import com.xmartlabs.fountain.testutils.extensions.getPagedListSize
+import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
+import com.xmartlabs.fountain.testutils.extensions.sendListResponseWithEntityCountResponse
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -23,11 +25,10 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
 
   @Test
   fun testFetchOnePage() {
-    val pageFetcher = com.xmartlabs.fountain.rx2.common.MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>()
-    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(pageFetcher)
+    val pageFetcher = MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>()
+    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(pageFetcher.toRxPageFetcher())
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
-
 
     pageFetcher.sendListResponseWithEntityCountResponse(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE.toLong())
     Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
@@ -40,8 +41,8 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
 
   @Test
   fun testFetchTwoPages() {
-    val pageFetcher = com.xmartlabs.fountain.rx2.common.MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>()
-    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(pageFetcher)
+    val pageFetcher = MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>()
+    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(pageFetcher.toRxPageFetcher())
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
@@ -61,8 +62,8 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
 
   @Test
   fun testFetchTwoAndAHalfPages() {
-    val pageFetcher = com.xmartlabs.fountain.rx2.common.MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>()
-    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(pageFetcher)
+    val pageFetcher = MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>()
+    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(pageFetcher.toRxPageFetcher())
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
