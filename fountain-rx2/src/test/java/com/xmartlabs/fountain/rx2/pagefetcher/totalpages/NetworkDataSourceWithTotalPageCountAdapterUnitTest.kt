@@ -13,7 +13,7 @@ import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.getPagedList
 import com.xmartlabs.fountain.testutils.extensions.getPagedListSize
 import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
-import com.xmartlabs.fountain.testutils.extensions.sendListResponseWithPageCountResponseIfIsRequired
+import com.xmartlabs.fountain.testutils.extensions.sendListResponseWithPageCountResponse
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -30,11 +30,11 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    pageFetcher.sendListResponseWithPageCountResponseIfIsRequired(1)
+    pageFetcher.sendListResponseWithPageCountResponse(1)
     Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
-    pageFetcher.sendListResponseWithPageCountResponseIfIsRequired(1, 1)
+    pageFetcher.sendListResponseWithPageCountResponse(1, 1)
     Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
@@ -46,15 +46,15 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    pageFetcher.sendListResponseWithPageCountResponseIfIsRequired(2)
+    pageFetcher.sendListResponseWithPageCountResponse(2)
     Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
-    pageFetcher.sendListResponseWithPageCountResponseIfIsRequired(2, 1)
+    pageFetcher.sendListResponseWithPageCountResponse(2, 1)
     Assert.assertEquals(2 * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
 
-    pageFetcher.sendListResponseWithPageCountResponseIfIsRequired(2, 1)
+    pageFetcher.sendListResponseWithPageCountResponse(2, 1)
     Assert.assertEquals(2 * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }

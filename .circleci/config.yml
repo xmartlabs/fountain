@@ -39,6 +39,15 @@ jobs:
           path: fountain/build/reports
           destination: reports/fountain
       - store_artifacts:
+          path: fountain-core/build/reports
+          destination: reports/fountain-core
+      - store_artifacts:
+          path: fountain-rx2/build/reports
+          destination: reports/fountain-rx2
+      - store_artifacts:
+          path: fountain-testutils/build/reports
+          destination: reports/fountain-testutils
+      - store_artifacts:
           path: app/build/reports
           destination: reports/app
 workflows:

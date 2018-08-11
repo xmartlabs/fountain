@@ -31,7 +31,7 @@ fun MockedNetworkDataSourcePageFetcher<ListResponseWithEntityCount<Int>>.sendLis
   })
 }
 
-fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponseIfIsRequired(
+fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponse(
     pageCount: Long,
     page: Int = 0) {
   networkResultListener.onSuccess(object : ListResponseWithPageCount<Int> {
@@ -41,7 +41,7 @@ fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListR
   })
 }
 
-fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponseIfIsRequired(
+fun MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>.sendListResponseWithPageCountResponse(
     pageCount: Long,
     elements: List<Int>) {
   networkResultListener.onSuccess(object : ListResponseWithPageCount<Int> {
