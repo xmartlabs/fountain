@@ -57,3 +57,5 @@ build.properties
 
 # OSX files
 .DS_Store
+
+jacoco.exec
