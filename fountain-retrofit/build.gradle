@@ -29,16 +29,15 @@ android {
 }
 
 dependencies {
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
-    androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
-
     api project(':fountain-core')
     implementation "android.arch.paging:common:${libraryVersion.archPaging}"
-    implementation "io.reactivex.rxjava2:rxjava:${libraryVersion.rxjava}"
+    implementation "com.squareup.retrofit2:retrofit:${libraryVersion.retrofit}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
+
 
     testImplementation "android.arch.core:core-testing:${libraryVersion.archTesting}"
     testImplementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:${libraryVersion.retrofit}"
     testImplementation "junit:junit:${libraryVersion.junit}"
     testImplementation "org.mockito:mockito-core:${libraryVersion.mockito}"
     testImplementation project(':fountain-testutils')

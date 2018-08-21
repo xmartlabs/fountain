@@ -35,6 +35,7 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
     implementation project(':fountain-rx2')
+    implementation project(':fountain-retrofit')
 
     implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
     implementation "android.arch.persistence.room:runtime:${libraryVersion.archRoom}"

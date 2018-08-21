@@ -26,7 +26,7 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
   }
 
   @Inject
-  lateinit var model: ListUsersViewModel
+  lateinit var viewModel: ListUsersViewModel
   @Inject
   lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -40,37 +40,37 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
     initSearch()
 
     val userName = savedInstanceState?.getString(KEY_USER_NAME) ?: DEFAULT_USER_NAME
-    model.showUsers(userName)
+    viewModel.showUsers(userName)
     initSwitchMode()
-    model.changeMode(savedInstanceState?.getSerializable(KEY_MODE_NAME) as? Mode ?: DEFAULT_MODE)
+    viewModel.changeMode(savedInstanceState?.getSerializable(KEY_MODE_NAME) as? Mode ?: DEFAULT_MODE)
   }
 
   private fun initSwitchMode() {
     networkAndDataSourceModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-      list.adapter = ListUsersAdapter { model.retry() }
-      model.changeMode(if (isChecked) Mode.NETWORK_AND_DATA_SOURCE else Mode.NETWORK)
+      list.adapter = ListUsersAdapter { viewModel.retry() }
+      viewModel.changeMode(if (isChecked) Mode.NETWORK_AND_DATA_SOURCE else Mode.NETWORK)
     }
   }
 
   private fun initAdapter() {
-    list.adapter = ListUsersAdapter { model.retry() }
-    model.users.observe(this, Observer<PagedList<User>> {
+    list.adapter = ListUsersAdapter { viewModel.retry() }
+    viewModel.users.observe(this, Observer<PagedList<User>> {
       (list.adapter as ListUsersAdapter).submitList(it)
     })
-    model.networkState.observe(this, Observer {
+    viewModel.networkState.observe(this, Observer {
       (list.adapter as ListUsersAdapter).setNetworkState(it)
     })
   }
 
   private fun initSwipeToRefresh() {
-    model.refreshState.observe(this, Observer {
+    viewModel.refreshState.observe(this, Observer {
       swipeRefresh.isRefreshing = it == NetworkState.LOADING
       if (it?.status == Status.FAILED) {
         Toast.makeText(this, "Refresh error", Toast.LENGTH_LONG).show()
       }
     })
     swipeRefresh.setOnRefreshListener {
-      model.refresh()
+      viewModel.refresh()
     }
   }
 
@@ -95,14 +95,14 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    outState.putString(KEY_USER_NAME, model.currentUser())
-    outState.putSerializable(KEY_MODE_NAME, model.currentMode())
+    outState.putString(KEY_USER_NAME, viewModel.currentUser())
+    outState.putSerializable(KEY_MODE_NAME, viewModel.currentMode())
   }
 
   private fun updatedUsernameFromInput() {
     input.text.trim().toString().let {
       if (it.isNotEmpty()) {
-        if (model.showUsers(it)) {
+        if (viewModel.showUsers(it)) {
           list.scrollToPosition(0)
           (list.adapter as? ListUsersAdapter)?.submitList(null)
         }
