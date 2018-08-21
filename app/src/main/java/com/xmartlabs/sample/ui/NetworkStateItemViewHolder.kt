@@ -14,17 +14,17 @@ import com.xmartlabs.sample.R
  * A View Holder that can display a loading view or have click action.
  * It is used to show the network state of paging.
  */
-class NetworkStateItemViewHolder(view: View,
-                                 private val retryCallback: () -> Unit)
-  : RecyclerView.ViewHolder(view) {
+class NetworkStateItemViewHolder(view: View, private val retryCallback: () -> Unit) : RecyclerView.ViewHolder(view) {
   private val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
   private val retry = view.findViewById<Button>(R.id.retry_button)
   private val errorMsg = view.findViewById<TextView>(R.id.error_msg)
+
   init {
     retry.setOnClickListener {
       retryCallback()
     }
   }
+
   fun bindTo(networkState: NetworkState?) {
     progressBar.visibility = toVisibility(networkState is NetworkState.Loading)
     retry.visibility = toVisibility(networkState is NetworkState.Error)
@@ -40,7 +40,7 @@ class NetworkStateItemViewHolder(view: View,
       return NetworkStateItemViewHolder(view, retryCallback)
     }
 
-    fun toVisibility(constraint : Boolean): Int {
+    fun toVisibility(constraint: Boolean): Int {
       return if (constraint) {
         View.VISIBLE
       } else {

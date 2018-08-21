@@ -34,7 +34,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    implementation project(':fountain')
+    implementation project(':fountain-rx2')
 
     implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
     implementation "android.arch.persistence.room:runtime:${libraryVersion.archRoom}"

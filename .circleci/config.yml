@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "fountain/build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "fountain-core/build.gradle" }}-{{ checksum  "fountain-rx2/build.gradle" }}
       - run:
           name: Accept licenses
           command: yes | sdkmanager --licenses || true
@@ -19,10 +19,10 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "fountain/build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "fountain-core/build.gradle" }}-{{ checksum  "fountain-rx2/build.gradle" }}
       - run:
           name: Build Project
-          command: ./gradlew build
+          command: ./gradlew clean build
       - run:
           name: Run detektCheck
           command: ./gradlew detektCheck
@@ -38,6 +38,15 @@ jobs:
       - store_artifacts:
           path: fountain/build/reports
           destination: reports/fountain
+      - store_artifacts:
+          path: fountain-core/build/reports
+          destination: reports/fountain-core
+      - store_artifacts:
+          path: fountain-rx2/build/reports
+          destination: reports/fountain-rx2
+      - store_artifacts:
+          path: fountain-testutils/build/reports
+          destination: reports/fountain-testutils
       - store_artifacts:
           path: app/build/reports
           destination: reports/app

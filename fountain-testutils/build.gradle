@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+    defaultConfig {
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled true
+        }
+    }
+    lintOptions {
+        checkAllWarnings true
+        warningsAsErrors true
+        ignore 'GradleDependency', 'NewerVersionAvailable', 'InvalidPackage'
+    }
+}
+
+dependencies {
+    api project(':fountain-core')
+    implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
+    implementation "android.arch.paging:common:${libraryVersion.archPaging}"
+    implementation "org.mockito:mockito-core:${libraryVersion.mockito}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libraryVersion.kotlin}"
+}
+
