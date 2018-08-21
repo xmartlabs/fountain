@@ -1,1 +1,1 @@
-include ':app', ':fountain'
+include ':app', ':fountain-core', ':fountain-rx2', ':fountain-testutils'
