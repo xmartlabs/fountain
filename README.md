@@ -9,7 +9,7 @@
 </p>
 
 A smart and simple way to work with paged endpoints.
-To see an example of how to use it, check out the introducing Fountain post: [part one](https://blog.xmartlabs.com/2018/07/16/Introducing-Fountain-Part-One/) 
+To see an example of how to use it, check out the introducing Fountain posts: [part one](https://blog.xmartlabs.com/2018/07/16/Introducing-Fountain-Part-One/) 
 and [part two](https://blog.xmartlabs.com/2018/08/20/Introducing-Fountain-Part-Two/).
 
 
