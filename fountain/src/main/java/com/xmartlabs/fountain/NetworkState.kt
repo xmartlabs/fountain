@@ -1,15 +1,4 @@
 package com.xmartlabs.fountain
-
-/** Represents the possible status of a service call. */
-enum class Status {
-  /** Represents that the service call is running. */
-  RUNNING,
-  /** Represents that the service call executed successfully. */
-  SUCCESS,
-  /** Represents that the service call failed. */
-  FAILED
-}
-
 /**
  * A structure to handle the network states.
  *
@@ -17,23 +6,16 @@ enum class Status {
  * @property throwable The error of the network state.
  * It's present only if the status is [Status.FAILED].
  */
-@Suppress("DataClassPrivateConstructor")
-data class NetworkState private constructor(
-    val status: Status,
-    val throwable: Throwable? = null) {
+sealed class NetworkState<out R> {
+  data class Success<out T>(val data: T) : NetworkState<T>()
+  data class Error(val exception: Throwable) : NetworkState<Nothing>()
+  data class Loading(val loadingPage : Int) : NetworkState<Nothing>()
 
-  companion object {
-    /** Returns a [NetworkState] with a [Status.SUCCESS] status. */
-    val LOADED = NetworkState(Status.SUCCESS)
-    /** Returns a [NetworkState] with a [Status.RUNNING] status. */
-    val LOADING = NetworkState(Status.RUNNING)
-
-    /**
-     * Returns a [NetworkState] with a [Status.FAILED] status.
-     *
-     * @param throwable The error that caused the failure.
-     * @return The [NetworkState] with a [Status.FAILED] status.
-     */
-    fun error(throwable: Throwable?) = NetworkState(Status.FAILED, throwable)
+  override fun toString(): String {
+    return when (this) {
+      is Success<*> -> "Success[data=$data]"
+      is Error -> "Error[exception=$exception]"
+      is Loading -> "Loading[page=$loadingPage]"
+    }
   }
 }

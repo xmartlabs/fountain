@@ -32,8 +32,8 @@ object Fountain {
    * @return A [Listing] structure with Network Support.
    */
   @Suppress("LongParameterList")
-  fun <NetworkValue> createNetworkListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<NetworkValue>>,
+  fun <NetworkValue, ServiceResponse : ListResponse<NetworkValue>> createNetworkListing(
+      networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
       firstPage: Int = DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = DEFAULT_PAGED_LIST_CONFIG
@@ -63,8 +63,8 @@ object Fountain {
    * @return A [Listing] structure with Cache + Network Support.
    */
   @Suppress("LongParameterList")
-  fun <NetworkValue, DataSourceValue> createNetworkWithCacheSupportListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<NetworkValue>>,
+  fun <NetworkValue, DataSourceValue, ServiceResponse : ListResponse<NetworkValue>> createNetworkWithCacheSupportListing(
+      networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,

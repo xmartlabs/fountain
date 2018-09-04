@@ -15,7 +15,7 @@ import com.xmartlabs.sample.model.User
 
 class ListUsersAdapter(private val retryCallback: () -> Unit)
   : PagedListAdapter<User, RecyclerView.ViewHolder>(USER_COMPARATOR) {
-  private var networkState: NetworkState? = null
+  private var networkState: NetworkState<*>? = null
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
     return when (viewType) {
       R.layout.item_user -> UserViewHolder.create(parent)
@@ -31,7 +31,7 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
     }
   }
 
-  private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
+  private fun hasExtraRow() = networkState != null && !(networkState is NetworkState.Success)
 
   override fun getItemViewType(position: Int): Int {
     return if (hasExtraRow() && position == itemCount - 1) {
@@ -45,7 +45,7 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
     return super.getItemCount() + if (hasExtraRow()) 1 else 0
   }
 
-  fun setNetworkState(newNetworkState: NetworkState?) {
+  fun setNetworkState(newNetworkState: NetworkState<*>?) {
     val previousState = this.networkState
     val hadExtraRow = hasExtraRow()
     this.networkState = newNetworkState

@@ -3,6 +3,7 @@ package com.xmartlabs.sample.repository
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Fountain
+import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceWithTotalEntityCountAdapter
@@ -24,7 +25,7 @@ class UserRepository @Inject constructor(
     private val db: AppDb
 ) {
   @MainThread
-  fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
+  fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User, ListResponse<User>> {
     val pageFetcher = (object : PageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)
@@ -38,7 +39,7 @@ class UserRepository @Inject constructor(
   }
 
   @MainThread
-  fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
+  fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User, ListResponse<User>> {
     val pageFetcher = (object : PageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsers(userName, page = page, pageSize = pageSize)

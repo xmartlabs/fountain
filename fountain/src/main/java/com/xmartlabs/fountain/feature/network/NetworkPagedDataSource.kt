@@ -13,18 +13,18 @@ import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Executor
 
-internal class NetworkPagedDataSource<T>(
+internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
     private val firstPage: Int,
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<T>>,
-    private var initData: List<T>?
+    private val networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
+    private var initData: ServiceResponse?
 ) : PageKeyedDataSource<Int, T>() {
 
   private var isLoadingInitialData = false
   private var retry: (() -> Any)? = null
-  val networkState = MutableLiveData<NetworkState>()
-  val initialLoad = MutableLiveData<NetworkState>()
+  val networkState = MutableLiveData<NetworkState<ServiceResponse>>()
+  val initialLoad = MutableLiveData<NetworkState<ServiceResponse>>()
 
   fun retryAllFailed() {
     val prevRetry = retry
@@ -38,14 +38,14 @@ internal class NetworkPagedDataSource<T>(
     synchronized(this) {
       if (networkDataSourceAdapter.canFetch(page = params.key, pageSize = params.requestedLoadSize)
           && !isLoadingInitialData) {
-        networkState.postValue(NetworkState.LOADING)
+        networkState.postValue(NetworkState.Loading(params.key))
         networkDataSourceAdapter.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
+            .subscribe(object : SingleObserver<ServiceResponse> {
+              override fun onSuccess(data: ServiceResponse) {
                 retry = null
                 callback.onResult(data.getElements(), params.key + 1)
-                networkState.postValue(NetworkState.LOADED)
+                networkState.postValue(NetworkState.Success(data))
               }
 
               override fun onSubscribe(d: Disposable) {}
@@ -54,7 +54,7 @@ internal class NetworkPagedDataSource<T>(
                 retry = {
                   loadAfter(params, callback)
                 }
-                networkState.postValue(NetworkState.error(t))
+                networkState.postValue(NetworkState.Error(t))
               }
             })
       }
@@ -71,15 +71,15 @@ internal class NetworkPagedDataSource<T>(
     if (initData == null) {
       synchronized(this) {
         isLoadingInitialData = true
-        networkState.postValue(NetworkState.LOADING)
-        initialLoad.postValue(NetworkState.LOADING)
+        networkState.postValue(NetworkState.Loading(firstPage))
+        initialLoad.postValue(NetworkState.Loading(firstPage))
         networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
+            .subscribe(object : SingleObserver<ServiceResponse> {
+              override fun onSuccess(data: ServiceResponse) {
                 retry = null
-                networkState.postValue(NetworkState.LOADED)
-                initialLoad.postValue(NetworkState.LOADED)
+                networkState.postValue(NetworkState.Success(data))
+                initialLoad.postValue(NetworkState.Success(data))
                 onInitialDataLoaded()
                 val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
                 callback.onResult(data.getElements(), -1, nextPage)
@@ -92,7 +92,7 @@ internal class NetworkPagedDataSource<T>(
                 retry = {
                   loadInitial(params, callback)
                 }
-                val error = NetworkState.error(t)
+                val error = NetworkState.Error(t)
                 networkState.postValue(error)
                 initialLoad.postValue(error)
               }
@@ -101,26 +101,26 @@ internal class NetworkPagedDataSource<T>(
     } else {
       retry = null
       val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
-      callback.onResult(initData!!, -1, nextPage)
-      networkState.postValue(NetworkState.LOADED)
-      initialLoad.postValue(NetworkState.LOADED)
+      callback.onResult(initData!!.getElements(), -1, nextPage)
+      networkState.postValue(NetworkState.Success(initData!!))
+      initialLoad.postValue(NetworkState.Success(initData!!))
     }
   }
 
   @AnyThread
-  fun resetData(resetDataCollection: MutableLiveData<List<T>>): LiveData<NetworkState> {
-    val resetNetworkState = MutableLiveData<NetworkState>()
+  fun resetData(resetDataCollection: MutableLiveData<ServiceResponse>): LiveData<NetworkState<ServiceResponse>> {
+    val resetNetworkState = MutableLiveData<NetworkState<ServiceResponse>>()
     synchronized(this) {
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
-        resetNetworkState.postValue(NetworkState.LOADING)
+        resetNetworkState.postValue(NetworkState.Loading(firstPage))
         networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
             .subscribeOn(ioServiceExecutor)
-            .subscribe(object : SingleObserver<ListResponse<T>> {
-              override fun onSuccess(data: ListResponse<T>) {
+            .subscribe(object : SingleObserver<ServiceResponse> {
+              override fun onSuccess(data: ServiceResponse) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.LOADED)
-                resetDataCollection.postValue(data.getElements())
+                resetNetworkState.postValue(NetworkState.Success(data))
+                resetDataCollection.postValue(data)
                 invalidate()
               }
 
@@ -128,11 +128,11 @@ internal class NetworkPagedDataSource<T>(
 
               override fun onError(t: Throwable) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.error(t))
+                resetNetworkState.postValue(NetworkState.Error(t))
               }
             })
       } else {
-        resetNetworkState.postValue(NetworkState.error(IllegalStateException("The first page cannot be fetched")))
+        resetNetworkState.postValue(NetworkState.Error(IllegalStateException("The first page cannot be fetched")))
       }
     }
     return resetNetworkState
