@@ -34,7 +34,8 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
     synchronized(this) {
       isLoadingInitialData = true
       helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-        networkState.postValue(NetworkState.Loading(page))
+        val loadingState = createInitialLoadingState()
+        networkState.postValue(loadingState)
         networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.initialLoadSizeHint)
             .createWebserviceCallback(it, pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize, true)
       }
@@ -50,7 +51,8 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
       synchronized(this) {
         if (!isLoadingInitialData) {
           helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            networkState.postValue(NetworkState.Loading(page))
+            val loadingState = createLoadingState(page, pagedListConfig.pageSize, page + 1)
+            networkState.postValue(loadingState)
             networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
                 .createWebserviceCallback(it, 1)
           }
@@ -68,7 +70,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
     synchronized(this) {
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
-        resetNetworkState.postValue(NetworkState.Loading(firstPage))
+        val loadingState = createInitialLoadingState()
+
+        resetNetworkState.postValue(loadingState)
         networkDataSourceAdapter.fetchPage(page = firstPage, pageSize = pagedListConfig.initialLoadSizeHint)
             .subscribeOn(ioServiceExecutor)
             .observeOn(ioDatabaseExecutor)
@@ -81,9 +85,10 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
                     cachedDataSourceAdapter.saveEntities(serviceResponse.getElements())
                   }
                   page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
+                  val isLastPage = !networkDataSourceAdapter.canFetch(page + 1, pagedListConfig.pageSize)
                   onInitialDataLoaded()
                   helper = PagingRequestHelper(ioServiceExecutor)
-                  resetNetworkState.postValue(NetworkState.Success)
+                  resetNetworkState.postValue(NetworkState.Loaded(firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage))
                 } catch (throwable: Throwable) {
                   onError(throwable)
                 }
@@ -93,14 +98,28 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
 
               override fun onError(e: Throwable) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.Error(e))
+                val isLastPage = !networkDataSourceAdapter.canFetch(page, pagedListConfig.pageSize)
+                resetNetworkState.postValue(NetworkState.Error(e, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage))
               }
             })
       } else {
-        resetNetworkState.postValue(NetworkState.Error(IllegalStateException("The first page cannot be fetched")))
+        val isLastPage = !networkDataSourceAdapter.canFetch(page + 1, pagedListConfig.pageSize)
+        val exception = IllegalStateException("The first page cannot be fetched")
+        resetNetworkState.postValue(NetworkState.Error(exception, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage))
       }
     }
     return resetNetworkState
+  }
+
+
+  private fun createLoadingState(page: Int, nextPage: Int, pageSize: Int): NetworkState.Loading {
+    val isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = pagedListConfig.pageSize)
+    return NetworkState.Loading(firstPage, pageSize, page == firstPage, isLastPage)
+  }
+
+  private fun createInitialLoadingState(): NetworkState.Loading {
+    val nextPage = firstPage + 1 + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
+    return createLoadingState(firstPage, nextPage, pagedListConfig.initialLoadSizeHint)
   }
 
   private fun onInitialDataLoaded() {
@@ -118,6 +137,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
         .observeOn(ioDatabaseExecutor)
         .subscribe(object : SingleObserver<ServiceResponse> {
           override fun onSuccess(response: ServiceResponse) {
+            val requestedPage = page
+            val isLastPage = !networkDataSourceAdapter.canFetch(page + requestedPages + 1, pagedListConfig.pageSize)
+            val pageSize = requestedPages * pagedListConfig.pageSize
             @Suppress("TooGenericExceptionCaught")
             try {
               cachedDataSourceAdapter.runInTransaction {
@@ -126,15 +148,15 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
                 }
                 cachedDataSourceAdapter.saveEntities(response.getElements())
               }
+              networkState.postValue(NetworkState.Loaded(page, pageSize, page == firstPage, isLastPage))
               page += requestedPages
-              networkState.postValue(NetworkState.Success)
               callback.recordSuccess()
               if (initialData) {
                 onInitialDataLoaded()
               }
             } catch (throwable: Throwable) {
               onError(throwable)
-              networkState.postValue(NetworkState.Error(throwable))
+              networkState.postValue(NetworkState.Error(throwable, requestedPage, pageSize, requestedPage == firstPage, isLastPage))
             }
           }
 
@@ -144,13 +166,10 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
             if (initialData) {
               onInitialDataLoaded()
             }
-            networkState.postValue(NetworkState.Error(t))
+            val isLastPage = !networkDataSourceAdapter.canFetch(page + requestedPages + 1, pagedListConfig.pageSize)
+            networkState.postValue(NetworkState.Error(t, page, requestedPages * pagedListConfig.pageSize, page == firstPage, isLastPage))
             callback.recordFailure(t)
           }
         })
   }
-
-  private fun PagingRequestHelper.StatusReport.getError(): Throwable = PagingRequestHelper.RequestType.values()
-      .mapNotNull { getErrorFor(it) }
-      .first()
 }

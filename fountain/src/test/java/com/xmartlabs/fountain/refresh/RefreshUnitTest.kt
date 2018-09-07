@@ -29,7 +29,7 @@ abstract class RefreshUnitTest {
     assert( listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())

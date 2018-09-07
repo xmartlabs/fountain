@@ -34,7 +34,7 @@ class RefreshCacheModeUnitTest : RefreshUnitTest() {
     listing.refresh.invoke()
     assert( listing.refreshState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert( listing.refreshState.value is NetworkState.Success)
+    assert( listing.refreshState.value is NetworkState.Loaded)
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 }

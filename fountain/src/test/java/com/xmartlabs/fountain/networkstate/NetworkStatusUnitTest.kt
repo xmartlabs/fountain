@@ -8,7 +8,6 @@ import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.extensions.mockLifecycleEvents
 import com.xmartlabs.fountain.common.extensions.sendPageResponse
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -34,7 +33,7 @@ abstract class NetworkStatusUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
 
     assert(listing.networkState.value is NetworkState.Loading)
@@ -49,7 +48,7 @@ abstract class NetworkStatusUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
   }
 
   @Test
@@ -61,13 +60,13 @@ abstract class NetworkStatusUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
   }
 
   @Test
@@ -80,7 +79,7 @@ abstract class NetworkStatusUnitTest {
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.Error(exception), listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Error)
   }
 
   @Test
@@ -92,14 +91,14 @@ abstract class NetworkStatusUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
     assert(listing.networkState.value is NetworkState.Loading)
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.Error(exception), listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Error)
   }
 
   @Test
@@ -111,16 +110,16 @@ abstract class NetworkStatusUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     listing.refresh.invoke()
     assert(listing.refreshState.value is NetworkState.Loading)
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assert(listing.networkState.value is NetworkState.Success)
-    assertEquals(NetworkState.Error(exception), listing.refreshState.value)
+    assert(listing.networkState.value is NetworkState.Loaded)
+    assert(listing.refreshState.value is NetworkState.Error)
   }
 
   protected abstract fun createListing(

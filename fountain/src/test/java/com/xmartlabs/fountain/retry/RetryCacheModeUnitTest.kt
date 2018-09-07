@@ -34,7 +34,7 @@ class RetryCacheModeUnitTest : RetryUnitTest() {
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 
@@ -57,7 +57,7 @@ class RetryCacheModeUnitTest : RetryUnitTest() {
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 }

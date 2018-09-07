@@ -28,13 +28,13 @@ abstract class RetryUnitTest {
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.Error(exception), listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 
@@ -47,17 +47,17 @@ abstract class RetryUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.Error(exception), listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
@@ -71,20 +71,20 @@ abstract class RetryUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.Error(exception), listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
 
     listing.retry.invoke()
-    assert(listing.networkState.value is NetworkState.Success)
+    assert(listing.networkState.value is NetworkState.Loaded)
     assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
 

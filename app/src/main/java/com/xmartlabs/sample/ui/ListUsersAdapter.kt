@@ -31,7 +31,7 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
     }
   }
 
-  private fun hasExtraRow() = networkState != null && !(networkState is NetworkState.Success)
+  private fun hasExtraRow() = networkState != null && !(networkState is NetworkState.Loaded)
 
   override fun getItemViewType(position: Int): Int {
     return if (hasExtraRow() && position == itemCount - 1) {
