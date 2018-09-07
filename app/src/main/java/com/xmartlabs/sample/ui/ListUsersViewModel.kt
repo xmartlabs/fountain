@@ -6,7 +6,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
-import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.model.User
 import com.xmartlabs.sample.repository.UserRepository
@@ -32,8 +31,8 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : V
   }
 
   val users: LiveData<PagedList<User>> = Transformations.switchMap(usersListing) { it.pagedList }
-  val networkState: LiveData<NetworkState<ListResponse<User>>> = Transformations.switchMap(usersListing) { it.networkState }
-  val refreshState: LiveData<NetworkState<ListResponse<User>>> = Transformations.switchMap(usersListing) { it.refreshState }
+  val networkState: LiveData<NetworkState> = Transformations.switchMap(usersListing) { it.networkState }
+  val refreshState: LiveData<NetworkState> = Transformations.switchMap(usersListing) { it.refreshState }
 
   init {
     mode.value = Mode.NETWORK_AND_DATA_SOURCE

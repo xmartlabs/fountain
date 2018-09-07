@@ -15,7 +15,7 @@ internal object NetworkPagedListingCreator {
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
       networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>
-  ): Listing<Value, ServiceResponse> {
+  ): Listing<Value> {
     val sourceFactory = NetworkPagedDataSourceFactory(
         firstPage = firstPage,
         ioServiceExecutor = ioServiceExecutor,

@@ -19,7 +19,7 @@ internal object CachedNetworkListingCreator {
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
       networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>
-  ): Listing<DataSourceValue, ServiceResponse> {
+  ): Listing<DataSourceValue> {
 
     val boundaryCallback = BoundaryCallback(
         networkDataSourceAdapter = networkDataSourceAdapter,
@@ -40,7 +40,7 @@ internal object CachedNetworkListingCreator {
 
     return Listing(
         pagedList = builder.build(),
-        networkState = refreshState,
+        networkState = boundaryCallback.networkState,
         retry = {
           boundaryCallback.helper.retryAllFailed()
         },

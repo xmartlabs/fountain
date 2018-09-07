@@ -26,10 +26,10 @@ abstract class RefreshUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert( listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
 
     assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())

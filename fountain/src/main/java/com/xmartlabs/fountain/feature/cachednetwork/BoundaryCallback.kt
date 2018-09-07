@@ -28,7 +28,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
   private var isLoadingInitialData = false
   private var page = firstPage
   var helper = PagingRequestHelper(ioServiceExecutor)
-  val networkState = MutableLiveData<NetworkState<ServiceResponse>>()
+  val networkState = MutableLiveData<NetworkState>()
 
   init {
     synchronized(this) {
@@ -63,8 +63,8 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
   override fun onItemAtFrontLoaded(itemAtFront: DataSourceValue) {}
 
   @AnyThread
-  fun resetData(): LiveData<NetworkState<ServiceResponse>> {
-    val resetNetworkState = MutableLiveData<NetworkState<ServiceResponse>>()
+  fun resetData(): LiveData<NetworkState> {
+    val resetNetworkState = MutableLiveData<NetworkState>()
     synchronized(this) {
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
@@ -83,7 +83,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
                   page = firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
                   onInitialDataLoaded()
                   helper = PagingRequestHelper(ioServiceExecutor)
-                  resetNetworkState.postValue(NetworkState.Success(serviceResponse))
+                  resetNetworkState.postValue(NetworkState.Success)
                 } catch (throwable: Throwable) {
                   onError(throwable)
                 }
@@ -127,7 +127,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
                 cachedDataSourceAdapter.saveEntities(response.getElements())
               }
               page += requestedPages
-              networkState.postValue(NetworkState.Success(response))
+              networkState.postValue(NetworkState.Success)
               callback.recordSuccess()
               if (initialData) {
                 onInitialDataLoaded()

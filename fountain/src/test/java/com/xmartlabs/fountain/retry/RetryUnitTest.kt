@@ -24,17 +24,17 @@ abstract class RetryUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.error(exception), listing.networkState.value)
+    assertEquals(NetworkState.Error(exception), listing.networkState.value)
 
     listing.retry.invoke()
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 
@@ -44,20 +44,20 @@ abstract class RetryUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.error(exception), listing.networkState.value)
+    assertEquals(NetworkState.Error(exception), listing.networkState.value)
 
     listing.retry.invoke()
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
 
     assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
@@ -68,23 +68,23 @@ abstract class RetryUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
     assertEquals(generateIntPageResponseList(0), listing.getPagedList())
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.error(exception), listing.networkState.value)
+    assertEquals(NetworkState.Error(exception), listing.networkState.value)
 
     listing.retry.invoke()
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
 
     listing.retry.invoke()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
     assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
 

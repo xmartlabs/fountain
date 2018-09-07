@@ -2,7 +2,6 @@ package com.xmartlabs.fountain.retry
 
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
-import com.xmartlabs.fountain.Status
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.extensions.generateIntPageResponseList
@@ -22,20 +21,20 @@ class RetryCacheModeUnitTest : RetryUnitTest() {
     val listing = IntMockedListingCreator.createNetworkWithCacheSupportListing(mockedNetworkDataSourceAdapter, 2)
         .mockLifecycleEvents()
 
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(Status.FAILED, listing.networkState.value!!.status)
-
-    listing.retry.invoke()
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
-    mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(Status.FAILED, listing.networkState.value!!.status)
+    assert(listing.networkState.value!! is NetworkState.Error)
 
     listing.retry.invoke()
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value!! is NetworkState.Error)
+
+    listing.retry.invoke()
+    assert(listing.networkState.value is NetworkState.Loading)
+    mockedNetworkDataSourceAdapter.sendPageResponse()
+    assert(listing.networkState.value is NetworkState.Success)
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 
@@ -45,20 +44,20 @@ class RetryCacheModeUnitTest : RetryUnitTest() {
     val listing = IntMockedListingCreator.createNetworkWithCacheSupportListing(mockedNetworkDataSourceAdapter, 2)
         .mockLifecycleEvents()
 
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(Status.FAILED, listing.networkState.value!!.status)
-
-    listing.retry.invoke()
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
-    mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(Status.FAILED, listing.networkState.value!!.status)
+    assert(listing.networkState.value!! is NetworkState.Error)
 
     listing.retry.invoke()
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value!! is NetworkState.Error)
+
+    listing.retry.invoke()
+    assert(listing.networkState.value is NetworkState.Loading)
+    mockedNetworkDataSourceAdapter.sendPageResponse()
+    assert(listing.networkState.value is NetworkState.Success)
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 }

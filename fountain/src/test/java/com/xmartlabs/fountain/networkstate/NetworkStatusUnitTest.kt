@@ -23,7 +23,7 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
   }
 
   @Test
@@ -31,13 +31,13 @@ abstract class NetworkStatusUnitTest {
     val mockedNetworkDataSourceAdapter = MockedNetworkDataSourceAdapter<ListResponse<Int>>()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
     listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
   }
 
   @Test
@@ -46,10 +46,10 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
   }
 
   @Test
@@ -58,16 +58,16 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
 
     listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
   }
 
   @Test
@@ -76,11 +76,11 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.error(exception), listing.networkState.value)
+    assertEquals(NetworkState.Error(exception), listing.networkState.value)
   }
 
   @Test
@@ -89,17 +89,17 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
 
     listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.error(exception), listing.networkState.value)
+    assertEquals(NetworkState.Error(exception), listing.networkState.value)
   }
 
   @Test
@@ -108,19 +108,19 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Success)
 
     listing.refresh.invoke()
-    assertEquals(NetworkState.LOADING, listing.refreshState.value)
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
+    assert(listing.refreshState.value is NetworkState.Loading)
+    assert(listing.networkState.value is NetworkState.Success)
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.emitter?.onError(exception)
-    assertEquals(NetworkState.LOADED, listing.networkState.value)
-    assertEquals(NetworkState.error(exception), listing.refreshState.value)
+    assert(listing.networkState.value is NetworkState.Success)
+    assertEquals(NetworkState.Error(exception), listing.refreshState.value)
   }
 
   protected abstract fun createListing(
