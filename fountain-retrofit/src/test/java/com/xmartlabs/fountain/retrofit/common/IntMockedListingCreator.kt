@@ -29,11 +29,9 @@ object IntMockedListingCreator {
   }
 
   fun createNetworkWithCacheSupportListing(
-      mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>,
-      numberOfErrors: Int = 0
+      mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
     val dataSourceAdapter: CachedDataSourceAdapter<Int, Int> = object : CachedDataSourceAdapter<Int, Int> {
-      var numberOfErrors = numberOfErrors
       val sequentialIntCacheDataSourceFactory = IntCacheDataSourceFactory()
 
       override fun getDataSourceFactory() = sequentialIntCacheDataSourceFactory
@@ -43,12 +41,7 @@ object IntMockedListingCreator {
       }
 
       override fun dropEntities() {
-        if (this.numberOfErrors > 0) {
-          this.numberOfErrors--
-          throw IllegalStateException("${this.numberOfErrors} errors remaining.")
-        } else{
-          sequentialIntCacheDataSourceFactory.clearData()
-        }
+        sequentialIntCacheDataSourceFactory.clearData()
       }
 
       override fun runInTransaction(transaction: () -> Unit) {

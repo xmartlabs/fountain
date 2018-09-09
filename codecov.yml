@@ -10,7 +10,7 @@ coverage:
   status:
     project:
       default:
-        threshold: 2
+        threshold: 8
     patch: no
     changes: no
 

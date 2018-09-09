@@ -20,10 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     lintOptions {
         checkAllWarnings true
         warningsAsErrors true
@@ -34,8 +30,8 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libraryVersion.espresso}"
     androidTestImplementation "com.android.support.test:runner:${libraryVersion.testRunner}"
 
-    implementation project(':fountain-rx2')
     implementation project(':fountain-retrofit')
+    implementation project(':fountain-rx2')
 
     implementation "android.arch.paging:runtime:${libraryVersion.archPaging}"
     implementation "android.arch.persistence.room:runtime:${libraryVersion.archRoom}"
