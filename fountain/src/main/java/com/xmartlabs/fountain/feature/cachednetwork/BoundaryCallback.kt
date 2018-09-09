@@ -51,7 +51,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
       synchronized(this) {
         if (!isLoadingInitialData) {
           helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            val loadingState = createLoadingState(page, pagedListConfig.pageSize, page + 1)
+            val loadingState = createLoadingState(page, page + 1, pagedListConfig.pageSize)
             networkState.postValue(loadingState)
             networkDataSourceAdapter.fetchPage(page = page, pageSize = pagedListConfig.pageSize)
                 .createWebserviceCallback(it, 1)
@@ -120,7 +120,7 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
 
   private fun createLoadingState(page: Int, nextPage: Int, pageSize: Int): NetworkState.Loading {
     val isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = pagedListConfig.pageSize)
-    return NetworkState.Loading(firstPage, pageSize, page == firstPage, isLastPage)
+    return NetworkState.Loading(page, pageSize, page == firstPage, isLastPage)
   }
 
   private fun createInitialLoadingState(): NetworkState.Loading {

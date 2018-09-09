@@ -4,10 +4,10 @@ package com.xmartlabs.fountain
 /**
  * A structure to handle the network states.
  *
- * @param page The requested page.
+ * @param page The requested page number.
  * @param pageSize The requested page size.
- * @param isFirstPage The requested page is the first page.
- * @param isLastPage The requested page is the last page.
+ * @param isFirstPage Indicates if the requested page is the first page.
+ * @param isLastPage Indicates if the requested page is the last page.
  */
 sealed class NetworkState(
     open val page: Int,
@@ -18,10 +18,10 @@ sealed class NetworkState(
   /**
    * Represents that the request is processing.
    *
-   * @param page The requested page.
+   * @param page The requested page number.
    * @param pageSize The requested page size.
-   * @param isFirstPage The requested page is the first page.
-   * @param isLastPage The requested page is the last page.
+   * @param isFirstPage Indicates if the requested page is the first page.
+   * @param isLastPage Indicates if the requested page is the last page.
    */
   data class Loading(
       override val page: Int,
@@ -33,10 +33,10 @@ sealed class NetworkState(
   /**
    * Represents that the request was made successfully.
    *
-   * @param page The requested page.
+   * @param page The requested page number.
    * @param pageSize The requested page size.
-   * @param isFirstPage The requested page is the first page.
-   * @param isLastPage The requested page is the last page.
+   * @param isFirstPage Indicates if the requested page is the first page.
+   * @param isLastPage Indicates if the requested page is the last page.
    */
   data class Loaded(
       override val page: Int,
@@ -49,10 +49,10 @@ sealed class NetworkState(
    * Represents that the request had an error.
    *
    * @param exception The exception that cosed the error.
-   * @param page The requested page.
+   * @param page The requested page number.
    * @param pageSize The requested page size.
-   * @param isFirstPage The requested page is the first page.
-   * @param isLastPage The requested page is the last page.
+   * @param isFirstPage Indicates if the requested page is the first page.
+   * @param isLastPage Indicates if the requested page is the last page.
    */
   data class Error(
       val exception: Throwable,
