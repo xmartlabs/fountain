@@ -88,7 +88,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
                   val isLastPage = !networkDataSourceAdapter.canFetch(page + 1, pagedListConfig.pageSize)
                   onInitialDataLoaded()
                   helper = PagingRequestHelper(ioServiceExecutor)
-                  resetNetworkState.postValue(NetworkState.Loaded(firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage))
+                  resetNetworkState.postValue(
+                      NetworkState.Loaded(firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage)
+                  )
                 } catch (throwable: Throwable) {
                   onError(throwable)
                 }
@@ -99,13 +101,17 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
               override fun onError(e: Throwable) {
                 onInitialDataLoaded()
                 val isLastPage = !networkDataSourceAdapter.canFetch(page, pagedListConfig.pageSize)
-                resetNetworkState.postValue(NetworkState.Error(e, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage))
+                resetNetworkState.postValue(
+                    NetworkState.Error(e, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage)
+                )
               }
             })
       } else {
         val isLastPage = !networkDataSourceAdapter.canFetch(page + 1, pagedListConfig.pageSize)
         val exception = IllegalStateException("The first page cannot be fetched")
-        resetNetworkState.postValue(NetworkState.Error(exception, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage))
+        resetNetworkState.postValue(
+            NetworkState.Error(exception, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage)
+        )
       }
     }
     return resetNetworkState
@@ -156,7 +162,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
               }
             } catch (throwable: Throwable) {
               onError(throwable)
-              networkState.postValue(NetworkState.Error(throwable, requestedPage, pageSize, requestedPage == firstPage, isLastPage))
+              networkState.postValue(
+                  NetworkState.Error(throwable, requestedPage, pageSize, requestedPage == firstPage, isLastPage)
+              )
             }
           }
 
@@ -167,7 +175,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
               onInitialDataLoaded()
             }
             val isLastPage = !networkDataSourceAdapter.canFetch(page + requestedPages + 1, pagedListConfig.pageSize)
-            networkState.postValue(NetworkState.Error(t, page, requestedPages * pagedListConfig.pageSize, page == firstPage, isLastPage))
+            networkState.postValue(
+                NetworkState.Error(t, page, requestedPages * pagedListConfig.pageSize, page == firstPage, isLastPage)
+            )
             callback.recordFailure(t)
           }
         })

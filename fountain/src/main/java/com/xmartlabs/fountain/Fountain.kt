@@ -63,8 +63,8 @@ object Fountain {
    * @return A [Listing] structure with Cache + Network Support.
    */
   @Suppress("LongParameterList")
-  fun <NetworkValue, DataSourceValue, ServiceResponse : ListResponse<NetworkValue>> createNetworkWithCacheSupportListing(
-      networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
+  fun <NetworkValue, DataSourceValue> createNetworkWithCacheSupportListing(
+      networkDataSourceAdapter: NetworkDataSourceAdapter<out ListResponse<NetworkValue>>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
       ioServiceExecutor: Executor = IoExecutors.NETWORK_EXECUTOR,
       ioDatabaseExecutor: Executor = IoExecutors.DATABASE_EXECUTOR,

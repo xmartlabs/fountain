@@ -40,7 +40,8 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
           && !isLoadingInitialData) {
         val nextPage = params.key + 1 + params.requestedLoadSize / pagedListConfig.pageSize
         var isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
-        networkState.postValue(NetworkState.Loading(params.key, params.requestedLoadSize, params.key == firstPage, isLastPage))
+        val isFirstPage = params.key == firstPage
+        networkState.postValue(NetworkState.Loading(params.key, params.requestedLoadSize, isFirstPage, isLastPage))
         networkDataSourceAdapter.fetchPage(page = params.key, pageSize = params.requestedLoadSize)
             .subscribeOn(ioServiceExecutor)
             .subscribe(object : SingleObserver<ServiceResponse> {
@@ -48,7 +49,9 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
                 retry = null
                 callback.onResult(data.getElements(), params.key + 1)
                 isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
-                networkState.postValue(NetworkState.Loaded(params.key, params.requestedLoadSize, params.key == firstPage, isLastPage))
+                networkState.postValue(
+                    NetworkState.Loaded(params.key, params.requestedLoadSize, isFirstPage, isLastPage)
+                )
               }
 
               override fun onSubscribe(d: Disposable) {}
@@ -57,7 +60,9 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
                 retry = {
                   loadAfter(params, callback)
                 }
-                networkState.postValue(NetworkState.Error(t, params.key, params.requestedLoadSize, params.key == firstPage, isLastPage))
+                networkState.postValue(
+                    NetworkState.Error(t, params.key, params.requestedLoadSize, isFirstPage, isLastPage)
+                )
               }
             })
       }
@@ -74,8 +79,8 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
     if (initData == null) {
       synchronized(this) {
         isLoadingInitialData = true
-        val nextPage = firstPage + 1 + params.requestedLoadSize / pagedListConfig.pageSize
-        val isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
+        var nextPage = firstPage + 1 + params.requestedLoadSize / pagedListConfig.pageSize
+        var isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
         val loadingState = NetworkState.Loading(firstPage, params.requestedLoadSize, true, isLastPage)
         networkState.postValue(loadingState)
         initialLoad.postValue(loadingState)
@@ -84,8 +89,8 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
             .subscribe(object : SingleObserver<ServiceResponse> {
               override fun onSuccess(data: ServiceResponse) {
                 retry = null
-                val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
-                val isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
+                nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
+                isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
                 val success = NetworkState.Loaded(firstPage, params.requestedLoadSize, true, isLastPage)
                 networkState.postValue(success)
                 initialLoad.postValue(success)
@@ -130,7 +135,9 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
             .subscribe(object : SingleObserver<ServiceResponse> {
               override fun onSuccess(data: ServiceResponse) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.Loaded(firstPage, pagedListConfig.initialLoadSizeHint, true, false))
+                resetNetworkState.postValue(
+                    NetworkState.Loaded(firstPage, pagedListConfig.initialLoadSizeHint, true, false)
+                )
                 resetDataCollection.postValue(data)
                 invalidate()
               }
@@ -139,12 +146,16 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
 
               override fun onError(t: Throwable) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(NetworkState.Error(t, firstPage, pagedListConfig.initialLoadSizeHint, true, false))
+                resetNetworkState.postValue(
+                    NetworkState.Error(t, firstPage, pagedListConfig.initialLoadSizeHint, true, false)
+                )
               }
             })
       } else {
         val exception = IllegalStateException("The first page cannot be fetched")
-        resetNetworkState.postValue(NetworkState.Error(exception, firstPage, pagedListConfig.initialLoadSizeHint, true, false))
+        resetNetworkState.postValue(
+            NetworkState.Error(exception, firstPage, pagedListConfig.initialLoadSizeHint, true, false)
+        )
       }
     }
     return resetNetworkState
