@@ -26,10 +26,10 @@ class NetworkStateItemViewHolder(view: View,
     }
   }
   fun bindTo(networkState: NetworkState?) {
-    progressBar.visibility = toVisbility(networkState is NetworkState.Loading)
-    retry.visibility = toVisbility(networkState is NetworkState.Error)
+    progressBar.visibility = toVisibility(networkState is NetworkState.Loading)
+    retry.visibility = toVisibility(networkState is NetworkState.Error)
     val errorMessage = (networkState as? NetworkState.Error)?.exception
-    errorMsg.visibility = toVisbility(errorMessage != null)
+    errorMsg.visibility = toVisibility(errorMessage != null)
     errorMsg.text = errorMessage?.message
   }
 
@@ -40,7 +40,7 @@ class NetworkStateItemViewHolder(view: View,
       return NetworkStateItemViewHolder(view, retryCallback)
     }
 
-    fun toVisbility(constraint : Boolean): Int {
+    fun toVisibility(constraint : Boolean): Int {
       return if (constraint) {
         View.VISIBLE
       } else {

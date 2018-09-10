@@ -18,7 +18,7 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
     private val ioServiceExecutor: Executor,
     private val pagedListConfig: PagedList.Config,
     private val networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
-    private var initData: ServiceResponse?
+    private val initData: ServiceResponse?
 ) : PageKeyedDataSource<Int, T>() {
 
   private var isLoadingInitialData = false
@@ -114,7 +114,7 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<T>>(
     } else {
       retry = null
       val nextPage = firstPage + params.requestedLoadSize / pagedListConfig.pageSize
-      callback.onResult(initData!!.getElements(), -1, nextPage)
+      callback.onResult(initData.getElements(), -1, nextPage)
       val isLastPage = !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = params.requestedLoadSize)
 
       val success = NetworkState.Loaded(firstPage, params.requestedLoadSize, true, isLastPage)
