@@ -4,4 +4,4 @@ Thank you for contributing to Fountain. Before pressing the "Create Pull Request
 
   - [ ] Please include the issue list number(s) or other PR numbers in the description if you are contributing in response to those.
 
-  - [ ] Please include a reasonable set of unit tests if you contribute new code or change existing one.
+  - [ ] Please include a reasonable set of unit tests if you contribute with new code or change existing one.
