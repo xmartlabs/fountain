@@ -99,20 +99,20 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, ServiceResponse :
 
               override fun onError(e: Throwable) {
                 onInitialDataLoaded()
-                resetNetworkState.postValue(
-                    NetworkState.Error(e, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage(page + 1))
-                )
+                resetNetworkState.postValue(createInitialLoadingErrorState(e))
               }
             })
       } else {
-        val exception = IllegalStateException("The first page cannot be fetched")
         resetNetworkState.postValue(
-            NetworkState.Error(exception, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage(page + 1))
+            createInitialLoadingErrorState(IllegalStateException("The first page cannot be fetched"))
         )
       }
     }
     return resetNetworkState
   }
+
+  private fun createInitialLoadingErrorState(throwable: Throwable) =
+      NetworkState.Error(throwable, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage(page + 1))
 
   private fun createLoadingState(page: Int, nextPage: Int, pageSize: Int): NetworkState.Loading {
     return NetworkState.Loading(page, pageSize, page == firstPage, isLastPage(nextPage))
