@@ -2,7 +2,6 @@ package com.xmartlabs.fountain.refresh
 
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
-import com.xmartlabs.fountain.Status
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.common.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.extensions.generateIntPageResponseList
@@ -22,20 +21,20 @@ class RefreshCacheModeUnitTest : RefreshUnitTest() {
     val listing = IntMockedListingCreator.createNetworkWithCacheSupportListing(mockedNetworkDataSourceAdapter, 2)
         .mockLifecycleEvents()
 
-    Assert.assertEquals(NetworkState.LOADING, listing.networkState.value)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(Status.FAILED, listing.networkState.value!!.status)
-
-    listing.refresh.invoke()
-    Assert.assertEquals(NetworkState.LOADING, listing.refreshState.value)
-    mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(Status.FAILED, listing.refreshState.value!!.status)
+    assert(listing.networkState.value!! is NetworkState.Error)
 
     listing.refresh.invoke()
-    Assert.assertEquals(NetworkState.LOADING, listing.refreshState.value)
+    assert( listing.refreshState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    Assert.assertEquals(NetworkState.LOADED, listing.refreshState.value)
+    assert(listing.networkState.value!! is NetworkState.Error)
+
+    listing.refresh.invoke()
+    assert( listing.refreshState.value is NetworkState.Loading)
+    mockedNetworkDataSourceAdapter.sendPageResponse()
+    assert( listing.refreshState.value is NetworkState.Loaded)
     Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
   }
 }

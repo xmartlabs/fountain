@@ -10,7 +10,7 @@ coverage:
   status:
     project:
       default:
-        threshold: 2
+        threshold: 10
     patch: no
     changes: no
 
@@ -22,7 +22,4 @@ parsers:
       method: no
       macro: no
 
-comment:
-  layout: "reach, diff, flags, files, footer"
-  behavior: default
-  require_changes: no
+comment: off
