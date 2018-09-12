@@ -8,7 +8,7 @@ import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 
 object IntMockedListingCreator {
-  private const val DEFAULT_FIRST_PAGE = 1
+  const val DEFAULT_FIRST_PAGE = 1
   internal const val DEFAULT_NETWORK_PAGE_SIZE = 20
   private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)

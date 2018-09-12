@@ -28,7 +28,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 
@@ -43,7 +42,7 @@ detekt {
 }
 
 junitJacoco {
-    jacocoVersion = '0.8.2-SNAPSHOT' // https://github.com/jacoco/jacoco/issues/552
+    jacocoVersion = '0.8.2'
     ignoreProjects = ['app']
     excludes = ["**/android/arch/paging/**"]
     includeNoLocationClasses = false
