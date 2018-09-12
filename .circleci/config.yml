@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "fountain-core/build.gradle" }}-{{ checksum  "fountain-rx2/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "fountain-core/build.gradle" }}-{{ checksum  "fountain-rx2/build.gradle" }}-{{ checksum  "fountain-retrofit/build.gradle" }}
       - run:
           name: Accept licenses
           command: yes | sdkmanager --licenses || true
@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "fountain-core/build.gradle" }}-{{ checksum  "fountain-rx2/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum "versions.gradle" }}-{{ checksum  "app/build.gradle" }}-{{ checksum  "fountain-core/build.gradle" }}-{{ checksum  "fountain-rx2/build.gradle" }}-{{ checksum  "fountain-retrofit/build.gradle" }}
       - run:
           name: Build Project
           command: ./gradlew clean build
@@ -41,6 +41,9 @@ jobs:
       - store_artifacts:
           path: fountain-core/build/reports
           destination: reports/fountain-core
+      - store_artifacts:
+          path: fountain-retrofit/build/reports
+          destination: reports/fountain-retrofit
       - store_artifacts:
           path: fountain-rx2/build/reports
           destination: reports/fountain-rx2

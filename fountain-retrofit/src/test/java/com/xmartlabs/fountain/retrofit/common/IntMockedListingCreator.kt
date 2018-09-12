@@ -1,11 +1,11 @@
-package com.xmartlabs.fountain.rx2.common
+package com.xmartlabs.fountain.retrofit.common
 
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.rx2.FountainRxSupport
-import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
+import com.xmartlabs.fountain.retrofit.FountainRetrofitSupport
+import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
 import com.xmartlabs.fountain.testutils.InstantExecutor
 import com.xmartlabs.fountain.testutils.IntCacheDataSourceFactory
 
@@ -18,9 +18,9 @@ object IntMockedListingCreator {
       .build()
 
   fun createNetworkListing(
-      mockedNetworkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<Int>>
+      mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
-    return FountainRxSupport.createNetworkListing(
+    return FountainRetrofitSupport.createNetworkListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),
         firstPage = DEFAULT_FIRST_PAGE,
@@ -29,7 +29,7 @@ object IntMockedListingCreator {
   }
 
   fun createNetworkWithCacheSupportListing(
-      mockedNetworkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<Int>>
+      mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
     val dataSourceAdapter: CachedDataSourceAdapter<Int, Int> = object : CachedDataSourceAdapter<Int, Int> {
       val sequentialIntCacheDataSourceFactory = IntCacheDataSourceFactory()
@@ -50,7 +50,7 @@ object IntMockedListingCreator {
       }
     }
 
-    return FountainRxSupport.createNetworkWithCacheSupportListing(
+    return FountainRetrofitSupport.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),
