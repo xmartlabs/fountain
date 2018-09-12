@@ -10,7 +10,7 @@ import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 object NetworkPagedListingCreator {
-  fun <Value, ServiceResponse : ListResponse<Value>> createListing(
+  fun <Value, ServiceResponse : ListResponse<out Value>> createListing(
       firstPage: Int,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
