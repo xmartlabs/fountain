@@ -54,7 +54,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.xmartlabs:fountain:0.2.0'
+    implementation 'com.github.xmartlabs:fountain:0.3.0'
 }
 ```
 
