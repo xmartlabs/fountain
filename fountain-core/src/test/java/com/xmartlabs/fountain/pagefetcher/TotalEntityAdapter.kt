@@ -9,9 +9,6 @@ import com.xmartlabs.fountain.adapter.PageFetcher
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.common.KnownSizeResponseManager
 
-/**
- * Created by mirland on 10/08/18.
- */
 
 /**
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.

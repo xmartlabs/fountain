@@ -1,30 +1,24 @@
 package com.xmartlabs.fountain.retrofit.common
 
-import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.retrofit.FountainRetrofitSupport
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
-import com.xmartlabs.fountain.testutils.InstantExecutor
 import com.xmartlabs.fountain.testutils.IntCacheDataSourceFactory
+import com.xmartlabs.fountain.testutils.extensions.TestConstants
+import java.util.concurrent.Executors
 
 object IntMockedListingCreator {
-  private const val DEFAULT_FIRST_PAGE = 1
-  internal const val DEFAULT_NETWORK_PAGE_SIZE = 20
-  private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
-      .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
-      .setInitialLoadSizeHint(DEFAULT_NETWORK_PAGE_SIZE)
-      .build()
-
+  val IO_EXCECUTOR = Executors.newSingleThreadExecutor()
   fun createNetworkListing(
       mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
     return FountainRetrofitSupport.createNetworkListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
-        ioServiceExecutor = InstantExecutor(),
-        firstPage = DEFAULT_FIRST_PAGE,
-        pagedListConfig = DEFAULT_PAGED_LIST_CONFIG
+        ioServiceExecutor = TestConstants.IO_EXCECUTOR,
+        firstPage = TestConstants.DEFAULT_FIRST_PAGE,
+        pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
   }
 
@@ -53,10 +47,10 @@ object IntMockedListingCreator {
     return FountainRetrofitSupport.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
-        ioServiceExecutor = InstantExecutor(),
-        ioDatabaseExecutor = InstantExecutor(),
-        firstPage = DEFAULT_FIRST_PAGE,
-        pagedListConfig = DEFAULT_PAGED_LIST_CONFIG
+        ioServiceExecutor = TestConstants.IO_EXCECUTOR,
+        ioDatabaseExecutor = TestConstants.IO_EXCECUTOR,
+        firstPage = TestConstants.DEFAULT_FIRST_PAGE,
+        pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
   }
 }

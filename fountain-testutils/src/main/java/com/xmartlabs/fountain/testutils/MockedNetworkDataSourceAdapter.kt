@@ -4,32 +4,54 @@ import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
 
-class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
-  private var fetchPageListener: NetworkResultListener<T>? = null
-  var networkResultListener: NetworkResultListener<T> = object  : NetworkResultListener<T>{
-    override fun onSuccess(response: T) {
-      fetchPageListener?.onSuccess(response)
-      fetchPageListener = null
-    }
 
-    override fun onError(t: Throwable) {
-      fetchPageListener?.onError(t)
-      fetchPageListener = null
+class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
+  var networkResultListener: NetworkResultListener<T>? = null
+  var pendingResponse: T? = null
+  var pendingError: Throwable? = null
+
+  override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
+    synchronized(this) {
+      pendingResponse
+          ?.let { networkResultListener.onSuccess(it) }
+          .orDo { pendingError?.let { networkResultListener.onError(it) } }
+          .orDo { this.networkResultListener = networkResultListener }
     }
   }
 
-  val wasPageRequired
-    get() = fetchPageListener != null
+  fun onSuccess(response: T) {
+    synchronized(this) {
+      networkResultListener.let {
+        if (it == null) {
+          pendingError = null
+          pendingResponse = response
+        } else {
+          it.onSuccess(response)
+          networkResultListener = null
+        }
+      }
+    }
+  }
 
-  override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
-    this.fetchPageListener = networkResultListener
+  fun onError(t: Throwable) {
+    synchronized(this) {
+      networkResultListener.let {
+        if (it == null) {
+          pendingError = t
+          pendingResponse = null
+        } else {
+          it.onError(t)
+          networkResultListener = null
+        }
+      }
+    }
   }
 }
 
 class MockedNetworkDataSourceAdapter<T> : NetworkDataSourceAdapter<T> {
   override val pageFetcher = MockedNetworkDataSourcePageFetcher<T>()
-  val networkResultListener: NetworkResultListener<T>?
-    get() = pageFetcher.networkResultListener
 
   override fun canFetch(page: Int, pageSize: Int): Boolean = true
 }
+
+private fun <T> T?.orDo(action: () -> T) = if (this == null) action() else this

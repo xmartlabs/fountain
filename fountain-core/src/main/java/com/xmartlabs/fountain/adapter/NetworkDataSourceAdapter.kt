@@ -2,11 +2,6 @@ package com.xmartlabs.fountain.adapter
 
 import android.support.annotation.CheckResult
 import android.support.annotation.NonNull
-import com.xmartlabs.fountain.ListResponse
-import com.xmartlabs.fountain.ListResponseWithEntityCount
-import com.xmartlabs.fountain.ListResponseWithPageCount
-import com.xmartlabs.fountain.common.FountainConstants
-import com.xmartlabs.fountain.common.KnownSizeResponseManager
 
 
 /** It is used to get notify the service response. */

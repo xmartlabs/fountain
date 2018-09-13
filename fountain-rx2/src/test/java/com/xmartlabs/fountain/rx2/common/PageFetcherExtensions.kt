@@ -9,7 +9,7 @@ fun <T> PageFetcher<T>.toRxPageFetcher(): RxPageFetcher<T> {
   return object : RxPageFetcher<T> {
     override fun fetchPage(page: Int, pageSize: Int): Single<T> {
       return Single.create {
-        this@toRxPageFetcher.fetchPage(page, pageSize, object : NetworkResultListener<T> {
+        fetchPage(page, pageSize, object : NetworkResultListener<T> {
           override fun onSuccess(response: T) = it.onSuccess(response)
 
           override fun onError(t: Throwable) = it.onError(t)

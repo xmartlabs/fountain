@@ -18,6 +18,8 @@ internal class NetworkPagedDataSourceFactory<T, ServiceResponse : ListResponse<o
 
   fun resetData() = sourceLiveData.value?.resetData(resetDataList)
 
+  fun retry() = sourceLiveData.value?.retry?.invoke()
+
   override fun create(): DataSource<Int, T> {
     val source = NetworkPagedDataSource(
         firstPage = firstPage,

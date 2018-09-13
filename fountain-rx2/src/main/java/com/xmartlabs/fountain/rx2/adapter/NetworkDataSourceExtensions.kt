@@ -14,12 +14,14 @@ private fun <T> NetworkResultListener<T>.toSingleObserver(): SingleObserver<T> =
   override fun onError(e: Throwable) = this@toSingleObserver.onError(e)
 }
 
-internal fun <T> RxPageFetcher<T>.toPageFetcher()
-    : PageFetcher<T> {
+internal fun <T> RxPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
-      fetchPage(page = page, pageSize = pageSize)
-          .subscribe(networkResultListener.toSingleObserver())
+      try {
+        networkResultListener.onSuccess(this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).blockingGet())
+      } catch (throwable: Throwable){
+        networkResultListener.onError(throwable)
+      }
     }
   }
 }

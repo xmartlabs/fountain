@@ -11,20 +11,16 @@ import retrofit2.Response
 private fun <T> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
-      fetchPage(page = page, pageSize = pageSize).enqueue(object : Callback<T> {
-        override fun onFailure(call: Call<T>, t: Throwable) {
-          networkResultListener.onError(t)
+      try {
+        val response = this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).execute()
+        if (response.isSuccessful) {
+          networkResultListener.onSuccess(response.body()!!)
+        } else {
+          networkResultListener.onError(HttpException(response))
         }
-
-        override fun onResponse(call: Call<T>, response: Response<T>) {
-          if (response.isSuccessful) {
-            response.body()
-                ?.let { networkResultListener.onSuccess(it) }
-          } else {
-            networkResultListener.onError(HttpException(response))
-          }
-        }
-      })
+      } catch (throwable: Throwable) {
+        networkResultListener.onError(throwable)
+      }
     }
   }
 }

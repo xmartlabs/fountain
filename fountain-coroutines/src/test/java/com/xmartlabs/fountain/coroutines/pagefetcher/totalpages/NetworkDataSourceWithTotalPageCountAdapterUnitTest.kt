@@ -1,12 +1,12 @@
-package com.xmartlabs.fountain.retrofit.pagefetcher.totalpages
+package com.xmartlabs.fountain.coroutines.pagefetcher.totalpages
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.Listing
-import com.xmartlabs.fountain.retrofit.adapter.NetworkDataSourceAdapterFactory
-import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
-import com.xmartlabs.fountain.retrofit.common.toRxPageFetcher
+import com.xmartlabs.fountain.coroutines.adapter.CoroutineNetworkDataSourceAdapter
+import com.xmartlabs.fountain.coroutines.adapter.NetworkDataSourceAdapterFactory
+import com.xmartlabs.fountain.coroutines.common.toCoroutinePageFetcher
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourcePageFetcher
 import com.xmartlabs.fountain.testutils.extensions.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
@@ -26,7 +26,7 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
   @Test
   fun testFetchOnePage() {
     val pageFetcher = MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>()
-    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(pageFetcher.toRxPageFetcher())
+    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(pageFetcher.toCoroutinePageFetcher())
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
@@ -42,7 +42,7 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
   @Test
   fun testFetchTwoPages() {
     val pageFetcher = MockedNetworkDataSourcePageFetcher<ListResponseWithPageCount<Int>>()
-    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(pageFetcher.toRxPageFetcher())
+    val mockedNetworkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(pageFetcher.toCoroutinePageFetcher())
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
@@ -59,6 +59,6 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
     Assert.assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
   }
 
-  abstract fun createListing(mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>)
+  abstract fun createListing(mockedNetworkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<Int>>)
       : Listing<Int>
 }
