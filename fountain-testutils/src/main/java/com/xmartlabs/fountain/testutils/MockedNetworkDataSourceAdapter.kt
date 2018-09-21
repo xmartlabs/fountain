@@ -6,16 +6,25 @@ import com.xmartlabs.fountain.adapter.PageFetcher
 
 
 class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
-  var networkResultListener: NetworkResultListener<T>? = null
-  var pendingResponse: T? = null
-  var pendingError: Throwable? = null
+  private var networkResultListener: NetworkResultListener<T>? = null
+  private var pendingResponse: T? = null
+  private var pendingError: Throwable? = null
 
   override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
     synchronized(this) {
       pendingResponse
-          ?.let { networkResultListener.onSuccess(it) }
-          .orDo { pendingError?.let { networkResultListener.onError(it) } }
-          .orDo { this.networkResultListener = networkResultListener }
+          ?.let {
+            networkResultListener.onSuccess(it)
+            pendingResponse = null
+          }
+          .orDo {
+            pendingError
+                ?.let {
+                  networkResultListener.onError(it)
+                  pendingError = null
+                }
+                .orDo { this.networkResultListener = networkResultListener }
+          }
     }
   }
 
@@ -54,4 +63,4 @@ class MockedNetworkDataSourceAdapter<T> : NetworkDataSourceAdapter<T> {
   override fun canFetch(page: Int, pageSize: Int): Boolean = true
 }
 
-private fun <T> T?.orDo(action: () -> T) = if (this == null) action() else this
+private fun <T> T?.orDo(action: () -> T) = this ?: action()

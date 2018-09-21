@@ -4,7 +4,7 @@ import android.arch.paging.PagedList
 import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.retrofit.FountainRetrofitSupport
+import com.xmartlabs.fountain.retrofit.FountainRetrofit
 import com.xmartlabs.fountain.retrofit.adapter.NetworkDataSourceAdapterFactory
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitPageFetcher
 import com.xmartlabs.sample.db.AppDb
@@ -32,7 +32,7 @@ class UserRepository @Inject constructor(
 
     val networkDataSourceAdapter = NetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(
         pageFetcher = pageFetcher)
-    return FountainRetrofitSupport.createNetworkListing(
+    return FountainRetrofit.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
     )
@@ -69,7 +69,7 @@ class UserRepository @Inject constructor(
         userDao.deleteUserSearch(userName)
       }
     }
-    return FountainRetrofitSupport.createNetworkWithCacheSupportListing(
+    return FountainRetrofit.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         cachedDataSourceAdapter = cachedDataSourceAdapter,
         pagedListConfig = pagedListConfig

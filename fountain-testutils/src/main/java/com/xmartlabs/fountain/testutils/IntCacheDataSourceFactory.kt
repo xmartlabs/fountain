@@ -7,13 +7,30 @@ class IntCacheDataSourceFactory : DataSource.Factory<Int, Int>() {
   private val items: MutableList<Int> = ArrayList()
   private lateinit var dataSource: MockIntDataSource
 
-  fun clearData() = dataSource.clearData()
+  private var created: Boolean = false
 
-  fun addData(items: List<Int>) = dataSource.addData(items)
+  fun clearData() {
+    if (created) {
+      dataSource.clearData()
+    }
+  }
 
-  fun invalidate() = dataSource.invalidate()
+  fun addData(items: List<Int>) {
+    if (created) {
+      dataSource.addData(items)
+    } else {
+      this.items.addAll(items)
+    }
+  }
+
+  fun invalidate() {
+    if (created) {
+      dataSource.invalidate()
+    }
+  }
 
   override fun create(): DataSource<Int, Int> {
+    created = true
     dataSource = MockIntDataSource(items)
     return dataSource
   }

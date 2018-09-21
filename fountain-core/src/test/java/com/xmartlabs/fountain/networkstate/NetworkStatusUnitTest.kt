@@ -7,6 +7,7 @@ import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
 import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
+import com.xmartlabs.fountain.testutils.extensions.scrollToTheEnd
 import com.xmartlabs.fountain.testutils.extensions.sendPageResponse
 import org.junit.Assert
 import org.junit.Rule
@@ -42,7 +43,7 @@ abstract class NetworkStatusUnitTest {
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
-    listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
+    listing.scrollToTheEnd()
     state = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(state, listing.networkState.value)
@@ -80,7 +81,7 @@ abstract class NetworkStatusUnitTest {
     Assert.assertEquals(listing.networkState.value, state)
 
 
-    listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
+    listing.scrollToTheEnd()
     state = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, state)
@@ -117,7 +118,7 @@ abstract class NetworkStatusUnitTest {
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert(listing.networkState.value is NetworkState.Loaded)
 
-    listing.pagedList.value!!.loadAround(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE - 1)
+    listing.scrollToTheEnd()
     assert(listing.networkState.value is NetworkState.Loading)
 
     val exception = Exception()

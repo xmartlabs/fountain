@@ -3,20 +3,19 @@ package com.xmartlabs.fountain.retrofit.common
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.retrofit.FountainRetrofitSupport
+import com.xmartlabs.fountain.retrofit.FountainRetrofit
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.InstantExecutor
 import com.xmartlabs.fountain.testutils.IntCacheDataSourceFactory
-import com.xmartlabs.fountain.testutils.extensions.TestConstants
-import java.util.concurrent.Executors
+import com.xmartlabs.fountain.testutils.TestConstants
 
 object IntMockedListingCreator {
-  val IO_EXCECUTOR = Executors.newSingleThreadExecutor()
   fun createNetworkListing(
       mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
-    return FountainRetrofitSupport.createNetworkListing(
+    return FountainRetrofit.createNetworkListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
-        ioServiceExecutor = TestConstants.IO_EXCECUTOR,
+        ioServiceExecutor = InstantExecutor(),
         firstPage = TestConstants.DEFAULT_FIRST_PAGE,
         pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
@@ -44,11 +43,11 @@ object IntMockedListingCreator {
       }
     }
 
-    return FountainRetrofitSupport.createNetworkWithCacheSupportListing(
+    return FountainRetrofit.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
-        ioServiceExecutor = TestConstants.IO_EXCECUTOR,
-        ioDatabaseExecutor = TestConstants.IO_EXCECUTOR,
+        ioServiceExecutor = InstantExecutor(),
+        ioDatabaseExecutor = InstantExecutor(),
         firstPage = TestConstants.DEFAULT_FIRST_PAGE,
         pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )

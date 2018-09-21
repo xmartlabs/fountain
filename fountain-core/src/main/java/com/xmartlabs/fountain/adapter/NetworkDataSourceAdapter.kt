@@ -19,7 +19,7 @@ interface PageFetcher<T> {
    *
    * @param page The page number to fetch.
    * @param pageSize The page size to fetch.
-   * @return A [Single] of the type [T] that represent the service call.
+   * @return A [NetworkResultListener] of the type [T] that represent the service call.
    */
   fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>)
 }

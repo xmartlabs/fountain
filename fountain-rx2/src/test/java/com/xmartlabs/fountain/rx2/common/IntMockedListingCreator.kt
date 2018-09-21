@@ -3,17 +3,17 @@ package com.xmartlabs.fountain.rx2.common
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.rx2.FountainRxSupport
+import com.xmartlabs.fountain.rx2.FountainRx
 import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
 import com.xmartlabs.fountain.testutils.InstantExecutor
 import com.xmartlabs.fountain.testutils.IntCacheDataSourceFactory
-import com.xmartlabs.fountain.testutils.extensions.TestConstants
+import com.xmartlabs.fountain.testutils.TestConstants
 
 object IntMockedListingCreator {
   fun createNetworkListing(
       mockedNetworkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
-    return FountainRxSupport.createNetworkListing(
+    return FountainRx.createNetworkListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),
         firstPage = TestConstants.DEFAULT_FIRST_PAGE,
@@ -43,7 +43,7 @@ object IntMockedListingCreator {
       }
     }
 
-    return FountainRxSupport.createNetworkWithCacheSupportListing(
+    return FountainRx.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),

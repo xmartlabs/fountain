@@ -21,7 +21,6 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
   var helper = PagingRequestHelper(ioServiceExecutor)
   val networkState = MutableLiveData<NetworkState>()
 
-
   internal fun onInitialDataPreloaded() {
     page = 1 + firstPage + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
     val isLastPage = !networkDataSourceAdapter.canFetch(page = page + 1, pageSize = pagedListConfig.pageSize)
@@ -65,7 +64,6 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
       override fun onError(throwable: Throwable) {}
     }
 
-
     synchronized(this) {
       if (!isLoadingInitialData) {
         isLoadingInitialData = true
@@ -74,25 +72,21 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
         performRequest(processResponse, resetNetworkState, callback, request)
       } else {
         resetNetworkState.postValue(
-            createInitialLoadingErrorState(IllegalStateException("The first page cannot be fetched"))
+            NetworkState.Error(
+                IllegalStateException("The first page cannot be fetched"),
+                firstPage,
+                pagedListConfig.initialLoadSizeHint,
+                true,
+                isLastPage(page + 1)
+            )
         )
       }
     }
     return resetNetworkState
   }
 
-
-  private fun createInitialLoadingErrorState(throwable: Throwable) =
-      NetworkState.Error(throwable, firstPage, pagedListConfig.initialLoadSizeHint, true, isLastPage(page + 1))
-
-  private fun createLoadingState(page: Int, nextPage: Int, pageSize: Int): NetworkState.Loading {
-    return NetworkState.Loading(page, pageSize, page == firstPage, isLastPage(nextPage))
-  }
-
-  private fun createInitialLoadingState(): NetworkState.Loading {
-    val nextPage = firstPage + 1 + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
-    return createLoadingState(firstPage, nextPage, pagedListConfig.initialLoadSizeHint)
-  }
+  private fun createLoadingState(page: Int, nextPage: Int, pageSize: Int): NetworkState.Loading =
+      NetworkState.Loading(page, pageSize, page == firstPage, isLastPage(nextPage))
 
   private fun onInitialDataLoaded() {
     synchronized(this) {
@@ -104,23 +98,25 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
       processResponse: (request: Request, response: NetworkResponse, callback: Callback) -> Unit,
       networkState: MutableLiveData<NetworkState>,
       callback: Callback,
-      request: Request) {
-
+      request: Request
+  ) {
     ioServiceExecutor.execute {
       val loadingState = if (request.isFirstPage) {
-        createInitialLoadingState()
+        val nextPage = firstPage + 1 + pagedListConfig.initialLoadSizeHint / pagedListConfig.pageSize
+        createLoadingState(firstPage, nextPage, pagedListConfig.initialLoadSizeHint)
       } else {
         createLoadingState(request.page, request.page + 1, pagedListConfig.pageSize)
       }
       networkState.postValue(loadingState)
 
-      networkDataSourceAdapter.pageFetcher.fetchPage(request.page, request.pageSize, object : NetworkResultListener<NetworkResponse> {
-        override fun onSuccess(response: NetworkResponse) =
-            saveInDatabaseIfNeeded(processResponse, networkState, request, response, callback)
+      networkDataSourceAdapter.pageFetcher.fetchPage(request.page, request.pageSize,
+          object : NetworkResultListener<NetworkResponse> {
+            override fun onSuccess(response: NetworkResponse) =
+                saveInDatabaseIfNeeded(processResponse, networkState, request, response, callback)
 
-        override fun onError(t: Throwable) =
-            onErrorHappened(networkState, request, t, callback)
-      })
+            override fun onError(t: Throwable) =
+                onErrorHappened(networkState, request, t, callback)
+          })
     }
   }
 
@@ -128,7 +124,8 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
       networkState: MutableLiveData<NetworkState>,
       request: Request,
       throwable: Throwable,
-      callback: Callback) {
+      callback: Callback
+  ) {
     if (request.isFirstPage) {
       onInitialDataLoaded()
     }
@@ -162,6 +159,9 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
     })
   }
 
+  private fun isLastPage(nextPage: Int) =
+      !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = pagedListConfig.pageSize)
+
   internal data class Request(val page: Int, val pageSize: Int, val requestedPageCount: Int, val isFirstPage: Boolean) {
     constructor(page: Int, isFirstPage: Boolean, config: PagedList.Config) : this(
         page = page,
@@ -170,9 +170,6 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
         isFirstPage = isFirstPage
     )
   }
-
-  private fun isLastPage(nextPage: Int) =
-      !networkDataSourceAdapter.canFetch(page = nextPage, pageSize = pagedListConfig.pageSize)
 
   internal abstract class Callback {
     companion object {

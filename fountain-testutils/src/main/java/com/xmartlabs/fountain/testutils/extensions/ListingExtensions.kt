@@ -19,3 +19,5 @@ fun <T> Listing<T>.mockLifecycleEvents(): Listing<T> = apply {
 fun <T> Listing<T>.getPagedListSize() = pagedList.value?.size?.or(0)
 
 fun <T> Listing<T>.getPagedList() = pagedList.value!!.getList()
+
+fun Listing<*>.scrollToTheEnd() = pagedList.value!!.scrollToTheEnd()

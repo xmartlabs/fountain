@@ -1,4 +1,4 @@
-package com.xmartlabs.fountain.testutils.extensions;
+package com.xmartlabs.fountain.testutils;
 
 import android.arch.paging.PagedList
 
