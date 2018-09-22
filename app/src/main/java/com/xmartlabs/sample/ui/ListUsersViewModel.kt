@@ -8,12 +8,12 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.model.User
-import com.xmartlabs.sample.repository.UserRepository
+import com.xmartlabs.sample.repository.UserRepositoryUsingCoroutines
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ListUsersViewModel @Inject constructor(userRepository: UserRepository) : ViewModel() {
+class ListUsersViewModel @Inject constructor(userRepository: UserRepositoryUsingCoroutines) : ViewModel() {
   companion object {
     private val PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
   }

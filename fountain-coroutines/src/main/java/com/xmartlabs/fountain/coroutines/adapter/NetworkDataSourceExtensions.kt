@@ -11,7 +11,7 @@ internal fun <T> CoroutinePageFetcher<T>.toPageFetcher(): PageFetcher<T> {
       runBlocking {
         try {
           networkResultListener.onSuccess(this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).await())
-        } catch (throwable: Throwable){
+        } catch (throwable: Throwable) {
           networkResultListener.onError(throwable)
         }
       }

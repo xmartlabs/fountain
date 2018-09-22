@@ -6,6 +6,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.service.UserService
 import dagger.Module
@@ -46,8 +47,9 @@ class AppModule {
     return Retrofit.Builder()
         .baseUrl("https://api.github.com/")
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
   }
 

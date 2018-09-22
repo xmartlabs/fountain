@@ -11,7 +11,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 
 /** A [CoroutineNetworkDataSourceAdapter] factory */
-object NetworkDataSourceAdapterFactory {
+object CoroutineNetworkDataSourceAdapterFactory {
   /**
    * Provides a [CoroutineNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
    * It is used when the service returns the entity count in the response.
@@ -36,7 +36,7 @@ object NetworkDataSourceAdapterFactory {
               val responseValue = pageFetcher.fetchPage(page, pageSize).await()
               knownSizeResponseManager.onTotalEntityResponseArrived(responseValue)
               deferred.complete(responseValue)
-            } catch (throwable:Throwable){
+            } catch (throwable: Throwable) {
               deferred.completeExceptionally(throwable)
             }
           }
@@ -75,3 +75,31 @@ object NetworkDataSourceAdapterFactory {
     override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)
   }
 }
+
+/**
+ * Provides a [CoroutineNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
+ * It is used when the service returns the entity count in the response.
+ *
+ * @param Value The value that the service returns.
+ * @param ListResponseValue The response type that the service returns.
+ * @param pageFetcher It is used to fetch each page from the service.
+ * @param firstPage The first page number, defined by the service.
+ */
+fun <Value, ServiceResponse : ListResponseWithEntityCount<Value>>
+    CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountCoroutineNetworkDataSourceAdapter(
+    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+) = CoroutineNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
+
+/**
+ * Provides a [CoroutineNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
+ * It is used when the service returns the page count in the response.
+ *
+ * @param Value The value that the service returns.
+ * @param ListResponseValue The response type that the service returns.
+ * @param pageFetcher It is used to fetch each page from the service.
+ * @param firstPage The first page number, defined by the service.
+ */
+fun <Value, ServiceResponse : ListResponseWithPageCount<Value>>
+    CoroutinePageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(
+    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+) = CoroutineNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)
