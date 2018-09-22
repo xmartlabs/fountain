@@ -1,28 +1,31 @@
 package com.xmartlabs.fountain.rx2.common
 
+
+import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
-import com.xmartlabs.fountain.adapter.NetworkResultListener
-import com.xmartlabs.fountain.adapter.PageFetcher
+import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
 import com.xmartlabs.fountain.rx2.adapter.RxPageFetcher
 import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
+import com.xmartlabs.fountain.testutils.extensions.toListResponse
 import com.xmartlabs.fountain.testutils.extensions.toListResponseEntityCount
 import com.xmartlabs.fountain.testutils.extensions.toListResponsePageCount
 import io.reactivex.Single
 
-fun <T> PageFetcher<T>.toRxPageFetcher(): RxPageFetcher<T> {
-  return object : RxPageFetcher<T> {
-    override fun fetchPage(page: Int, pageSize: Int): Single<T> {
-      return Single.create {
-        fetchPage(page, pageSize, object : NetworkResultListener<T> {
-          override fun onSuccess(response: T) = it.onSuccess(response)
+class MockedPageFetcher(var error: Boolean = false) : RxPageFetcher<ListResponse<Int>> {
+  override fun fetchPage(page: Int, pageSize: Int): Single<ListResponse<Int>> =
+      if (error) Single.error(IllegalStateException("Mocked error")) else generateServiceCall(page)
 
-          override fun onError(t: Throwable) = it.onError(t)
-        })
-      }
-    }
-  }
+  private fun generateServiceCall(page: Int) = generateSpecificIntPageResponseList(page)
+      .toListResponse()
+      .toSingle()
 }
+
+fun <T> RxPageFetcher<T>.toInfiniteRxNetworkDataSourceAdapter() =
+    object : RxNetworkDataSourceAdapter<T> {
+      override val rxPageFetcher = this@toInfiniteRxNetworkDataSourceAdapter
+      override fun canFetch(page: Int, pageSize: Int) = true
+    }
 
 class EntityCountMockedPageFetcher(private val entityCount: Long) : RxPageFetcher<ListResponseWithEntityCount<Int>> {
   override fun fetchPage(page: Int, pageSize: Int): Single<ListResponseWithEntityCount<Int>> =

@@ -1,7 +1,13 @@
 package com.xmartlabs.fountain.testutils.extensions
 
+import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
+
+fun <T> List<T>.toListResponse(): ListResponse<T> =
+    object : ListResponse<T> {
+      override fun getElements(): List<T> = this@toListResponse
+    }
 
 fun <T> List<T>.toListResponseEntityCount(entityCount: Long): ListResponseWithEntityCount<T> =
     object : ListResponseWithEntityCount<T> {

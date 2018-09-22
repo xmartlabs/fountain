@@ -43,8 +43,12 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
             callback?.onFailure(call, t) ?: Unit
 
         override fun onResponse(call: Call<T>?, response: Response<T>) {
-          response.body()?.let {
-            onSuccessResponse.invoke(it)
+          response.body().let {
+            if (it == null){
+              callback?.onFailure(call, IllegalStateException("Response cannot be null"))
+            }else {
+              onSuccessResponse.invoke(it)
+            }
           }
           callback?.onResponse(call, response)
         }
