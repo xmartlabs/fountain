@@ -21,7 +21,6 @@ class UserRepositoryUsingRx @Inject constructor(
     private val userDao: UserDao,
     private val db: AppDb
 ) {
-  @MainThread
   fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : RxPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
@@ -35,7 +34,6 @@ class UserRepositoryUsingRx @Inject constructor(
     )
   }
 
-  @MainThread
   fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : RxPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =

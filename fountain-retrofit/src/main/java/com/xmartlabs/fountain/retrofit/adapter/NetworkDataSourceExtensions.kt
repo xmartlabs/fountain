@@ -43,14 +43,12 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
             callback?.onFailure(call, t) ?: Unit
 
         override fun onResponse(call: Call<T>?, response: Response<T>) {
-          response.body().let {
-            if (it == null){
-              callback?.onFailure(call, IllegalStateException("Response cannot be null"))
-            }else {
-              onSuccessResponse.invoke(it)
-            }
-          }
-          callback?.onResponse(call, response)
+          response.body()
+              ?.let {
+                callback?.onResponse(call, response)
+                onSuccessResponse.invoke(it)
+              }
+              .orDo { callback?.onFailure(call, IllegalStateException("Response cannot be null")) }
         }
       })
     }
@@ -74,3 +72,5 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
     override fun request() = this@doOnSuccess.request()
   }
 }
+
+private fun <T> T?.orDo(action: () -> T) = this ?: action()

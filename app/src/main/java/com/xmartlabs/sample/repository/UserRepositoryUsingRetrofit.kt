@@ -21,7 +21,6 @@ class UserRepositoryUsingRetrofit @Inject constructor(
     private val userDao: UserDao,
     private val db: AppDb
 ) {
-  @MainThread
   fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : RetrofitPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =
@@ -35,7 +34,6 @@ class UserRepositoryUsingRetrofit @Inject constructor(
     )
   }
 
-  @MainThread
   fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : RetrofitPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =

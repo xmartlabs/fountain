@@ -30,29 +30,29 @@ class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
 
   fun onSuccess(response: T) {
     synchronized(this) {
-      networkResultListener.let {
-        if (it == null) {
-          pendingError = null
-          pendingResponse = response
-        } else {
-          it.onSuccess(response)
-          networkResultListener = null
-        }
-      }
+      networkResultListener
+          ?.let {
+            it.onSuccess(response)
+            networkResultListener = null
+          }
+          .orDo {
+            pendingError = null
+            pendingResponse = response
+          }
     }
   }
 
   fun onError(t: Throwable) {
     synchronized(this) {
-      networkResultListener.let {
-        if (it == null) {
-          pendingError = t
-          pendingResponse = null
-        } else {
-          it.onError(t)
-          networkResultListener = null
-        }
-      }
+      networkResultListener
+          ?.let {
+            it.onError(t)
+            networkResultListener = null
+          }
+          .orDo {
+            pendingError = t
+            pendingResponse = null
+          }
     }
   }
 }

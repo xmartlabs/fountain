@@ -1,7 +1,6 @@
 package com.xmartlabs.sample.repository
 
 import android.arch.paging.PagedList
-import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.coroutines.FountainCoroutines
 import com.xmartlabs.fountain.coroutines.adapter.CoroutinePageFetcher
@@ -21,7 +20,6 @@ class UserRepositoryUsingCoroutines @Inject constructor(
     private val userDao: UserDao,
     private val db: AppDb
 ) {
-  @MainThread
   fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : CoroutinePageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Deferred<GhListResponse<User>> =
@@ -35,7 +33,6 @@ class UserRepositoryUsingCoroutines @Inject constructor(
     )
   }
 
-  @MainThread
   fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : CoroutinePageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Deferred<GhListResponse<User>> =
