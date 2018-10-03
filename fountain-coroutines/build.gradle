@@ -44,6 +44,12 @@ dependencies {
     testImplementation project(':fountain-testutils')
 }
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 dokka {
     outputDirectory = "$buildDir/docs"
 }
@@ -74,4 +80,3 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }
-

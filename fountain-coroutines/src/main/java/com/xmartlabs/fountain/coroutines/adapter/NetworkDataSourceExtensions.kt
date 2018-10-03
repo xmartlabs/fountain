@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.coroutines.adapter
 
+import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
@@ -7,6 +8,7 @@ import kotlinx.coroutines.experimental.runBlocking
 
 internal fun <T> CoroutinePageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
+    @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
       runBlocking {
         try {

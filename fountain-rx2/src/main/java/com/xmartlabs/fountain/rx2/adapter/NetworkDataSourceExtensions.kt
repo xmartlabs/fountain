@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.rx2.adapter
 
+import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
@@ -8,6 +9,7 @@ import io.reactivex.disposables.Disposable
 
 internal fun <T> RxPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
+    @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
       try {
         networkResultListener.onSuccess(this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).blockingGet())

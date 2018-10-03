@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.testutils
 
+import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
@@ -10,6 +11,7 @@ class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
   private var pendingResponse: T? = null
   private var pendingError: Throwable? = null
 
+  @WorkerThread
   override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
     synchronized(this) {
       pendingResponse
