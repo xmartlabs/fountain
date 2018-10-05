@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.pagefetcher
 
+import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
@@ -9,9 +10,6 @@ import com.xmartlabs.fountain.adapter.PageFetcher
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.common.KnownSizeResponseManager
 
-/**
- * Created by mirland on 10/08/18.
- */
 
 /**
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
@@ -51,6 +49,7 @@ class NetworkDataSourceWithTotalPageCountAdapter<T, R : ListResponseWithPageCoun
   override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)
 
   override val pageFetcher = object : PageFetcher<ListResponse<T>> {
+    @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<ListResponse<T>>) =
         pageFetcher.fetchPage(page, pageSize, object : NetworkResultListener<R> {
           override fun onSuccess(response: R) {

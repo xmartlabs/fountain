@@ -42,7 +42,7 @@ object CachedNetworkListingCreator {
         pagedList = builder.build(),
         networkState = boundaryCallback.networkState,
         retry = {
-          boundaryCallback.helper.retryAllFailed()
+          boundaryCallback.retry()
         },
         refresh = {
           refreshTrigger.value = null

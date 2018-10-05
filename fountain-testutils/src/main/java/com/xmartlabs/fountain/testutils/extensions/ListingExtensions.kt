@@ -8,7 +8,6 @@ import org.mockito.Mockito
 
 fun <T> Listing<T>.mockLifecycleEvents(): Listing<T> = apply {
   val lifecycle = LifecycleRegistry(Mockito.mock(LifecycleOwner::class.java))
-  lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
   refreshState.observe({ lifecycle }) { }
   pagedList.observe({ lifecycle }) { }
@@ -19,3 +18,5 @@ fun <T> Listing<T>.mockLifecycleEvents(): Listing<T> = apply {
 fun <T> Listing<T>.getPagedListSize() = pagedList.value?.size?.or(0)
 
 fun <T> Listing<T>.getPagedList() = pagedList.value!!.getList()
+
+fun Listing<*>.scrollToTheEnd() = pagedList.value!!.scrollToTheEnd()

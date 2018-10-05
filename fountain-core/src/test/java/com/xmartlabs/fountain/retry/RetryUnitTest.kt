@@ -6,9 +6,10 @@ import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
-import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
+import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.getPagedList
 import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
+import com.xmartlabs.fountain.testutils.extensions.scrollToTheEnd
 import com.xmartlabs.fountain.testutils.extensions.sendPageResponse
 import org.junit.Assert
 import org.junit.Assert.assertEquals
@@ -29,7 +30,7 @@ abstract class RetryUnitTest {
     assert(listing.networkState.value is NetworkState.Loading)
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.networkResultListener?.onError(exception)
+    mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
     assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
@@ -37,7 +38,7 @@ abstract class RetryUnitTest {
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert(listing.networkState.value is NetworkState.Loaded)
-    assertEquals(generateIntPageResponseList(0), listing.getPagedList())
+    assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
   }
 
   @Test
@@ -50,10 +51,11 @@ abstract class RetryUnitTest {
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert(listing.networkState.value is NetworkState.Loaded)
-    assertEquals(generateIntPageResponseList(0), listing.getPagedList())
+    assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
+    listing.scrollToTheEnd()
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.networkResultListener?.onError(exception)
+    mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
     var networkState : NetworkState = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE +1 ,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
@@ -68,7 +70,7 @@ abstract class RetryUnitTest {
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
 
-    assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
+    assertEquals(generateSpecificIntPageResponseList(0, 1), listing.getPagedList())
   }
 
   @Test
@@ -81,10 +83,11 @@ abstract class RetryUnitTest {
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert(listing.networkState.value is NetworkState.Loaded)
-    assertEquals(generateIntPageResponseList(0), listing.getPagedList())
+    assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
+    listing.scrollToTheEnd()
 
     val exception = Exception()
-    mockedNetworkDataSourceAdapter.networkResultListener?.onError(exception)
+    mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
     assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
@@ -94,7 +97,7 @@ abstract class RetryUnitTest {
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loaded)
-    assertEquals(generateIntPageResponseList(0, 1), listing.getPagedList())
+    assertEquals(generateSpecificIntPageResponseList(0, 1), listing.getPagedList())
   }
 
   protected abstract fun createListing(

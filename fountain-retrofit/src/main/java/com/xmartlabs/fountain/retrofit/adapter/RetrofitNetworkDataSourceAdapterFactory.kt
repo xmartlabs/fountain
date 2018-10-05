@@ -7,7 +7,7 @@ import com.xmartlabs.fountain.common.KnownSizeResponseManager
 import retrofit2.Call
 
 /** A [RetrofitNetworkDataSourceAdapter] factory */
-object NetworkDataSourceAdapterFactory {
+object RetrofitNetworkDataSourceAdapterFactory {
   /**
    * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
    * It is used when the service returns the entity count in the response.
@@ -58,3 +58,31 @@ object NetworkDataSourceAdapterFactory {
     override fun canFetch(page: Int, pageSize: Int) = knownSizeResponseManager.canFetch(page, pageSize)
   }
 }
+
+/**
+ * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
+ * It is used when the service returns the entity count in the response.
+ *
+ * @param Value The value that the service returns.
+ * @param ListResponseValue The response type that the service returns.
+ * @param pageFetcher It is used to fetch each page from the service.
+ * @param firstPage The first page number, defined by the service.
+ */
+fun <Value, ServiceResponse : ListResponseWithEntityCount<Value>>
+    RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountRetrofitNetworkDataSourceAdapter(
+    firstPage: Int = com.xmartlabs.fountain.common.FountainConstants.DEFAULT_FIRST_PAGE
+) = RetrofitNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
+
+/**
+ * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
+ * It is used when the service returns the page count in the response.
+ *
+ * @param Value The value that the service returns.
+ * @param ListResponseValue The response type that the service returns.
+ * @param pageFetcher It is used to fetch each page from the service.
+ * @param firstPage The first page number, defined by the service.
+ */
+fun <Value, ServiceResponse : ListResponseWithPageCount<Value>>
+    RetrofitPageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(
+    firstPage: Int = com.xmartlabs.fountain.common.FountainConstants.DEFAULT_FIRST_PAGE
+) = RetrofitNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)

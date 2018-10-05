@@ -1,30 +1,23 @@
 package com.xmartlabs.fountain.rx2.common
 
-import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.rx2.FountainRxSupport
+import com.xmartlabs.fountain.rx2.FountainRx
 import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
 import com.xmartlabs.fountain.testutils.InstantExecutor
 import com.xmartlabs.fountain.testutils.IntCacheDataSourceFactory
+import com.xmartlabs.fountain.testutils.TestConstants
 
 object IntMockedListingCreator {
-  private const val DEFAULT_FIRST_PAGE = 1
-  internal const val DEFAULT_NETWORK_PAGE_SIZE = 20
-  private val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
-      .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
-      .setInitialLoadSizeHint(DEFAULT_NETWORK_PAGE_SIZE)
-      .build()
-
   fun createNetworkListing(
       mockedNetworkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<Int>>
   ): Listing<Int> {
-    return FountainRxSupport.createNetworkListing(
+    return FountainRx.createNetworkListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),
-        firstPage = DEFAULT_FIRST_PAGE,
-        pagedListConfig = DEFAULT_PAGED_LIST_CONFIG
+        firstPage = TestConstants.DEFAULT_FIRST_PAGE,
+        pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
   }
 
@@ -50,13 +43,13 @@ object IntMockedListingCreator {
       }
     }
 
-    return FountainRxSupport.createNetworkWithCacheSupportListing(
+    return FountainRx.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
         ioServiceExecutor = InstantExecutor(),
         ioDatabaseExecutor = InstantExecutor(),
-        firstPage = DEFAULT_FIRST_PAGE,
-        pagedListConfig = DEFAULT_PAGED_LIST_CONFIG
+        firstPage = TestConstants.DEFAULT_FIRST_PAGE,
+        pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
   }
 }

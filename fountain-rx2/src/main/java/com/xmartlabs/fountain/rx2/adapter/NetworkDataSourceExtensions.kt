@@ -1,25 +1,21 @@
 package com.xmartlabs.fountain.rx2.adapter
 
+import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 
-private fun <T> NetworkResultListener<T>.toSingleObserver(): SingleObserver<T> = object : SingleObserver<T> {
-  override fun onSuccess(t: T) = this@toSingleObserver.onSuccess(t)
-
-  override fun onSubscribe(d: Disposable) {}
-
-  override fun onError(e: Throwable) = this@toSingleObserver.onError(e)
-}
-
-internal fun <T> RxPageFetcher<T>.toPageFetcher()
-    : PageFetcher<T> {
+internal fun <T> RxPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
+    @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
-      fetchPage(page = page, pageSize = pageSize)
-          .subscribe(networkResultListener.toSingleObserver())
+      try {
+        networkResultListener.onSuccess(this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).blockingGet())
+      } catch (throwable: Throwable){
+        networkResultListener.onError(throwable)
+      }
     }
   }
 }
