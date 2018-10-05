@@ -1,1 +1,1 @@
-include ':app', ':fountain-core', ':fountain-rx2', ':fountain-testutils', ':fountain-retrofit'
+include ':app', ':fountain-core', 'fountain-coroutines', ':fountain-rx2', ':fountain-testutils', ':fountain-retrofit'

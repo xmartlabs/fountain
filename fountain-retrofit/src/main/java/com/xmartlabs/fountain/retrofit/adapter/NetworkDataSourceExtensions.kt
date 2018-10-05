@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.retrofit.adapter
 
+import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
@@ -10,21 +11,18 @@ import retrofit2.Response
 
 private fun <T> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
+    @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
-      fetchPage(page = page, pageSize = pageSize).enqueue(object : Callback<T> {
-        override fun onFailure(call: Call<T>, t: Throwable) {
-          networkResultListener.onError(t)
+      try {
+        val response = this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).execute()
+        if (response.isSuccessful) {
+          networkResultListener.onSuccess(response.body()!!)
+        } else {
+          networkResultListener.onError(HttpException(response))
         }
-
-        override fun onResponse(call: Call<T>, response: Response<T>) {
-          if (response.isSuccessful) {
-            response.body()
-                ?.let { networkResultListener.onSuccess(it) }
-          } else {
-            networkResultListener.onError(HttpException(response))
-          }
-        }
-      })
+      } catch (throwable: Throwable) {
+        networkResultListener.onError(throwable)
+      }
     }
   }
 }
@@ -47,10 +45,12 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
             callback?.onFailure(call, t) ?: Unit
 
         override fun onResponse(call: Call<T>?, response: Response<T>) {
-          response.body()?.let {
-            onSuccessResponse.invoke(it)
-          }
-          callback?.onResponse(call, response)
+          response.body()
+              ?.let {
+                callback?.onResponse(call, response)
+                onSuccessResponse.invoke(it)
+              }
+              .orDo { callback?.onFailure(call, IllegalStateException("Response cannot be null")) }
         }
       })
     }
@@ -74,3 +74,5 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
     override fun request() = this@doOnSuccess.request()
   }
 }
+
+private fun <T> T?.orDo(action: () -> T) = this ?: action()

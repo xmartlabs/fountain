@@ -2,11 +2,7 @@ package com.xmartlabs.fountain.adapter
 
 import android.support.annotation.CheckResult
 import android.support.annotation.NonNull
-import com.xmartlabs.fountain.ListResponse
-import com.xmartlabs.fountain.ListResponseWithEntityCount
-import com.xmartlabs.fountain.ListResponseWithPageCount
-import com.xmartlabs.fountain.common.FountainConstants
-import com.xmartlabs.fountain.common.KnownSizeResponseManager
+import android.support.annotation.WorkerThread
 
 
 /** It is used to get notify the service response. */
@@ -20,12 +16,13 @@ interface NetworkResultListener<T> {
 /** It is used to fetch each page from the service. */
 interface PageFetcher<T> {
   /**
-   * Fetches the page [page] with a size [pageSize] from the service.
+   *Fetches the page [page] with a size [pageSize] from the service.
    *
    * @param page The page number to fetch.
    * @param pageSize The page size to fetch.
-   * @return A [Single] of the type [T] that represent the service call.
+   * @return A [NetworkResultListener] of the type [T] that represent the service call.
    */
+  @WorkerThread
   fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>)
 }
 

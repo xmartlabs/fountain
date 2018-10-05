@@ -4,7 +4,7 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
-import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
+import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.getPagedList
 import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
 import com.xmartlabs.fountain.testutils.extensions.sendPageResponse
@@ -35,6 +35,6 @@ class RefreshCacheModeUnitTest : RefreshUnitTest() {
     assert( listing.refreshState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert( listing.refreshState.value is NetworkState.Loaded)
-    Assert.assertEquals(generateIntPageResponseList(0), listing.getPagedList())
+    Assert.assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
   }
 }

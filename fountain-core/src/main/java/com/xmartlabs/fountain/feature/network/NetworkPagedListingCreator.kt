@@ -36,7 +36,7 @@ object NetworkPagedListingCreator {
           it.networkState
         },
         retry = {
-          sourceFactory.sourceLiveData.value?.retryAllFailed()
+          sourceFactory.retry()
         },
         refresh = {
           refreshTrigger.value = null
