@@ -21,7 +21,7 @@ class MockedPageFetcher(var error: Boolean = false) : CoroutinePageFetcher<ListR
       .toDeferred()
 }
 
-fun <T> CoroutinePageFetcher<T>.toInfiniteCoroutineNetworkDataSourceAdapter() =
+fun <T: ListResponse<*>> CoroutinePageFetcher<T>.toInfiniteCoroutineNetworkDataSourceAdapter() =
     object : CoroutineNetworkDataSourceAdapter<T> {
       override val coroutinePageFetcher = this@toInfiniteCoroutineNetworkDataSourceAdapter
       override fun canFetch(page: Int, pageSize: Int) = true

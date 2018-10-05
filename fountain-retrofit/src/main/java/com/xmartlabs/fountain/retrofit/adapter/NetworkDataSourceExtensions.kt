@@ -1,6 +1,7 @@
 package com.xmartlabs.fountain.retrofit.adapter
 
 import android.support.annotation.WorkerThread
+import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.PageFetcher
@@ -9,7 +10,7 @@ import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
 
-private fun <T> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
+private fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   return object : PageFetcher<T> {
     @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
@@ -27,7 +28,7 @@ private fun <T> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   }
 }
 
-internal fun <T> RetrofitNetworkDataSourceAdapter<T>.toNetworkDataSourceAdapter(): NetworkDataSourceAdapter<T> {
+internal fun <T : ListResponse<*>> RetrofitNetworkDataSourceAdapter<T>.toNetworkDataSourceAdapter(): NetworkDataSourceAdapter<T> {
   return object : NetworkDataSourceAdapter<T> {
     override val pageFetcher = retrofitPageFetcher.toPageFetcher()
 
