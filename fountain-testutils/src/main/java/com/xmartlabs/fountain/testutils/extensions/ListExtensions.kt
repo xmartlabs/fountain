@@ -7,6 +7,7 @@ fun <T> PagedList<T>.getList(): List<T?> =
     javaClass.superclass.getDeclaredField("mStorage")
         .let { field ->
           field.isAccessible = true
+          @Suppress("UNCHECKED_CAST")
           val abstractList = field.get(this) as AbstractList<T?>
           while (abstractList.contains(null)) {
             val indexOfFirst = abstractList.indexOfFirst { it == null }

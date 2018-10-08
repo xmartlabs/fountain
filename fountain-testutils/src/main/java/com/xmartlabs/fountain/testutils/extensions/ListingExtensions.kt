@@ -9,10 +9,10 @@ import org.mockito.Mockito
 fun <T> Listing<T>.mockLifecycleEvents(): Listing<T> = apply {
   val lifecycle = LifecycleRegistry(Mockito.mock(LifecycleOwner::class.java))
 
+  lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
   refreshState.observe({ lifecycle }) { }
   pagedList.observe({ lifecycle }) { }
   networkState.observe({ lifecycle }) { }
-  lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 }
 
 fun <T> Listing<T>.getPagedListSize() = pagedList.value?.size?.or(0)

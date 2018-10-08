@@ -18,8 +18,8 @@ and [part two](https://blog.xmartlabs.com/2018/08/20/Introducing-Fountain-Part-T
 Fountain is an Android Kotlin library conceived to make your life easier when dealing with paged endpoint services, where the paging is based on incremental page numbers (e.g. 1, 2, 3, ...).
 It uses the [Google Android Architecture Components](https://developer.android.com/topic/libraries/architecture/), mainly the [Android Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) to make it easier to work with paged services.
 
-The main goal of the library is to easily provide a [Listing](https://xmartlabs.gitbook.io/fountain/listing) component from a common service specification.
-[Listing](https://xmartlabs.gitbook.io/fountain/listing) provides essentially five elements to take control of the paged list:
+The main goal of the library is to easily **provide a [Listing] component from a common service specification**.
+[Listing] provides essentially five elements to take control of the paged list:
 
 ```kotlin
 data class Listing<T>(
@@ -41,16 +41,16 @@ Basically, you could manage all data streams with a `Listing` component, which i
 It's really flexible and useful to display the paged list entities and reflect the network status changes in the UI.
 
 Fountain provides two ways to generate a `Listing` component from paged services:    
-1. **Network support:** Provides a `Listing` based on a common Retrofit service implementation.
+1. [**Network support:**](#network-support) Provides a `Listing` based on a common Retrofit service implementation.
 Note entities won't be saved in memory nor disk.
-1. **Cache + Network support:** Provides a `Listing` with cache support using a common Retrofit service implementation, and a [`DataSource`](https://developer.android.com/reference/android/arch/paging/DataSource) for caching the data.
+1. [**Cache + Network support:**](#cache--network-support) Provides a `Listing` with cache support using a common Retrofit service implementation, and a [`DataSource`](https://developer.android.com/reference/android/arch/paging/DataSource) for caching the data.
 We recommend you use [Room](https://developer.android.com/topic/libraries/architecture/room) to provide the `DataSource`, because it will be easier. However, you could use any other `DataSource`.
 
 Fountain supports 2 types of Retrofit service adapters:
 - A [RxJava2 retrofit adapter.](https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2)
 - A [Coroutine retrofit adapter.](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter)
 
-It also supports not using an adapter, you can also work with a simple retrofit [call])(https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html). 
+It also supports not using an adapter, you can also work with a simple Retrofit [call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html).
 
 ## Download
 
@@ -87,30 +87,23 @@ Each static factory have two constructor, one for each Fountain mode.
 
 ### Network support
 
-The `Listing` with network support can be obtained using:
-```kotlin
-createNetworkListing(networkDataSourceAdapter)
-```
+The `Listing` with network support can be obtained invoking `createNetworkListing` from the static factory class.
 
-There's one network `NetworkDataSourceAdapter` per adapter.
-They provide all operations that the library will use to handle the paging.
-- `RetrofitNetworkDataSourceAdapter` used to handle the Retrofit requests.
-- `CoroutineNetworkDataSourceAdapter` used to handle the Coroutine requests. 
-- `RxNetworkDataSourceAdapter` used to handle the RxJava2 requests.
+It require only one argument, a `NetworkDataSourceAdapter`, which provides all operations that the library will use to handle the paging.
 
-The `NetworkDataSourceAdapter` provides a method to check if a page can be fetched and another one to fetch it.
+The `NetworkDataSourceAdapter` contains two methods: a method to check if a page can be fetched and another one to fetch it.
 
 ```kotlin
 interface NetworkDataSourceAdapter<T : ListResponse<*>> {
-  val pageFeatcher: PageFetcher<T>
+  val pageFetcher: PageFetcher<T>
 
   @CheckResult
   fun canFetch(page: Int, pageSize: Int): Boolean
 }
 ```
 
-`PageFetcher` is an structure which provides a method to fetch a page.
-As in the previous case, there are one `PageFetcher` per adapter. 
+`PageFetcher` is an structure which provides a way to fetch a page from a service call.
+There are one `PageFetcher` per library adapteradapter. 
 
 ```kotlin
 interface RetrofitPageFetcher<T : ListResponse<*>> {
@@ -138,9 +131,7 @@ interface ListResponse<T> {
 
 Additionally, there are other response types that can be used when the service provides more information in the response.
 
-##### List Response with Entity Count
-
-Used when the service provides the amount of entities.
+`ListResponseWithEntityCount`: Used when the service provides the amount of entities.
 
 ```kotlin
 interface ListResponseWithEntityCount<T> : ListResponse<T> {
@@ -148,9 +139,7 @@ interface ListResponseWithEntityCount<T> : ListResponse<T> {
 }
 ```
 
-##### List Response with Page Count
-
-Used when the service provides the amount of pages.
+`ListResponseWithPageCount`: Used when the service provides the amount of pages.
 
 ```kotlin
 interface ListResponseWithPageCount<T> : ListResponse<T> {
@@ -158,7 +147,6 @@ interface ListResponseWithPageCount<T> : ListResponse<T> {
 }
 ```
 
-### Generate `NetworkDataSourceAdapter` from a `PageFetcher` with a known size.
 If you use either `ListResponseWithPageCount` or `ListResponseWithEntityCount` you can convert a `PageFetcher` to a `NetworkDataSourceAdapter`.
 That means that if the response has the number of pages or entities you can get a `NetworkDataSourceAdapter` without implement the `canFetch` method.
 
@@ -166,38 +154,28 @@ To do that Fountain provides some extensions en each adapter module.
 ```kotlin
 // Retrofit adapter extensions
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountRetrofitNetworkDataSourceAdapter(
-    firstPage: Int = com.xmartlabs.fountain.common.FountainConstants.DEFAULT_FIRST_PAGE
-)
+    RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
 fun <ServiceResponse : ListResponseWithPageCount<*>>
-    RetrofitPageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(firstPage: Int)
+    RetrofitPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
 
 // CoroutinePageFetcher adapter extensions
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountCoroutineNetworkDataSourceAdapter(firstPage: Int)
-
+    CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
 fun <ServiceResponse : ListResponseWithPageCount<*>>
-    CoroutinePageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(firstPage: Int)
+    CoroutinePageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
 
 // RxPageFetcher adapter extensions
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    RxPageFetcher<ServiceResponse>.toTotalEntityCountRetrofitNetworkDataSourceAdapter(firstPage: Int)
+    RxPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
 fun <ServiceResponse : ListResponseWithPageCount<*>>
-     RxPageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(firstPage: Int)
+     RxPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
 ```
+
 ### Cache + Network support
 
-The `Listing` with network and cache support can be obtained using:
-
-```kotlin
-createNetworkWithCacheSupportListing(
-  networkDataSourceAdapter = networkDataSourceAdapter,
-  cachedDataSourceAdapter = cachedDataSourceAdapter
-)
-
-```
-There are two required components: 
-1. A `NetworkDataSourceAdapter<out ListResponse<Value>>` to fetch all pages.
+The `Listing` with network and cache support can be obtained invoking `createNetworkWithCacheSupportListing` from the static factory class.
+It has two required components: 
+1. A `NetworkDataSourceAdapter<out ListResponse<NetworkValue>>` to fetch all pages.
 1. A `CachedDataSourceAdapter<NetworkValue, DataSourceValue>` to update the `DataSource`.
 It's the interface that the library will use to take control of the `DataSource`.
 
@@ -259,3 +237,5 @@ The changelog for this project can be found in the [CHANGELOG](CHANGELOG.md) fil
 
 ## About
 Made with ❤️ by [XMARTLABS](http://xmartlabs.com)
+
+[Listing]: https://xmartlabs.gitbook.io/fountain/listing

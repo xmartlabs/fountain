@@ -6,7 +6,7 @@ import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.coroutines.adapter.CoroutineNetworkDataSourceAdapter
-import com.xmartlabs.fountain.coroutines.adapter.toNetworkDataSourceAdapter
+import com.xmartlabs.fountain.coroutines.adapter.toBaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import kotlinx.coroutines.experimental.CoroutineDispatcher
@@ -35,8 +35,8 @@ object FountainCoroutines {
    * @return A [Listing] structure with Network Support.
    */
   @Suppress("LongParameterList")
-  fun <NetworkValue, ServiceResponse : ListResponse<NetworkValue>> createNetworkListing(
-      networkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<ServiceResponse>,
+  fun <NetworkValue> createNetworkListing(
+      networkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE,
       ioServiceCoroutineDispatcher: CoroutineDispatcher = FountainConstants.NETWORK_EXECUTOR.asCoroutineDispatcher(),
       coroutineScope: CoroutineScope = GlobalScope,
@@ -45,7 +45,7 @@ object FountainCoroutines {
       firstPage = firstPage,
       ioServiceExecutor = ioServiceCoroutineDispatcher.toExecutor(coroutineScope),
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
+      networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
 
   /**
@@ -82,7 +82,7 @@ object FountainCoroutines {
       ioDatabaseExecutor = ioDatabaseCoroutineDispatcher.toExecutor(coroutineScope),
       ioServiceExecutor = ioServiceCoroutineDispatcher.toExecutor(coroutineScope),
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
+      networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
 }
 

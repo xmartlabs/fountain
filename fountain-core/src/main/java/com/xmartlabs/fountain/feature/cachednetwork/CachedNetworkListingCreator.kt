@@ -6,6 +6,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
+import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
@@ -18,7 +19,7 @@ object CachedNetworkListingCreator {
       ioDatabaseExecutor: Executor,
       ioServiceExecutor: Executor,
       pagedListConfig: PagedList.Config,
-      networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>
+      networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>
   ): Listing<DataSourceValue> {
 
     val boundaryCallback = BoundaryCallback(

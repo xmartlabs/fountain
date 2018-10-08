@@ -27,7 +27,7 @@ object CoroutineNetworkDataSourceAdapterFactory {
   ) = object : CoroutineNetworkDataSourceAdapter<ListResponseValue> {
     private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
-    override val coroutinePageFetcher: CoroutinePageFetcher<ListResponseValue>
+    override val pageFetcher: CoroutinePageFetcher<ListResponseValue>
       get() = object : CoroutinePageFetcher<ListResponseValue> {
         override fun fetchPage(page: Int, pageSize: Int): Deferred<ListResponseValue> {
           val deferred = CompletableDeferred<ListResponseValue>()
@@ -62,7 +62,7 @@ object CoroutineNetworkDataSourceAdapterFactory {
   ) = object : CoroutineNetworkDataSourceAdapter<ListResponseValue> {
     private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
-    override val coroutinePageFetcher: CoroutinePageFetcher<ListResponseValue>
+    override val pageFetcher: CoroutinePageFetcher<ListResponseValue>
       get() = object : CoroutinePageFetcher<ListResponseValue> {
         override fun fetchPage(page: Int, pageSize: Int): Deferred<ListResponseValue> =
             GlobalScope.async {
@@ -84,7 +84,7 @@ object CoroutineNetworkDataSourceAdapterFactory {
  * @param firstPage The first page number, defined by the service.
  */
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountCoroutineNetworkDataSourceAdapter(
+    CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(
     firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) = CoroutineNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
 
@@ -96,6 +96,6 @@ fun <ServiceResponse : ListResponseWithEntityCount<*>>
  * @param firstPage The first page number, defined by the service.
  */
 fun <ServiceResponse : ListResponseWithPageCount<*>>
-    CoroutinePageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(
+    CoroutinePageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(
     firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) = CoroutineNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)

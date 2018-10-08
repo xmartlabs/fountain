@@ -1,7 +1,7 @@
 package com.xmartlabs.fountain.rx2.adapter
 
-import android.support.annotation.CheckResult
 import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import io.reactivex.Single
 
 /**
@@ -20,10 +20,4 @@ interface RxPageFetcher<T : ListResponse<*>> {
 }
 
 /** It is used to handle the paging state */
-interface RxNetworkDataSourceAdapter<T : ListResponse<*>> {
-  val rxPageFetcher: RxPageFetcher<T>
-
-  /** Returns `true` if the page [page] with a size [pageSize] can be fetched */
-  @CheckResult
-  fun canFetch(page: Int, pageSize: Int): Boolean
-}
+interface RxNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<RxPageFetcher<T>>

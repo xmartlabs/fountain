@@ -7,15 +7,16 @@ import android.arch.paging.PagedList
 import android.support.annotation.AnyThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.feature.PagerManager
 import java.util.concurrent.Executor
 
 internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
-    private val firstPage: Int,
-    private val ioServiceExecutor: Executor,
-    private val pagedListConfig: PagedList.Config,
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<ServiceResponse>,
+    firstPage: Int,
+    ioServiceExecutor: Executor,
+    pagedListConfig: PagedList.Config,
+    networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>,
     private val initData: ServiceResponse?
 ) : PageKeyedDataSource<Int, T>() {
 

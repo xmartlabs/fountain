@@ -18,7 +18,7 @@ ext {
             gson                           : '2.8.5',
             jacoco                         : '0.11.0',
             junit                          : '4.12',
-            kotlin                         : '1.2.41',
+            kotlin                         : '1.2.70',
             kotlinCoroutines               : '0.26.0',
             kotlinCoroutinesRetrofitAdapter: '1.0.0',
             mavenPlugin                    : '2.0',

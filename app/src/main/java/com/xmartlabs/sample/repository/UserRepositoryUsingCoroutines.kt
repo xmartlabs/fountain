@@ -4,7 +4,7 @@ import android.arch.paging.PagedList
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.coroutines.FountainCoroutines
 import com.xmartlabs.fountain.coroutines.adapter.CoroutinePageFetcher
-import com.xmartlabs.fountain.coroutines.adapter.toTotalEntityCountCoroutineNetworkDataSourceAdapter
+import com.xmartlabs.fountain.coroutines.adapter.toTotalEntityCountNetworkDataSourceAdapter
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.User
@@ -26,7 +26,7 @@ class UserRepositoryUsingCoroutines @Inject constructor(
           userService.searchUsersUsingCoroutines(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountCoroutineNetworkDataSourceAdapter()
+    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
     return FountainCoroutines.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
@@ -39,7 +39,7 @@ class UserRepositoryUsingCoroutines @Inject constructor(
           userService.searchUsersUsingCoroutines(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountCoroutineNetworkDataSourceAdapter()
+    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
 
     val cachedDataSourceAdapter = UserCachedDataSourceAdapter(userName, userDao, db)
     return FountainCoroutines.createNetworkWithCacheSupportListing(

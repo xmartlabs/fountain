@@ -22,7 +22,7 @@ object RxNetworkDataSourceAdapterFactory {
   ) = object : RxNetworkDataSourceAdapter<ListResponseValue> {
     private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
-    override val rxPageFetcher: RxPageFetcher<ListResponseValue>
+    override val pageFetcher: RxPageFetcher<ListResponseValue>
       get() = object : RxPageFetcher<ListResponseValue> {
         override fun fetchPage(page: Int, pageSize: Int): Single<ListResponseValue> =
             pageFetcher.fetchPage(page, pageSize)
@@ -46,7 +46,7 @@ object RxNetworkDataSourceAdapterFactory {
   ) = object : RxNetworkDataSourceAdapter<ListResponseValue> {
     private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
-    override val rxPageFetcher: RxPageFetcher<ListResponseValue>
+    override val pageFetcher: RxPageFetcher<ListResponseValue>
       get() = object : RxPageFetcher<ListResponseValue> {
         override fun fetchPage(page: Int, pageSize: Int): Single<ListResponseValue> =
             pageFetcher.fetchPage(page, pageSize)
@@ -65,7 +65,7 @@ object RxNetworkDataSourceAdapterFactory {
  * @param firstPage The first page number, defined by the service.
  */
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    RxPageFetcher<ServiceResponse>.toTotalEntityCountRetrofitNetworkDataSourceAdapter(
+    RxPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(
     firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) = RxNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
 
@@ -77,6 +77,6 @@ fun <ServiceResponse : ListResponseWithEntityCount<*>>
  * @param firstPage The first page number, defined by the service.
  */
 fun <ServiceResponse : ListResponseWithPageCount<*>>
-    RxPageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(
+    RxPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(
     firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) = RxNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)

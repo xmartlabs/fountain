@@ -6,12 +6,13 @@ import android.arch.paging.PagedList
 import android.arch.paging.PagingRequestHelper
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import java.util.concurrent.Executor
 
 internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out NetworkValue>>(
-    private val networkDataSourceAdapter: NetworkDataSourceAdapter<NetworkResponse>,
+    private val networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
     private val pagedListConfig: PagedList.Config,
     private val ioServiceExecutor: Executor,
     private val firstPage: Int

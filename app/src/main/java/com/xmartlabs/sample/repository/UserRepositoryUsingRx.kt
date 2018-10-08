@@ -1,11 +1,10 @@
 package com.xmartlabs.sample.repository
 
 import android.arch.paging.PagedList
-import android.support.annotation.MainThread
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.rx2.FountainRx
 import com.xmartlabs.fountain.rx2.adapter.RxPageFetcher
-import com.xmartlabs.fountain.rx2.adapter.toTotalEntityCountRetrofitNetworkDataSourceAdapter
+import com.xmartlabs.fountain.rx2.adapter.toTotalEntityCountNetworkDataSourceAdapter
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.User
@@ -27,7 +26,7 @@ class UserRepositoryUsingRx @Inject constructor(
           userService.searchUsersUsingRx(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountRetrofitNetworkDataSourceAdapter()
+    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
     return FountainRx.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
@@ -40,7 +39,7 @@ class UserRepositoryUsingRx @Inject constructor(
           userService.searchUsersUsingRx(userName, page = page, pageSize = pageSize)
     })
 
-    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountRetrofitNetworkDataSourceAdapter()
+    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
 
     val cachedDataSourceAdapter = UserCachedDataSourceAdapter(userName, userDao, db)
     return FountainRx.createNetworkWithCacheSupportListing(

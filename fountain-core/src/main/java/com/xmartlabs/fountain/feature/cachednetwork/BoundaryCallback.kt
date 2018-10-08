@@ -5,13 +5,14 @@ import android.arch.paging.PagedList
 import android.support.annotation.AnyThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
+import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.feature.PagerManager
 import java.util.concurrent.Executor
 
 internal class BoundaryCallback<NetworkValue, DataSourceValue, NetworkResponse : ListResponse<out NetworkValue>>(
-    networkDataSourceAdapter: NetworkDataSourceAdapter<NetworkResponse>,
+    networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
     private val cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
     pagedListConfig: PagedList.Config,
     ioServiceExecutor: Executor,
