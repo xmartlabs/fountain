@@ -1,6 +1,5 @@
 package com.xmartlabs.fountain.retrofit.adapter
 
-import android.support.annotation.CheckResult
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import retrofit2.Call
@@ -20,5 +19,5 @@ interface RetrofitPageFetcher<T : ListResponse<*>> {
   fun fetchPage(page: Int, pageSize: Int): Call<T>
 }
 
-/**It's [NetworkDataSourceAdapter] based on a [RetrofitPageFetcher]. */
+/**It's a [NetworkDataSourceAdapter] based on a [RetrofitPageFetcher]. */
 interface RetrofitNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<RetrofitPageFetcher<T>>

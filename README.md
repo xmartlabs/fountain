@@ -50,7 +50,7 @@ Fountain supports 2 types of Retrofit service adapters:
 - A [RxJava2 retrofit adapter.](https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2)
 - A [Coroutine retrofit adapter.](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter)
 
-It also supports not using an adapter, you can also work with a simple Retrofit [call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html).
+It also supports not using any of them, as you could work with a simple Retrofit [call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html).
 
 ## Download
 
@@ -80,16 +80,16 @@ You can read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
 ### Factory constructors
 There's one static factory object class for each each dependency.
 - FountainCoroutines: Used to get a [Listing] from a Retrofit service which uses a Coroutine adapter.
-- FountainRetrofit: Used to get the a [Listing] from a Retrofit service without using an special adapter.
+- FountainRetrofit: Used to get a [Listing] from a Retrofit service without using an special adapter.
 - FountainRx: Used to get a [Listing] from a Retrofit service which uses a RxJava2 adapter.
 
-Each static factory have two constructor, one for each Fountain mode.
+Each static factory has two constructors, one for each Fountain mode.
 
 ### Network support
 
 The `Listing` with network support can be obtained invoking `createNetworkListing` from the static factory class.
 
-It require only one argument, a `NetworkDataSourceAdapter`, which provides all operations that the library will use to handle the paging.
+It requires only one argument, a `NetworkDataSourceAdapter`, which provides all operations that the library will use to handle the paging.
 
 The `NetworkDataSourceAdapter` contains two main functions: a method to check if a page can be fetched and a property to fetch it.
 
@@ -102,7 +102,7 @@ interface NetworkDataSourceAdapter<PageFetcher> {
 }
 ```
 
-`PageFetcher` is an structure which provides a way to fetch a page from a service call.
+`PageFetcher` is a structure that provides a way to fetch a page from a service call.
 There is one page fetcher per library adapter, we will refer to any of them as `PageFetcher` throughout the documentation. 
 
 ```kotlin
@@ -148,7 +148,7 @@ interface ListResponseWithPageCount<T> : ListResponse<T> {
 ```
 
 If you use either `ListResponseWithPageCount` or `ListResponseWithEntityCount` you can convert a `PageFetcher` to a `NetworkDataSourceAdapter`.
-That means that if the response has the number of pages or entities you can get a `NetworkDataSourceAdapter` without implement the `canFetch` method.
+That means that if the response has the number of pages or entities you can get a `NetworkDataSourceAdapter` without implementing the `canFetch` method.
 
 To do that Fountain provides some extensions:
 ```kotlin
@@ -197,7 +197,7 @@ The pagination strategy that **Fountain** is using can be seen in the following 
 It starts with an initial service data request.
 By default the initial data requested is three pages, but this value can be changed, in the [`PagedList.Config`](https://developer.android.com/reference/android/arch/paging/PagedList.Config.html), using the [`setInitialLoadSizeHint`](https://developer.android.com/reference/android/arch/paging/PagedList.Config.html#initialLoadSizeHint) method.
 This parameter can be set in the factory constructor method. 
-When the service data comes, all data is refreshed in the `DataSource` using the `CachedDataSourceAdapter`.
+When the service data comes from the service, all data is refreshed in the `DataSource` using the `CachedDataSourceAdapter`.
 Note that the `Listing` component will notify that the data changed.
 
 After that, the [Android Paging Library] will require pages when the local data is running low.

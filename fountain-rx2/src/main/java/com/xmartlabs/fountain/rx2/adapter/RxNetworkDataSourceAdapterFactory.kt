@@ -61,7 +61,7 @@ object RxNetworkDataSourceAdapterFactory {
  * Provides a [RxNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the entity count in the response.
  *
- * @param ServiceResponse The response type that the service returns.
+ * @param ServiceResponse The response type returned by the service.
  * @param firstPage The first page number, defined by the service.
  */
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
@@ -73,7 +73,7 @@ fun <ServiceResponse : ListResponseWithEntityCount<*>>
  * Provides a [RxNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the page count in the response.
  *
- * @param ServiceResponse The response type that the service returns.
+ * @param ServiceResponse The response type returned by the service.
  * @param firstPage The first page number, defined by the service.
  */
 fun <ServiceResponse : ListResponseWithPageCount<*>>

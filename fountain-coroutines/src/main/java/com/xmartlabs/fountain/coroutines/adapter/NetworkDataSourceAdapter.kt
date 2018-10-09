@@ -1,6 +1,5 @@
 package com.xmartlabs.fountain.coroutines.adapter
 
-import android.support.annotation.CheckResult
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import kotlinx.coroutines.experimental.Deferred
@@ -20,5 +19,5 @@ interface CoroutinePageFetcher<T : ListResponse<*>> {
   fun fetchPage(page: Int, pageSize: Int): Deferred<T>
 }
 
-/**It's [NetworkDataSourceAdapter] based on a [CoroutinePageFetcher]. */
+/**It's a [NetworkDataSourceAdapter] based on a [CoroutinePageFetcher]. */
 interface CoroutineNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<CoroutinePageFetcher<T>>
