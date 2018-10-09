@@ -1,20 +1,21 @@
 package com.xmartlabs.fountain.retrofit.adapter
 
 import android.support.annotation.WorkerThread
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
+import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
+import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
-import com.xmartlabs.fountain.adapter.PageFetcher
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
 
-private fun <T> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
-  return object : PageFetcher<T> {
+private fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toBasePageFetcher(): BasePageFetcher<T> {
+  return object : BasePageFetcher<T> {
     @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
       try {
-        val response = this@toPageFetcher.fetchPage(page = page, pageSize = pageSize).execute()
+        val response = this@toBasePageFetcher.fetchPage(page = page, pageSize = pageSize).execute()
         if (response.isSuccessful) {
           networkResultListener.onSuccess(response.body()!!)
         } else {
@@ -27,14 +28,13 @@ private fun <T> RetrofitPageFetcher<T>.toPageFetcher(): PageFetcher<T> {
   }
 }
 
-internal fun <T> RetrofitNetworkDataSourceAdapter<T>.toNetworkDataSourceAdapter(): NetworkDataSourceAdapter<T> {
-  return object : NetworkDataSourceAdapter<T> {
-    override val pageFetcher = retrofitPageFetcher.toPageFetcher()
+internal fun <T : ListResponse<*>> RetrofitNetworkDataSourceAdapter<T>.toBaseNetworkDataSourceAdapter() =
+    object : BaseNetworkDataSourceAdapter<T> {
+      override val pageFetcher = this@toBaseNetworkDataSourceAdapter.pageFetcher.toBasePageFetcher()
 
-    override fun canFetch(page: Int, pageSize: Int): Boolean =
-        this@toNetworkDataSourceAdapter.canFetch(page = page, pageSize = pageSize)
-  }
-}
+      override fun canFetch(page: Int, pageSize: Int): Boolean =
+          this@toBaseNetworkDataSourceAdapter.canFetch(page = page, pageSize = pageSize)
+    }
 
 @Suppress("ComplexMethod")
 internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {

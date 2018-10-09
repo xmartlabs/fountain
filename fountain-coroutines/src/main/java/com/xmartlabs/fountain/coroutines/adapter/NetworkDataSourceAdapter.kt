@@ -1,13 +1,14 @@
 package com.xmartlabs.fountain.coroutines.adapter
 
-import android.support.annotation.CheckResult
+import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import kotlinx.coroutines.experimental.Deferred
 
 /**
  * It is used to fetch each page from the service.
- * It's based on [RxJava](https://github.com/ReactiveX/RxJava).
+ * It's based on [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html).
  */
-interface CoroutinePageFetcher<T> {
+interface CoroutinePageFetcher<T : ListResponse<*>> {
   /**
    * Fetches the page [page] with a size [pageSize] from the service.
    *
@@ -18,11 +19,5 @@ interface CoroutinePageFetcher<T> {
   fun fetchPage(page: Int, pageSize: Int): Deferred<T>
 }
 
-/** It is used to handle the paging state */
-interface CoroutineNetworkDataSourceAdapter<T> {
-  val coroutinePageFetcher: CoroutinePageFetcher<T>
-
-  /** Returns `true` if the page [page] with a size [pageSize] can be fetched */
-  @CheckResult
-  fun canFetch(page: Int, pageSize: Int): Boolean
-}
+/**It's a [NetworkDataSourceAdapter] based on a [CoroutinePageFetcher]. */
+interface CoroutineNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<CoroutinePageFetcher<T>>

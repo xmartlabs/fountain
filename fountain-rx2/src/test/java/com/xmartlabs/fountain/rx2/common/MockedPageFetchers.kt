@@ -21,9 +21,9 @@ class MockedPageFetcher(var error: Boolean = false) : RxPageFetcher<ListResponse
       .toSingle()
 }
 
-fun <T> RxPageFetcher<T>.toInfiniteRxNetworkDataSourceAdapter() =
+fun <T: ListResponse<*>> RxPageFetcher<T>.toInfiniteRxNetworkDataSourceAdapter() =
     object : RxNetworkDataSourceAdapter<T> {
-      override val rxPageFetcher = this@toInfiniteRxNetworkDataSourceAdapter
+      override val pageFetcher = this@toInfiniteRxNetworkDataSourceAdapter
       override fun canFetch(page: Int, pageSize: Int) = true
     }
 

@@ -1,12 +1,12 @@
 package com.xmartlabs.fountain.testutils
 
 import android.support.annotation.WorkerThread
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
+import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
+import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
-import com.xmartlabs.fountain.adapter.PageFetcher
 
 
-class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
+class MockedNetworkDataSourcePageFetcher<T> : BasePageFetcher<T> {
   private var networkResultListener: NetworkResultListener<T>? = null
   private var pendingResponse: T? = null
   private var pendingError: Throwable? = null
@@ -59,7 +59,7 @@ class MockedNetworkDataSourcePageFetcher<T> : PageFetcher<T> {
   }
 }
 
-class MockedNetworkDataSourceAdapter<T> : NetworkDataSourceAdapter<T> {
+class MockedNetworkDataSourceAdapter<T> : BaseNetworkDataSourceAdapter<T> {
   override val pageFetcher = MockedNetworkDataSourcePageFetcher<T>()
 
   override fun canFetch(page: Int, pageSize: Int): Boolean = true

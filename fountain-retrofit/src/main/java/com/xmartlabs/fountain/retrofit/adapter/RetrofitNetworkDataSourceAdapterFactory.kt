@@ -17,13 +17,13 @@ object RetrofitNetworkDataSourceAdapterFactory {
    * @param pageFetcher It is used to fetch each page from the service.
    * @param firstPage The first page number, defined by the service.
    */
-  fun <Value, ListResponseValue : ListResponseWithEntityCount<Value>> fromTotalEntityCountListResponse(
+  fun <ListResponseValue : ListResponseWithEntityCount<*>> fromTotalEntityCountListResponse(
       pageFetcher: RetrofitPageFetcher<ListResponseValue>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
   ) = object : RetrofitNetworkDataSourceAdapter<ListResponseValue> {
     private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
-    override val retrofitPageFetcher: RetrofitPageFetcher<ListResponseValue>
+    override val pageFetcher: RetrofitPageFetcher<ListResponseValue>
       get() = object : RetrofitPageFetcher<ListResponseValue> {
         override fun fetchPage(page: Int, pageSize: Int): Call<ListResponseValue> =
             pageFetcher.fetchPage(page, pageSize)
@@ -42,13 +42,13 @@ object RetrofitNetworkDataSourceAdapterFactory {
    * @param pageFetcher It is used to fetch each page from the service.
    * @param firstPage The first page number, defined by the service.
    */
-  fun <Value, ListResponseValue : ListResponseWithPageCount<Value>> fromTotalPageCountListResponse(
+  fun <ListResponseValue : ListResponseWithPageCount<*>> fromTotalPageCountListResponse(
       pageFetcher: RetrofitPageFetcher<ListResponseValue>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
   ) = object : RetrofitNetworkDataSourceAdapter<ListResponseValue> {
     private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
-    override val retrofitPageFetcher: RetrofitPageFetcher<ListResponseValue>
+    override val pageFetcher: RetrofitPageFetcher<ListResponseValue>
       get() = object : RetrofitPageFetcher<ListResponseValue> {
         override fun fetchPage(page: Int, pageSize: Int): Call<ListResponseValue> =
             pageFetcher.fetchPage(page, pageSize)
@@ -63,26 +63,22 @@ object RetrofitNetworkDataSourceAdapterFactory {
  * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the entity count in the response.
  *
- * @param Value The value that the service returns.
- * @param ListResponseValue The response type that the service returns.
- * @param pageFetcher It is used to fetch each page from the service.
+ * @param ServiceResponse The response type returned by the service.
  * @param firstPage The first page number, defined by the service.
  */
-fun <Value, ServiceResponse : ListResponseWithEntityCount<Value>>
-    RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountRetrofitNetworkDataSourceAdapter(
-    firstPage: Int = com.xmartlabs.fountain.common.FountainConstants.DEFAULT_FIRST_PAGE
+fun <ServiceResponse : ListResponseWithEntityCount<*>>
+    RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(
+    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) = RetrofitNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
 
 /**
  * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the page count in the response.
  *
- * @param Value The value that the service returns.
- * @param ListResponseValue The response type that the service returns.
- * @param pageFetcher It is used to fetch each page from the service.
+ * @param ServiceResponse The response type returned by the service.
  * @param firstPage The first page number, defined by the service.
  */
-fun <Value, ServiceResponse : ListResponseWithPageCount<Value>>
-    RetrofitPageFetcher<ServiceResponse>.toTotalPageCountCoroutineNetworkDataSourceAdapter(
-    firstPage: Int = com.xmartlabs.fountain.common.FountainConstants.DEFAULT_FIRST_PAGE
+fun <ServiceResponse : ListResponseWithPageCount<*>>
+    RetrofitPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(
+    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
 ) = RetrofitNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)

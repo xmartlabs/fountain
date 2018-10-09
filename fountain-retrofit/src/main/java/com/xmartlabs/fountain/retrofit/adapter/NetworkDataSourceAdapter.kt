@@ -1,13 +1,14 @@
 package com.xmartlabs.fountain.retrofit.adapter
 
-import android.support.annotation.CheckResult
+import com.xmartlabs.fountain.ListResponse
+import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import retrofit2.Call
 
 /**
  * It is used to fetch each page from the service.
  * It's based on [Retrofit](https://square.github.io/retrofit/) service response.
  */
-interface RetrofitPageFetcher<T> {
+interface RetrofitPageFetcher<T : ListResponse<*>> {
   /**
    * Fetches the page [page] with a size [pageSize] from the service.
    *
@@ -18,11 +19,5 @@ interface RetrofitPageFetcher<T> {
   fun fetchPage(page: Int, pageSize: Int): Call<T>
 }
 
-/** It is used to handle the paging state */
-interface RetrofitNetworkDataSourceAdapter<T> {
-  val retrofitPageFetcher: RetrofitPageFetcher<T>
-
-  /** Returns `true` if the page [page] with a size [pageSize] can be fetched */
-  @CheckResult
-  fun canFetch(page: Int, pageSize: Int): Boolean
-}
+/**It's a [NetworkDataSourceAdapter] based on a [RetrofitPageFetcher]. */
+interface RetrofitNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<RetrofitPageFetcher<T>>

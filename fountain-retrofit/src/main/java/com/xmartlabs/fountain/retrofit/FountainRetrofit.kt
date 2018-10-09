@@ -8,7 +8,7 @@ import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
-import com.xmartlabs.fountain.retrofit.adapter.toNetworkDataSourceAdapter
+import com.xmartlabs.fountain.retrofit.adapter.toBaseNetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 
@@ -38,7 +38,7 @@ object FountainRetrofit {
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
+      networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
 
   /**
@@ -73,6 +73,6 @@ object FountainRetrofit {
       ioDatabaseExecutor = ioDatabaseExecutor,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
+      networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
 }
