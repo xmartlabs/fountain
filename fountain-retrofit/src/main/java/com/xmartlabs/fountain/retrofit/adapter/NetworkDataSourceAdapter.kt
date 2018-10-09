@@ -20,4 +20,5 @@ interface RetrofitPageFetcher<T : ListResponse<*>> {
   fun fetchPage(page: Int, pageSize: Int): Call<T>
 }
 
+/**It's [NetworkDataSourceAdapter] based on a [RetrofitPageFetcher]. */
 interface RetrofitNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<RetrofitPageFetcher<T>>

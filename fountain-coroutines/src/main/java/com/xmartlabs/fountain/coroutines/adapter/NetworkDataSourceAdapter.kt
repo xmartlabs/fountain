@@ -7,7 +7,7 @@ import kotlinx.coroutines.experimental.Deferred
 
 /**
  * It is used to fetch each page from the service.
- * It's based on [RxJava](https://github.com/ReactiveX/RxJava).
+ * It's based on [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html).
  */
 interface CoroutinePageFetcher<T : ListResponse<*>> {
   /**
@@ -20,4 +20,5 @@ interface CoroutinePageFetcher<T : ListResponse<*>> {
   fun fetchPage(page: Int, pageSize: Int): Deferred<T>
 }
 
+/**It's [NetworkDataSourceAdapter] based on a [CoroutinePageFetcher]. */
 interface CoroutineNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<CoroutinePageFetcher<T>>

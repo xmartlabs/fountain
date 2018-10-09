@@ -19,5 +19,5 @@ interface RxPageFetcher<T : ListResponse<*>> {
   fun fetchPage(page: Int, pageSize: Int): Single<T>
 }
 
-/** It is used to handle the paging state */
+/**It's [NetworkDataSourceAdapter] based on a [RxPageFetcher]. */
 interface RxNetworkDataSourceAdapter<T : ListResponse<*>> : NetworkDataSourceAdapter<RxPageFetcher<T>>

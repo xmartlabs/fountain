@@ -16,7 +16,7 @@ and [part two](https://blog.xmartlabs.com/2018/08/20/Introducing-Fountain-Part-T
 ## Overview
 
 Fountain is an Android Kotlin library conceived to make your life easier when dealing with paged endpoint services, where the paging is based on incremental page numbers (e.g. 1, 2, 3, ...).
-It uses the [Google Android Architecture Components](https://developer.android.com/topic/libraries/architecture/), mainly the [Android Paging Library](https://developer.android.com/topic/libraries/architecture/paging/) to make it easier to work with paged services.
+It uses the [Google Android Architecture Components](https://developer.android.com/topic/libraries/architecture/), mainly the [Android Paging Library] to make it easier to work with paged services.
 
 The main goal of the library is to easily **provide a [Listing] component from a common service specification**.
 [Listing] provides essentially five elements to take control of the paged list:
@@ -64,7 +64,7 @@ dependencies {
     // This dependency is required only if you want to use a Retrofit service without a special adapter. 
     implementation 'com.github.xmartlabs.fountain:fountain-retrofit:0.3.0'
 
-    // This dependency is required only if you want to use a coroutine retrofit adapter.
+    // This dependency is required only if you want to use a Coroutine retrofit adapter.
     implementation 'com.github.xmartlabs.fountain:fountain-coroutines:0.3.0'
 
     // This dependency is required only if you want to use a RxJava2 retrofit adapter.
@@ -79,9 +79,9 @@ You can read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
 
 ### Factory constructors
 There's one static factory object class for each each dependency.
-- FountainRetrofit: Used to get the a listing from a Retrofit service without using an special adapter.
-- FountainCoroutines: Used to get a listing from a Retrofit service which uses a Coroutine adapter.
-- FountainRx: Used to get a listing from a Retrofit service which uses a RxJava2 adapter.
+- FountainCoroutines: Used to get a [Listing] from a Retrofit service which uses a Coroutine adapter.
+- FountainRetrofit: Used to get the a [Listing] from a Retrofit service without using an special adapter.
+- FountainRx: Used to get a [Listing] from a Retrofit service which uses a RxJava2 adapter.
 
 Each static factory have two constructor, one for each Fountain mode.
 
@@ -91,11 +91,11 @@ The `Listing` with network support can be obtained invoking `createNetworkListin
 
 It require only one argument, a `NetworkDataSourceAdapter`, which provides all operations that the library will use to handle the paging.
 
-The `NetworkDataSourceAdapter` contains two methods: a method to check if a page can be fetched and another one to fetch it.
+The `NetworkDataSourceAdapter` contains two main functions: a method to check if a page can be fetched and a property to fetch it.
 
 ```kotlin
-interface NetworkDataSourceAdapter<T : ListResponse<*>> {
-  val pageFetcher: PageFetcher<T>
+interface NetworkDataSourceAdapter<PageFetcher> {
+  val pageFetcher: PageFetcher
 
   @CheckResult
   fun canFetch(page: Int, pageSize: Int): Boolean
@@ -103,7 +103,7 @@ interface NetworkDataSourceAdapter<T : ListResponse<*>> {
 ```
 
 `PageFetcher` is an structure which provides a way to fetch a page from a service call.
-There are one `PageFetcher` per library adapteradapter. 
+There are one `PageFetcher` per library adapter. 
 
 ```kotlin
 interface RetrofitPageFetcher<T : ListResponse<*>> {
@@ -150,30 +150,18 @@ interface ListResponseWithPageCount<T> : ListResponse<T> {
 If you use either `ListResponseWithPageCount` or `ListResponseWithEntityCount` you can convert a `PageFetcher` to a `NetworkDataSourceAdapter`.
 That means that if the response has the number of pages or entities you can get a `NetworkDataSourceAdapter` without implement the `canFetch` method.
 
-To do that Fountain provides some extensions en each adapter module.
+To do that Fountain provides some extensions:
 ```kotlin
-// Retrofit adapter extensions
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
+    PageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
 fun <ServiceResponse : ListResponseWithPageCount<*>>
-    RetrofitPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
-
-// CoroutinePageFetcher adapter extensions
-fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
-fun <ServiceResponse : ListResponseWithPageCount<*>>
-    CoroutinePageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
-
-// RxPageFetcher adapter extensions
-fun <ServiceResponse : ListResponseWithEntityCount<*>>
-    RxPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(firstPage: Int)
-fun <ServiceResponse : ListResponseWithPageCount<*>>
-     RxPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
+    PageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(firstPage: Int)
 ```
 
 ### Cache + Network support
 
 The `Listing` with network and cache support can be obtained invoking `createNetworkWithCacheSupportListing` from the static factory class.
+
 It has two required components: 
 1. A `NetworkDataSourceAdapter<out ListResponse<NetworkValue>>` to fetch all pages.
 1. A `CachedDataSourceAdapter<NetworkValue, DataSourceValue>` to update the `DataSource`.
@@ -206,20 +194,22 @@ This will be executed in a transaction.
 The pagination strategy that **Fountain** is using can be seen in the following image:
 <br> <p align="center"> <img src="images/paginationStrategy.png" /> </p>
 
-The paging strategy starts with an initial service data request.
+It starts with an initial service data request.
 By default the initial data requested is three pages, but this value can be changed, in the [`PagedList.Config`](https://developer.android.com/reference/android/arch/paging/PagedList.Config.html), using the [`setInitialLoadSizeHint`](https://developer.android.com/reference/android/arch/paging/PagedList.Config.html#initialLoadSizeHint) method.
-This parameter can be set in the [`Fountain`](Listing.md) factory method. 
-When the service data comes, all data is refreshed in the [`DataSource`] using the [`CachedDataSourceAdapter`].
-Note that the [`Listing`](Listing.md) component will notify that the data changed.
+This parameter can be set in the factory constructor method. 
+When the service data comes, all data is refreshed in the `DataSource` using the `CachedDataSourceAdapter`.
+Note that the `Listing` component will notify that the data changed.
 
 After that, the [Android Paging Library] will require pages when the local data is running low.
-When a new page is required, the paging library will invoke a new service call, and will use the [`CachedDataSourceAdapter`] to save the returned data into the [`DataSource`].
+When a new page is required, the paging library will invoke a new service call, and will use the `CachedDataSourceAdapter` to save the returned data into the `DataSource`.
 
 ## Architecture recommendations
 
 It's strongly recommended to integrate this component in a MVVM architecture combined with the Repository Pattern.
-The [`Listing`] component should be provided by the repository.
-The `ViewModel`, can use the different [`Listing`] elements, provided by the repository, to show the data and the network changes in the UI.
+The `Listing` component should be provided by the repository.
+The `ViewModel`, can use the different `Listing` elements, provided by the repository, to show the data and the network changes in the UI.
+
+You can take a look at the [example project](/app) to see how it work.
 
 
 ## Getting involved
@@ -238,4 +228,5 @@ The changelog for this project can be found in the [CHANGELOG](CHANGELOG.md) fil
 ## About
 Made with ❤️ by [XMARTLABS](http://xmartlabs.com)
 
+[Android Paging Library]: https://developer.android.com/topic/libraries/architecture/paging/
 [Listing]: https://xmartlabs.gitbook.io/fountain/listing
