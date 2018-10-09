@@ -47,8 +47,8 @@ Note entities won't be saved in memory nor disk.
 We recommend you use [Room](https://developer.android.com/topic/libraries/architecture/room) to provide the `DataSource`, because it will be easier. However, you could use any other `DataSource`.
 
 Fountain supports 2 types of Retrofit service adapters:
-- A [RxJava2 retrofit adapter.](https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2)
-- A [Coroutine retrofit adapter.](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter)
+- A [RxJava2 Retrofit adapter.](https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2)
+- A [Coroutine Retrofit adapter.](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter)
 
 It also supports not using any of them, as you could work with a simple Retrofit [call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html).
 
@@ -198,7 +198,7 @@ It starts with an initial service data request.
 By default the initial data requested is three pages, but this value can be changed, in the [`PagedList.Config`](https://developer.android.com/reference/android/arch/paging/PagedList.Config.html), using the [`setInitialLoadSizeHint`](https://developer.android.com/reference/android/arch/paging/PagedList.Config.html#initialLoadSizeHint) method.
 This parameter can be set in the factory constructor method. 
 When the service data comes from the service, all data is refreshed in the `DataSource` using the `CachedDataSourceAdapter`.
-Note that the `Listing` component will notify that the data changed.
+Note that the `Listing` component will notify that data changed.
 
 After that, the [Android Paging Library] will require pages when the local data is running low.
 When a new page is required, the paging library will invoke a new service call, and will use the `CachedDataSourceAdapter` to save the returned data into the `DataSource`.
