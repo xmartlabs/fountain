@@ -103,7 +103,7 @@ interface NetworkDataSourceAdapter<PageFetcher> {
 ```
 
 `PageFetcher` is an structure which provides a way to fetch a page from a service call.
-There are one `PageFetcher` per library adapter. 
+There is one page fetcher per library adapter, we will refer to any of them as `PageFetcher` throughout the documentation. 
 
 ```kotlin
 interface RetrofitPageFetcher<T : ListResponse<*>> {
@@ -209,7 +209,7 @@ It's strongly recommended to integrate this component in a MVVM architecture com
 The `Listing` component should be provided by the repository.
 The `ViewModel`, can use the different `Listing` elements, provided by the repository, to show the data and the network changes in the UI.
 
-You can take a look at the [example project](/app) to see how it work.
+You can take a look at the [example project](/app) to see how everything comes together.
 
 
 ## Getting involved
