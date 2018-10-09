@@ -11,7 +11,7 @@ object FountainConstants {
 
   const val DEFAULT_FIRST_PAGE = 1
   const val DEFAULT_NETWORK_PAGE_SIZE = 20
-  val DEFAULT_PAGED_LIST_CONFIG = PagedList.Config.Builder()
+  val DEFAULT_PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder()
       .setPageSize(DEFAULT_NETWORK_PAGE_SIZE)
       .build()
 }

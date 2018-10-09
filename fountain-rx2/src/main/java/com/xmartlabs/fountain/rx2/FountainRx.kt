@@ -8,7 +8,7 @@ import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import com.xmartlabs.fountain.rx2.adapter.RxNetworkDataSourceAdapter
-import com.xmartlabs.fountain.rx2.adapter.toNetworkDataSourceAdapter
+import com.xmartlabs.fountain.rx2.adapter.toBaseNetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 /** A [Listing] factory */
@@ -28,8 +28,8 @@ object FountainRx {
    * @return A [Listing] structure with Network Support.
    */
   @Suppress("LongParameterList")
-  fun <NetworkValue, ServiceResponse : ListResponse<NetworkValue>> createNetworkListing(
-      networkDataSourceAdapter: RxNetworkDataSourceAdapter<ServiceResponse>,
+  fun <NetworkValue> createNetworkListing(
+      networkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<NetworkValue>>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE,
       ioServiceExecutor: Executor = FountainConstants.NETWORK_EXECUTOR,
       pagedListConfig: PagedList.Config = FountainConstants.DEFAULT_PAGED_LIST_CONFIG
@@ -37,7 +37,7 @@ object FountainRx {
       firstPage = firstPage,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
+      networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
 
   /**
@@ -72,6 +72,6 @@ object FountainRx {
       ioDatabaseExecutor = ioDatabaseExecutor,
       ioServiceExecutor = ioServiceExecutor,
       pagedListConfig = pagedListConfig,
-      networkDataSourceAdapter = networkDataSourceAdapter.toNetworkDataSourceAdapter()
+      networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
 }

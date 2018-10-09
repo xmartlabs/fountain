@@ -4,7 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
-import com.xmartlabs.fountain.retrofit.adapter.toTotalPageCountCoroutineNetworkDataSourceAdapter
+import com.xmartlabs.fountain.retrofit.adapter.toTotalPageCountNetworkDataSourceAdapter
 import com.xmartlabs.fountain.retrofit.common.PageCountMockedPageFetcher
 import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateIntPageResponseList
@@ -24,7 +24,7 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
   @Test
   fun testFetchOnePage() {
     val pageFetcher = PageCountMockedPageFetcher(1)
-    val mockedNetworkDataSourceAdapter = pageFetcher.toTotalPageCountCoroutineNetworkDataSourceAdapter()
+    val mockedNetworkDataSourceAdapter = pageFetcher.toTotalPageCountNetworkDataSourceAdapter()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
@@ -39,7 +39,7 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
   @Test
   fun testFetchTwoPages() {
     val pageFetcher = PageCountMockedPageFetcher(2)
-    val mockedNetworkDataSourceAdapter = pageFetcher.toTotalPageCountCoroutineNetworkDataSourceAdapter()
+    val mockedNetworkDataSourceAdapter = pageFetcher.toTotalPageCountNetworkDataSourceAdapter()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 

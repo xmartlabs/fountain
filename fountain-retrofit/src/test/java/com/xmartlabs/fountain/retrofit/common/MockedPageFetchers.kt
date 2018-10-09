@@ -24,9 +24,9 @@ class MockedPageFetcher(var error: Boolean = false) : RetrofitPageFetcher<ListRe
       .toCall()
 }
 
-fun <T> RetrofitPageFetcher<T>.toInfiniteRetrofitNetworkDataSourceAdapter() =
+fun <T: ListResponse<*>> RetrofitPageFetcher<T>.toInfiniteRetrofitNetworkDataSourceAdapter() =
     object : RetrofitNetworkDataSourceAdapter<T> {
-      override val retrofitPageFetcher = this@toInfiniteRetrofitNetworkDataSourceAdapter
+      override val pageFetcher = this@toInfiniteRetrofitNetworkDataSourceAdapter
       override fun canFetch(page: Int, pageSize: Int) = true
     }
 
