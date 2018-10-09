@@ -3,8 +3,8 @@ package com.xmartlabs.fountain.rx2.adapter
 import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.BasePageFetcher
+import com.xmartlabs.fountain.adapter.NetworkResultListener
 
 internal fun <T : ListResponse<*>> RxPageFetcher<T>.toBasePageFetcher() = object : BasePageFetcher<T> {
   @WorkerThread

@@ -5,7 +5,6 @@ import android.arch.paging.DataSource
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 internal class NetworkPagedDataSourceFactory<T, ServiceResponse : ListResponse<out T>> (

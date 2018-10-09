@@ -7,7 +7,6 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.feature.PagerManager
 import java.util.concurrent.Executor
 

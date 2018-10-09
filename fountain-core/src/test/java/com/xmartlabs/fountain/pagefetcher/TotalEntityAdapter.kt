@@ -5,9 +5,9 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
+import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.NetworkResultListener
-import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.common.KnownSizeResponseManager
 

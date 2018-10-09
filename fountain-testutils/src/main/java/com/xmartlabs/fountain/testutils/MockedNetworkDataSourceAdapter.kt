@@ -2,9 +2,8 @@ package com.xmartlabs.fountain.testutils
 
 import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.adapter.BasePageFetcher
+import com.xmartlabs.fountain.adapter.NetworkResultListener
 
 
 class MockedNetworkDataSourcePageFetcher<T> : BasePageFetcher<T> {

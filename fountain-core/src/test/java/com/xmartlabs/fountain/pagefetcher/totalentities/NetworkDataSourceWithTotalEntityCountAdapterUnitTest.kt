@@ -5,7 +5,6 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.pagefetcher.NetworkDataSourceWithTotalEntityCountAdapter
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourcePageFetcher

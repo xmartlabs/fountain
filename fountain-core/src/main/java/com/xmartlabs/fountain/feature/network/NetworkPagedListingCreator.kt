@@ -7,7 +7,6 @@ import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
-import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import java.util.concurrent.Executor
 
 object NetworkPagedListingCreator {
