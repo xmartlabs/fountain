@@ -52,7 +52,6 @@ abstract class RetryUnitTest {
     assertEquals(generateIntPageResponseList(2), listing.getPagedList())
   }
 
-
   protected abstract fun createListing(
       mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<ListResponse<Int>>
   ): Listing<Int>

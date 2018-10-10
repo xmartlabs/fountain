@@ -53,8 +53,9 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
     }
   }
 
-  fun resetData(processResponse: (request: Request, response: NetworkResponse, callback: Callback) -> Unit)
-      : LiveData<NetworkState> {
+  fun resetData(
+      processResponse: (request: Request, response: NetworkResponse, callback: Callback) -> Unit
+  ): LiveData<NetworkState> {
     val resetNetworkState = MutableLiveData<NetworkState>()
     val callback = object : Callback() {
       override fun onSuccess() {
@@ -141,7 +142,8 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
       networkState: MutableLiveData<NetworkState>,
       request: Request,
       response: NetworkResponse,
-      callback: Callback) {
+      callback: Callback
+  ) {
     processResponse.invoke(request, response, object : Callback() {
       override fun onSuccess() {
         val isLastPage = isLastPage(request.page + request.pageSize + 1)
@@ -173,8 +175,7 @@ internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out Net
 
   internal abstract class Callback {
     companion object {
-      fun fromCallback(callback: PagingRequestHelper.Request.Callback)
-          : Callback = object : Callback() {
+      fun fromCallback(callback: PagingRequestHelper.Request.Callback): Callback = object : Callback() {
         override fun onSuccess() = callback.recordSuccess()
 
         override fun onError(throwable: Throwable) = callback.recordFailure(throwable)

@@ -46,7 +46,9 @@ internal class BoundaryCallback<NetworkValue, DataSourceValue, NetworkResponse :
   fun resetData(): LiveData<NetworkState> = pageManager.resetData(this::processResponse)
 
   private fun processResponse(
-      request: PagerManager.Request, response: NetworkResponse, callback: PagerManager.Callback
+      request: PagerManager.Request,
+      response: NetworkResponse,
+      callback: PagerManager.Callback
   ) {
     ioDatabaseExecutor.execute {
       @Suppress("TooGenericExceptionCaught")

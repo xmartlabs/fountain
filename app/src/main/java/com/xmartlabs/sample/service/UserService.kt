@@ -14,20 +14,23 @@ interface UserService {
   }
 
   @GET(SEARCH_USERS_URL)
-  fun searchUsersUsingRx(@Query("q") name: String,
-                         @Query("page") page: Int,
-                         @Query("per_page") pageSize: Int
+  fun searchUsersUsingRx(
+      @Query("q") name: String,
+      @Query("page") page: Int,
+      @Query("per_page") pageSize: Int
   ): Single<GhListResponse<User>>
 
   @GET(SEARCH_USERS_URL)
-  fun searchUsersUsingRetrofit(@Query("q") name: String,
-                               @Query("page") page: Int,
-                               @Query("per_page") pageSize: Int
+  fun searchUsersUsingRetrofit(
+      @Query("q") name: String,
+      @Query("page") page: Int,
+      @Query("per_page") pageSize: Int
   ): Call<GhListResponse<User>>
 
   @GET(SEARCH_USERS_URL)
-  fun searchUsersUsingCoroutines(@Query("q") name: String,
-                                 @Query("page") page: Int,
-                                 @Query("per_page") pageSize: Int
+  fun searchUsersUsingCoroutines(
+      @Query("q") name: String,
+      @Query("page") page: Int,
+      @Query("per_page") pageSize: Int
   ): Deferred<GhListResponse<User>>
 }

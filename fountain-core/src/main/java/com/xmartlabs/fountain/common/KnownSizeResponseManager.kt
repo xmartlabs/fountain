@@ -3,7 +3,7 @@ package com.xmartlabs.fountain.common
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 
-class KnownSizeResponseManager(private val firstPage : Int) {
+class KnownSizeResponseManager(private val firstPage: Int) {
   private var totalEntities: Long? = null
 
   fun onTotalEntityResponseArrived(response: ListResponseWithEntityCount<*>) {

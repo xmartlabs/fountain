@@ -55,6 +55,7 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
     Assert.assertEquals(generateIntPageResponseList(2), listing.getPagedList())
   }
 
-  abstract fun createListing(mockedNetworkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<Int>>)
-      : Listing<Int>
+  abstract fun createListing(
+      mockedNetworkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<Int>>
+  ): Listing<Int>
 }

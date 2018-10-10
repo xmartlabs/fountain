@@ -31,11 +31,10 @@ allprojects {
         mavenCentral()
     }
 }
-/*
+
 dependencies {
-    detekt "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0.RC9.2"
+    detekt "io.gitlab.arturbosch.detekt:detekt-formatting:${libraryVersion.detekt}"
 }
-*/
 
 detekt {
     config = files("detekt-config.yml")

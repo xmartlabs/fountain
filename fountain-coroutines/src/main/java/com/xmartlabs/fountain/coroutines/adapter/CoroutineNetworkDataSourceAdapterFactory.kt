@@ -14,7 +14,6 @@ object CoroutineNetworkDataSourceAdapterFactory {
    * Provides a [CoroutineNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
    * It is used when the service returns the entity count in the response.
    *
-   * @param Value The value that the service returns.
    * @param ListResponseValue The response type that the service returns.
    * @param pageFetcher It is used to fetch each page from the service.
    * @param firstPage The first page number, defined by the service.
@@ -49,7 +48,6 @@ object CoroutineNetworkDataSourceAdapterFactory {
    * Provides a [CoroutineNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
    * It is used when the service returns the page count in the response.
    *
-   * @param Value The value that the service returns.
    * @param ListResponseValue The response type that the service returns.
    * @param pageFetcher It is used to fetch each page from the service.
    * @param firstPage The first page number, defined by the service.
@@ -90,8 +88,8 @@ object CoroutineNetworkDataSourceAdapterFactory {
  */
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
     CoroutinePageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(
-    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
-) = CoroutineNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
+        firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+    ) = CoroutineNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
 
 /**
  * Provides a [CoroutineNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
@@ -102,5 +100,5 @@ fun <ServiceResponse : ListResponseWithEntityCount<*>>
  */
 fun <ServiceResponse : ListResponseWithPageCount<*>>
     CoroutinePageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(
-    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
-) = CoroutineNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)
+        firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+    ) = CoroutineNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)

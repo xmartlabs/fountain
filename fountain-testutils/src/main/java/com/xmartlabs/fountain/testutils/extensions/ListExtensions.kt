@@ -16,4 +16,4 @@ fun <T> PagedList<T>.getList(): List<T?> =
           return abstractList
         }
 
-fun <T> PagedList<T>.scrollToTheEnd() =  loadAround(size - 1)
+fun <T> PagedList<T>.scrollToTheEnd() = loadAround(size - 1)

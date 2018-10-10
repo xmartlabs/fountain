@@ -26,7 +26,7 @@ abstract class RefreshUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    assert( listing.networkState.value is NetworkState.Loading)
+    assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert(listing.networkState.value is NetworkState.Loaded)

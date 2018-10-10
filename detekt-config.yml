@@ -196,7 +196,7 @@ formatting:
   android: false
   autoCorrect: true
   ChainWrapping:
-    active: true
+    active: false
     autoCorrect: true
   CommentSpacing:
     active: true
@@ -207,13 +207,13 @@ formatting:
     active: true
     autoCorrect: true
   ImportOrdering:
-    active: true
+    active: false
     autoCorrect: true
   Indentation:
     active: true
     autoCorrect: true
     indentSize: 4
-    continuationIndentSize: 4
+    continuationIndentSize: 6
   MaximumLineLength:
     active: true
     maxLineLength: 120
@@ -230,7 +230,7 @@ formatting:
     active: true
     autoCorrect: true
   NoItParamInMultilineLambda:
-    active: true
+    active: false
   NoLineBreakAfterElse:
     active: true
     autoCorrect: true

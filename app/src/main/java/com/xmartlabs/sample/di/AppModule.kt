@@ -31,7 +31,7 @@ class AppModule {
 
   @Singleton
   @Provides
-  fun provideOkHttpClient(): OkHttpClient{
+  fun provideOkHttpClient(): OkHttpClient {
     val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
     loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 

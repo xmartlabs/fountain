@@ -1,6 +1,5 @@
 package com.xmartlabs.sample.db
 
-
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import com.xmartlabs.sample.model.User
