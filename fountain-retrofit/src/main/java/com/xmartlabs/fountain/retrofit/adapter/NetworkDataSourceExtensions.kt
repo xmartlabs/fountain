@@ -44,7 +44,7 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
         override fun onFailure(call: Call<T>, t: Throwable) =
             callback?.onFailure(call, t) ?: Unit
 
-        override fun onResponse(call: Call<T>?, response: Response<T>) {
+        override fun onResponse(call: Call<T>, response: Response<T>) {
           response.body()
               ?.let {
                 callback?.onResponse(call, response)
