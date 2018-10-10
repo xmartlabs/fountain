@@ -1,4 +1,4 @@
-package com.xmartlabs.sample.ui
+package com.xmartlabs.sample.ui.searchusers
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
@@ -8,31 +8,59 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.model.User
-import com.xmartlabs.sample.repository.UserRepositoryUsingCoroutines
+import com.xmartlabs.sample.repository.user.UserRepositoryUsingCoroutines
+import com.xmartlabs.sample.repository.user.UserRepositoryUsingRetrofit
+import com.xmartlabs.sample.repository.user.UserRepositoryUsingRx
+import com.xmartlabs.sample.ui.common.FountainAdapterType
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ListUsersViewModel @Inject constructor(userRepository: UserRepositoryUsingCoroutines) : ViewModel() {
+class ListUsersViewModel @Inject constructor(
+    private val coroutineUserRepositiry: UserRepositoryUsingCoroutines,
+    private val retrofitUserRepositiry: UserRepositoryUsingRetrofit,
+    private val rxjavaUserRepositiry: UserRepositoryUsingRx
+) : ViewModel() {
   companion object {
     private val PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
+    private fun <T> emptyLiveData(): LiveData<T> {
+      val emptyLiveData = MutableLiveData<T>()
+      emptyLiveData.value = null
+      return emptyLiveData
+    }
   }
 
   //It's just to combine the mode with the username, in a real use case it's not needed
   private val usernameModeMediator = MediatorLiveData<Pair<Mode, String>>()
 
+  private val userRepository
+    get() = when (adapterType) {
+      FountainAdapterType.COROUTINE -> coroutineUserRepositiry
+      FountainAdapterType.RETROFIT -> retrofitUserRepositiry
+      FountainAdapterType.RX -> rxjavaUserRepositiry
+    }
+
+  var adapterType: FountainAdapterType = FountainAdapterType.RETROFIT
+
   private val userName = MutableLiveData<String>()
   private val mode = MutableLiveData<Mode>()
   private val usersListing = Transformations.map(usernameModeMediator) {
-    if (it.first == Mode.NETWORK)
-      userRepository.searchServiceUsers(it.second, PAGED_LIST_CONFIG)
-    else
-      userRepository.searchServiceAndDbUsers(it.second, PAGED_LIST_CONFIG)
+    when {
+      it.second.isBlank() -> null // to avoid empty queries
+      it.first == Mode.NETWORK -> userRepository.searchServiceUsers(it.second, PAGED_LIST_CONFIG)
+      else -> userRepository.searchServiceAndDbUsers(it.second, PAGED_LIST_CONFIG)
+    }
   }
 
-  val users: LiveData<PagedList<User>> = Transformations.switchMap(usersListing) { it.pagedList }
-  val networkState: LiveData<NetworkState> = Transformations.switchMap(usersListing) { it.networkState }
-  val refreshState: LiveData<NetworkState> = Transformations.switchMap(usersListing) { it.refreshState }
+  val users: LiveData<PagedList<User>> = Transformations.switchMap(usersListing) {
+    it?.pagedList ?: emptyLiveData()
+  }
+  val networkState: LiveData<NetworkState> = Transformations.switchMap(usersListing) {
+    it?.networkState ?: emptyLiveData()
+  }
+  val refreshState: LiveData<NetworkState> = Transformations.switchMap(usersListing) {
+    it?.refreshState ?: emptyLiveData()
+  }
 
   init {
     mode.value = Mode.NETWORK_AND_DATA_SOURCE
@@ -52,7 +80,7 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepositoryUsing
   }
 
   fun showUsers(username: String): Boolean {
-    if (userName.value == username || username.isBlank()) {
+    if (userName.value == username) {
       return false
     }
     userName.value = username

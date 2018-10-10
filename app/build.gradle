@@ -8,7 +8,7 @@ android {
     buildToolsVersion build_versions.build_tools
     defaultConfig {
         applicationId "com.xmartlabs.fountain"
-        minSdkVersion build_versions.min_sdk
+        minSdkVersion 16
         targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
