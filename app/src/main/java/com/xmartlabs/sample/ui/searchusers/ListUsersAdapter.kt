@@ -1,4 +1,4 @@
-package com.xmartlabs.sample.ui
+package com.xmartlabs.sample.ui.searchusers
 
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
