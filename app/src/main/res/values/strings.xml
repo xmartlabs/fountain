@@ -5,4 +5,11 @@
     <string name="user_name">User name</string>
     <string name="user_image">User Image</string>
     <string name="retry">Retry</string>
+    <string name="fountain_sample_app">Fountain sample app</string>
+    <string name="select_fountains_adapter">Select Fountain\'s adapter</string>
+    <string name="retrofit">Retrofit</string>
+    <string name="coroutine_retrofit_adapter">Coroutine Retrofit adapter</string>
+    <string name="rxjava2_retrofit_adapter">RxJava2 Retrofit adapter</string>
+    <string name="fountain_logo">Fountain logo</string>
+    <string name="fountain">Fountain</string>
 </resources>

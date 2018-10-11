@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:contentDescription="@string/fountain_logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/fountain_logo"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cairo_bold"
+        android:layout_marginBottom="50dp"
+        android:text="@string/fountain"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:text="@string/select_fountains_adapter"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/retrofitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/retrofit"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/coroutineAdapterButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/coroutine_retrofit_adapter"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/rxjavaButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rxjava2_retrofit_adapter"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        />
+
+</LinearLayout>
