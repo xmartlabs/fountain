@@ -24,13 +24,15 @@ class MockedPageFetcher(var error: Boolean = false) : RetrofitPageFetcher<ListRe
       .toCall()
 }
 
-fun <T: ListResponse<*>> RetrofitPageFetcher<T>.toInfiniteRetrofitNetworkDataSourceAdapter() =
+fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toInfiniteRetrofitNetworkDataSourceAdapter() =
     object : RetrofitNetworkDataSourceAdapter<T> {
       override val pageFetcher = this@toInfiniteRetrofitNetworkDataSourceAdapter
       override fun canFetch(page: Int, pageSize: Int) = true
     }
 
-class EntityCountMockedPageFetcher(private val entityCount: Long) : RetrofitPageFetcher<ListResponseWithEntityCount<Int>> {
+class EntityCountMockedPageFetcher(
+    private val entityCount: Long
+) : RetrofitPageFetcher<ListResponseWithEntityCount<Int>> {
   override fun fetchPage(page: Int, pageSize: Int): Call<ListResponseWithEntityCount<Int>> =
       generateSpecificIntPageResponseList(page)
           .filter { it < entityCount }
@@ -42,7 +44,6 @@ class PageCountMockedPageFetcher(private val pageCount: Long) : RetrofitPageFetc
   override fun fetchPage(page: Int, pageSize: Int): Call<ListResponseWithPageCount<Int>> =
       generateSpecificIntPageResponseList(page).toListResponsePageCount(pageCount).toCall()
 }
-
 
 @Suppress("ThrowsCount")
 private fun <T, ServiceResponse : ListResponse<T>> ServiceResponse.toCall(): Call<ServiceResponse> {

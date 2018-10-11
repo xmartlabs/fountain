@@ -12,7 +12,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:${libraryVersion.gradle}"
         classpath "com.github.dcendents:android-maven-gradle-plugin:${libraryVersion.mavenPlugin}"
         classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:${libraryVersion.jacoco}"
-        classpath "gradle.plugin.io.gitlab.arturbosch:detekt-gradle-plugin:${libraryVersion.detekt}"
+        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${libraryVersion.detekt}"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${libraryVersion.dokka}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${libraryVersion.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libraryVersion.kotlin}"
@@ -22,6 +22,7 @@ buildscript {
 apply plugin: "com.vanniktech.android.junit.jacoco"
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "io.gitlab.arturbosch.detekt"
+apply from: 'versions.gradle'
 
 allprojects {
     repositories {
@@ -31,14 +32,14 @@ allprojects {
     }
 }
 
+dependencies {
+    detekt "io.gitlab.arturbosch.detekt:detekt-formatting:${libraryVersion.detekt}"
+}
+
 detekt {
-    version = "1.0.0.RC7-3"
-    defaultProfile {
-        config = "$project.rootDir/detekt-config.yml"
-        input = file("$projectDir")
-        filters = ".*/resources/.*,.*/build/.*"
-        output = file("build/reports/detekt")
-    }
+    config = files("detekt-config.yml")
+    input = files("$projectDir")
+    filters = ".*/resources/.*,.*/build/.*"
 }
 
 junitJacoco {

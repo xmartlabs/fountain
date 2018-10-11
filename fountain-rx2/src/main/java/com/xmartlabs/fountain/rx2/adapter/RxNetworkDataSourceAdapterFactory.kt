@@ -66,8 +66,8 @@ object RxNetworkDataSourceAdapterFactory {
  */
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
     RxPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(
-    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
-) = RxNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
+        firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+    ) = RxNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
 
 /**
  * Provides a [RxNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
@@ -78,5 +78,5 @@ fun <ServiceResponse : ListResponseWithEntityCount<*>>
  */
 fun <ServiceResponse : ListResponseWithPageCount<*>>
     RxPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(
-    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
-) = RxNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)
+        firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+    ) = RxNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)

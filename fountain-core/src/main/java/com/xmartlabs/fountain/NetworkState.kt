@@ -1,6 +1,5 @@
 package com.xmartlabs.fountain
 
-
 /**
  * A structure to handle the network states.
  *

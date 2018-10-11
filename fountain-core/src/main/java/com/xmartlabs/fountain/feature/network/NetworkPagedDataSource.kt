@@ -46,7 +46,7 @@ internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
   override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {}
 
   override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, T>) {
-    pageManager.loadNextPage{ request, response, responseCallback ->
+    pageManager.loadNextPage { request, response, responseCallback ->
       callback.onResult(response.getElements(), request.page + 1)
       responseCallback.onSuccess()
     }

@@ -21,10 +21,10 @@ class UserRepositoryUsingRetrofit @Inject constructor(
     private val db: AppDb
 ) : UserRepository {
   override fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : RetrofitPageFetcher<GhListResponse<User>> {
+    val pageFetcher = object : RetrofitPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =
           userService.searchUsersUsingRetrofit(userName, page = page, pageSize = pageSize)
-    })
+    }
 
     val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
     return FountainRetrofit.createNetworkListing(
@@ -34,10 +34,10 @@ class UserRepositoryUsingRetrofit @Inject constructor(
   }
 
   override fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : RetrofitPageFetcher<GhListResponse<User>> {
+    val pageFetcher = object : RetrofitPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =
           userService.searchUsersUsingRetrofit(userName, page = page, pageSize = pageSize)
-    })
+    }
 
     val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
 
