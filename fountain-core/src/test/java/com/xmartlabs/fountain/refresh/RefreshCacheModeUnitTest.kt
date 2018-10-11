@@ -24,12 +24,12 @@ class RefreshCacheModeUnitTest : RefreshUnitTest() {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value!! is NetworkState.Error)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.refresh.invoke()
     assert( listing.refreshState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value!! is NetworkState.Error)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.refresh.invoke()
     assert( listing.refreshState.value is NetworkState.Loading)

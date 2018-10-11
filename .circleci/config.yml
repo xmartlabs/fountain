@@ -24,8 +24,8 @@ jobs:
           name: Build Project
           command: ./gradlew clean build
       - run:
-          name: Run detektCheck
-          command: ./gradlew detektCheck
+          name: Run detekt
+          command: ./gradlew detekt
       - run:
           name: Generate Coverage
           command: ./gradlew jacocoTestReportDebug

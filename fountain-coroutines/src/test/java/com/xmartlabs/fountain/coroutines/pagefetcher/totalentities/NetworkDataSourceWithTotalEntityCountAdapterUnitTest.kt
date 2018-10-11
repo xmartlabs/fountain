@@ -42,7 +42,6 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-
     Assert.assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(1), listing.getPagedList())
 
@@ -86,6 +85,7 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
     Assert.assertEquals((0 until entityCount).toList(), listing.getPagedList())
   }
 
-  abstract fun createListing(mockedNetworkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<Int>>)
-      : Listing<Int>
+  abstract fun createListing(
+      mockedNetworkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<Int>>
+  ): Listing<Int>
 }

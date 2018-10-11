@@ -11,7 +11,6 @@ import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.common.KnownSizeResponseManager
 
-
 /**
  * Provides a [NetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
  * It is used when the service returns the entity count in the response.

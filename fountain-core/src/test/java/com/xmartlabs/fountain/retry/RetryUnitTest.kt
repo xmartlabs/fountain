@@ -56,17 +56,17 @@ abstract class RetryUnitTest {
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
-    var networkState : NetworkState = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE +1 ,
+    var networkState: NetworkState = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
 
     listing.retry.invoke()
-    networkState = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1 ,
+    networkState = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
 
-    networkState = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1 ,
+    networkState = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
 

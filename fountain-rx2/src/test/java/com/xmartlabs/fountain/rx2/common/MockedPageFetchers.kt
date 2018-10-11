@@ -1,6 +1,5 @@
 package com.xmartlabs.fountain.rx2.common
 
-
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
@@ -21,7 +20,7 @@ class MockedPageFetcher(var error: Boolean = false) : RxPageFetcher<ListResponse
       .toSingle()
 }
 
-fun <T: ListResponse<*>> RxPageFetcher<T>.toInfiniteRxNetworkDataSourceAdapter() =
+fun <T : ListResponse<*>> RxPageFetcher<T>.toInfiniteRxNetworkDataSourceAdapter() =
     object : RxNetworkDataSourceAdapter<T> {
       override val pageFetcher = this@toInfiniteRxNetworkDataSourceAdapter
       override fun canFetch(page: Int, pageSize: Int) = true
@@ -42,6 +41,4 @@ class PageCountMockedPageFetcher(private val pageCount: Long) : RxPageFetcher<Li
           .toSingle()
 }
 
-private fun <T> T.toSingle(): Single<T> {
-  return Single.just(this)
-}
+private fun <T> T.toSingle() = Single.just(this)

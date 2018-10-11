@@ -64,10 +64,10 @@ class ListGithubUsersActivity : AppCompatActivity(), HasSupportFragmentInjector 
   private fun initAdapter() {
     list.adapter = ListUsersAdapter { viewModel.retry() }
     viewModel.users.observe(this, Observer<PagedList<User>> {
-      (list.adapter as ListUsersAdapter).submitList(it)
+      (list.adapter as? ListUsersAdapter)?.submitList(it)
     })
     viewModel.networkState.observe(this, Observer {
-      (list.adapter as ListUsersAdapter).setNetworkState(it)
+      (list.adapter as? ListUsersAdapter)?.setNetworkState(it)
     })
   }
 
@@ -98,11 +98,9 @@ class ListGithubUsersActivity : AppCompatActivity(), HasSupportFragmentInjector 
 
   private fun updatedUsernameFromInput() {
     input.text.trim().toString().let {
-      if (it.isNotEmpty()) {
-        if (viewModel.showUsers(it)) {
-          list.scrollToPosition(0)
-          (list.adapter as? ListUsersAdapter)?.submitList(null)
-        }
+      if (it.isNotEmpty() && viewModel.showUsers(it)) {
+        list.scrollToPosition(0)
+        (list.adapter as? ListUsersAdapter)?.submitList(null)
       }
     }
   }
@@ -110,7 +108,7 @@ class ListGithubUsersActivity : AppCompatActivity(), HasSupportFragmentInjector 
   private fun Activity.hideSoftKeyboard() = currentFocus
       ?.windowToken
       ?.let {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(it, 0)
+        (getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager)
+            ?.hideSoftInputFromWindow(it, 0)
       }
 }

@@ -62,6 +62,7 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
     listing.scrollToTheEnd()
   }
 
-  abstract fun createListing(mockedNetworkDataSourceAdapter: BaseNetworkDataSourceAdapter<out ListResponse<Int>>)
-      : Listing<Int>
+  abstract fun createListing(
+      mockedNetworkDataSourceAdapter: BaseNetworkDataSourceAdapter<out ListResponse<Int>>
+  ): Listing<Int>
 }

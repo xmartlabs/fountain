@@ -12,6 +12,7 @@ internal fun <T : ListResponse<*>> CoroutinePageFetcher<T>.toBasePageFetcher(): 
     @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
       runBlocking {
+        @Suppress("TooGenericExceptionCaught")
         try {
           networkResultListener.onSuccess(this@toBasePageFetcher.fetchPage(page = page, pageSize = pageSize).await())
         } catch (throwable: Throwable) {

@@ -5,7 +5,6 @@ import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 
-
 class MockedNetworkDataSourcePageFetcher<T> : BasePageFetcher<T> {
   private var networkResultListener: NetworkResultListener<T>? = null
   private var pendingResponse: T? = null
