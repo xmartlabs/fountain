@@ -8,6 +8,7 @@ import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.coroutines.adapter.CoroutineNetworkDataSourceAdapter
 import com.xmartlabs.fountain.coroutines.adapter.toBaseNetworkDataSourceAdapter
+import com.xmartlabs.fountain.coroutines.common.toExecutor
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import kotlinx.coroutines.experimental.CoroutineDispatcher
@@ -15,8 +16,6 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.asCoroutineDispatcher
-import kotlinx.coroutines.experimental.launch
-import java.util.concurrent.Executor
 
 /** A [Listing] factory */
 object FountainCoroutines {
@@ -83,10 +82,4 @@ object FountainCoroutines {
       pagedListConfig = pagedListConfig,
       networkDataSourceAdapter = networkDataSourceAdapter.toBaseNetworkDataSourceAdapter()
   )
-}
-
-private fun CoroutineDispatcher.toExecutor(coroutineScope: CoroutineScope) = Executor { command ->
-  coroutineScope.launch(this@toExecutor) {
-    command?.run()
-  }
 }
