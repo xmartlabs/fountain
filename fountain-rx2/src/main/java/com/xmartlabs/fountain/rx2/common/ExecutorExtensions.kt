@@ -5,7 +5,6 @@ import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executor
 
-
 internal fun Executor.toScheduler() = Schedulers.from(this)
 
 internal fun Scheduler.toExecutor() = Executor {

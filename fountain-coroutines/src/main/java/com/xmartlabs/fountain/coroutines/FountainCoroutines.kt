@@ -16,7 +16,6 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.asCoroutineDispatcher
-import java.util.concurrent.Executor
 
 /** A [Listing] factory */
 object FountainCoroutines {
