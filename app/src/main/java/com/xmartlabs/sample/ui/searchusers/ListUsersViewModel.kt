@@ -17,9 +17,9 @@ import javax.inject.Singleton
 
 @Singleton
 class ListUsersViewModel @Inject constructor(
-    private val coroutineUserRepositiry: UserRepositoryUsingCoroutines,
-    private val retrofitUserRepositiry: UserRepositoryUsingRetrofit,
-    private val rxjavaUserRepositiry: UserRepositoryUsingRx
+    private val coroutineUserRepository: UserRepositoryUsingCoroutines,
+    private val retrofitUserRepository: UserRepositoryUsingRetrofit,
+    private val rxjavaUserRepository: UserRepositoryUsingRx
 ) : ViewModel() {
   companion object {
     private val PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
@@ -35,9 +35,9 @@ class ListUsersViewModel @Inject constructor(
 
   private val userRepository
     get() = when (adapterType) {
-      FountainAdapterType.COROUTINE -> coroutineUserRepositiry
-      FountainAdapterType.RETROFIT -> retrofitUserRepositiry
-      FountainAdapterType.RX -> rxjavaUserRepositiry
+      FountainAdapterType.COROUTINE -> coroutineUserRepository
+      FountainAdapterType.RETROFIT -> retrofitUserRepository
+      FountainAdapterType.RX -> rxjavaUserRepository
     }
 
   var adapterType: FountainAdapterType = FountainAdapterType.RETROFIT

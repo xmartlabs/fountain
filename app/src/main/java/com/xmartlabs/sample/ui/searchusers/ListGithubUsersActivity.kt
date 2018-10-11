@@ -107,8 +107,10 @@ class ListGithubUsersActivity : AppCompatActivity(), HasSupportFragmentInjector 
     }
   }
 
-  private fun Activity.hideSoftKeyboard() {
-    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-  }
+  private fun Activity.hideSoftKeyboard() = currentFocus
+      ?.windowToken
+      ?.let {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(it, 0)
+      }
 }
