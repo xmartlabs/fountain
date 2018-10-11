@@ -15,7 +15,7 @@ object IntMockedListingCreator {
   ): Listing<Int> {
     return FountainRx.createNetworkListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
-        ioServiceExecutor = InstantExecutor(),
+        ioServiceScheduler = InstantExecutor().toScheduler(),
         firstPage = TestConstants.DEFAULT_FIRST_PAGE,
         pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
@@ -46,8 +46,8 @@ object IntMockedListingCreator {
     return FountainRx.createNetworkWithCacheSupportListing(
         networkDataSourceAdapter = mockedNetworkDataSourceAdapter,
         cachedDataSourceAdapter = dataSourceAdapter,
-        ioServiceExecutor = InstantExecutor(),
-        ioDatabaseExecutor = InstantExecutor(),
+        ioServiceScheduler = InstantExecutor().toScheduler(),
+        ioDatabaseScheduler = InstantExecutor().toScheduler(),
         firstPage = TestConstants.DEFAULT_FIRST_PAGE,
         pagedListConfig = TestConstants.DEFAULT_PAGED_LIST_CONFIG
     )
