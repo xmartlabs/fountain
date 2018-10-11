@@ -21,10 +21,10 @@ class UserRepositoryUsingCoroutines @Inject constructor(
     private val db: AppDb
 ) {
   fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : CoroutinePageFetcher<GhListResponse<User>> {
+    val pageFetcher = object : CoroutinePageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Deferred<GhListResponse<User>> =
           userService.searchUsersUsingCoroutines(userName, page = page, pageSize = pageSize)
-    })
+    }
 
     val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
     return FountainCoroutines.createNetworkListing(
@@ -34,10 +34,10 @@ class UserRepositoryUsingCoroutines @Inject constructor(
   }
 
   fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : CoroutinePageFetcher<GhListResponse<User>> {
+    val pageFetcher = object : CoroutinePageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Deferred<GhListResponse<User>> =
           userService.searchUsersUsingCoroutines(userName, page = page, pageSize = pageSize)
-    })
+    }
 
     val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
 

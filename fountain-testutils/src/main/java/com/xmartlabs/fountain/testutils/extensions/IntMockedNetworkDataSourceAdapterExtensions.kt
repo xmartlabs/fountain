@@ -69,7 +69,7 @@ fun generateSpecificIntPageResponseList(vararg pages: Int): List<Int> {
 }
 
 fun generateIntPageResponseList(numberOfRequested: Int): List<Int> {
-  return (0..(numberOfRequested - 1))
+  return (0 until numberOfRequested)
       .map { it + TestConstants.DEFAULT_FIRST_PAGE }
       .flatMap { generateSpecificIntPageResponseList(it) }
 }

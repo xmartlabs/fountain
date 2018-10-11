@@ -9,6 +9,7 @@ import com.xmartlabs.fountain.adapter.NetworkResultListener
 internal fun <T : ListResponse<*>> RxPageFetcher<T>.toBasePageFetcher() = object : BasePageFetcher<T> {
   @WorkerThread
   override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
+    @Suppress("TooGenericExceptionCaught")
     try {
       networkResultListener.onSuccess(this@toBasePageFetcher.fetchPage(page = page, pageSize = pageSize).blockingGet())
     } catch (throwable: Throwable) {

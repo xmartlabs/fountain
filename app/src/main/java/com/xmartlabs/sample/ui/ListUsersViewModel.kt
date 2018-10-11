@@ -39,11 +39,13 @@ class ListUsersViewModel @Inject constructor(userRepository: UserRepositoryUsing
     usernameModeMediator.addSource(mode) {
       val userNameValue = userName.value.orEmpty()
       if (it != null && userNameValue.isNotBlank()) {
-        usernameModeMediator.value = Pair(it, userNameValue)
+        usernameModeMediator.value = it to userNameValue
       }
     }
     usernameModeMediator.addSource(userName) { username ->
-      username?.let { usernameModeMediator.value = Pair(mode.value!!, username) }
+      mode.value?.let { modeValue ->
+        username?.let { usernameModeMediator.value = modeValue to username }
+      }
     }
   }
 

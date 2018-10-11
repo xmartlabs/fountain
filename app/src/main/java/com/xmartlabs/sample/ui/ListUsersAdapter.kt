@@ -26,8 +26,8 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
 
   override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
     when (getItemViewType(position)) {
-      R.layout.item_user -> (holder as UserViewHolder).bindTo(getItem(position))
-      R.layout.item_network_state -> (holder as NetworkStateItemViewHolder).bindTo(networkState)
+      R.layout.item_user -> (holder as? UserViewHolder)?.bindTo(getItem(position))
+      R.layout.item_network_state -> (holder as? NetworkStateItemViewHolder)?.bindTo(networkState)
     }
   }
 
@@ -43,9 +43,7 @@ class ListUsersAdapter(private val retryCallback: () -> Unit)
     }
   }
 
-  override fun getItemCount(): Int {
-    return super.getItemCount() + if (hasExtraRow()) 1 else 0
-  }
+  override fun getItemCount() = super.getItemCount() + if (hasExtraRow()) 1 else 0
 
   fun setNetworkState(newNetworkState: NetworkState?) {
     val previousState = this.networkState

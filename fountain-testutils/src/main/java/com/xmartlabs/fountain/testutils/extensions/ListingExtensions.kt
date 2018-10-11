@@ -17,6 +17,8 @@ fun <T> Listing<T>.mockLifecycleEvents(): Listing<T> = apply {
 
 fun <T> Listing<T>.getPagedListSize() = pagedList.value?.size?.or(0)
 
+@Suppress("UnsafeCallOnNullableType")
 fun <T> Listing<T>.getPagedList() = pagedList.value!!.getList()
 
+@Suppress("UnsafeCallOnNullableType")
 fun Listing<*>.scrollToTheEnd() = pagedList.value!!.scrollToTheEnd()

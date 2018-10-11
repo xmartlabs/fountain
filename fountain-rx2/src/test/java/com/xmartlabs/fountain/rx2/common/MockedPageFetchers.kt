@@ -41,6 +41,4 @@ class PageCountMockedPageFetcher(private val pageCount: Long) : RxPageFetcher<Li
           .toSingle()
 }
 
-private fun <T> T.toSingle(): Single<T> {
-  return Single.just(this)
-}
+private fun <T> T.toSingle() = Single.just(this)

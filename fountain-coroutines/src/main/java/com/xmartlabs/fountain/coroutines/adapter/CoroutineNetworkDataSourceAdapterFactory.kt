@@ -29,6 +29,7 @@ object CoroutineNetworkDataSourceAdapterFactory {
         override fun fetchPage(page: Int, pageSize: Int): Deferred<ListResponseValue> {
           val deferred = CompletableDeferred<ListResponseValue>()
           runBlocking {
+            @Suppress("TooGenericExceptionCaught")
             try {
               val responseValue = pageFetcher.fetchPage(page, pageSize).await()
               knownSizeResponseManager.onTotalEntityResponseArrived(responseValue)
@@ -63,6 +64,7 @@ object CoroutineNetworkDataSourceAdapterFactory {
         override fun fetchPage(page: Int, pageSize: Int): Deferred<ListResponseValue> {
           val deferred = CompletableDeferred<ListResponseValue>()
           runBlocking {
+            @Suppress("TooGenericExceptionCaught")
             try {
               val responseValue = pageFetcher.fetchPage(page, pageSize).await()
               knownSizeResponseManager.onTotalPageCountResponseArrived(pageSize, responseValue)

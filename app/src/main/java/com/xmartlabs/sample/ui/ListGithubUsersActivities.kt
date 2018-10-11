@@ -54,10 +54,10 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
   private fun initAdapter() {
     list.adapter = ListUsersAdapter { viewModel.retry() }
     viewModel.users.observe(this, Observer<PagedList<User>> {
-      (list.adapter as ListUsersAdapter).submitList(it)
+      (list.adapter as? ListUsersAdapter)?.submitList(it)
     })
     viewModel.networkState.observe(this, Observer {
-      (list.adapter as ListUsersAdapter).setNetworkState(it)
+      (list.adapter as? ListUsersAdapter)?.setNetworkState(it)
     })
   }
 
@@ -100,11 +100,9 @@ class ListGithubUsersActivities : AppCompatActivity(), HasSupportFragmentInjecto
 
   private fun updatedUsernameFromInput() {
     input.text.trim().toString().let {
-      if (it.isNotEmpty()) {
-        if (viewModel.showUsers(it)) {
-          list.scrollToPosition(0)
-          (list.adapter as? ListUsersAdapter)?.submitList(null)
-        }
+      if (it.isNotEmpty() && viewModel.showUsers(it)) {
+        list.scrollToPosition(0)
+        (list.adapter as? ListUsersAdapter)?.submitList(null)
       }
     }
   }

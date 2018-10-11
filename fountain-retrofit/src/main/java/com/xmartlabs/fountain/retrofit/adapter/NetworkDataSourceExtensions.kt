@@ -14,10 +14,17 @@ private fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toBasePageFetcher(): Ba
   return object : BasePageFetcher<T> {
     @WorkerThread
     override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
+      @Suppress("TooGenericExceptionCaught")
       try {
         val response = this@toBasePageFetcher.fetchPage(page = page, pageSize = pageSize).execute()
         if (response.isSuccessful) {
-          networkResultListener.onSuccess(response.body()!!)
+          response.body()
+              ?.let { networkResultListener.onSuccess(it) }
+              .orDo {
+                networkResultListener.onError(
+                    IllegalStateException("Response body cannot be null", HttpException(response))
+                )
+              }
         } else {
           networkResultListener.onError(HttpException(response))
         }
