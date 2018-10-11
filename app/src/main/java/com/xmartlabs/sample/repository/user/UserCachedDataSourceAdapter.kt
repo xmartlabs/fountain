@@ -1,4 +1,4 @@
-package com.xmartlabs.sample.repository
+package com.xmartlabs.sample.repository.user
 
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 import com.xmartlabs.sample.db.AppDb
