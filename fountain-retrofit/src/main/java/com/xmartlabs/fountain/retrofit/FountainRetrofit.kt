@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.retrofit
 
+import android.arch.paging.DataSource
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
@@ -10,7 +11,6 @@ import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
 import com.xmartlabs.fountain.retrofit.adapter.toBaseNetworkDataSourceAdapter
 import java.util.concurrent.Executor
-
 
 /** A [Listing] factory */
 object FountainRetrofit {

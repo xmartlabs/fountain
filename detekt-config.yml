@@ -46,13 +46,6 @@ console-reports:
   #  - 'FindingsReport'
   #  - 'BuildFailureReport'
 
-output-reports:
-  active: true
-  exclude:
-  #  - 'HtmlOutputReport'
-  #  - 'PlainOutputReport'
-  #  - 'XmlOutputReport'
-
 comments:
   active: true
   CommentOverPrivateFunction:
@@ -77,13 +70,14 @@ complexity:
     active: true
     threshold: 4
   ComplexInterface:
-    active: false
+    active: true
     threshold: 10
     includeStaticDeclarations: false
   ComplexMethod:
     active: true
     threshold: 10
     ignoreSingleWhenExpression: false
+    ignoreSimpleWhenEntries: false
   LabeledExpression:
     active: false
   LargeClass:
@@ -169,16 +163,16 @@ exceptions:
   SwallowedException:
     active: false
   ThrowingExceptionFromFinally:
-    active: false
+    active: true
   ThrowingExceptionInMain:
     active: false
   ThrowingExceptionsWithoutMessageOrCause:
-    active: false
+    active: true
     exceptions: 'IllegalArgumentException,IllegalStateException,IOException'
   ThrowingNewInstanceOfSameException:
     active: false
   TooGenericExceptionCaught:
-    active: false
+    active: true
     exceptionNames:
      - ArrayIndexOutOfBoundsException
      - Error
@@ -188,6 +182,7 @@ exceptions:
      - IndexOutOfBoundsException
      - RuntimeException
      - Throwable
+    allowedExceptionNameRegex: "^(_|(ignore|expected).*)"
   TooGenericExceptionThrown:
     active: true
     exceptionNames:
@@ -198,10 +193,10 @@ exceptions:
 
 formatting:
   active: true
-  android: false
+  android: true
   autoCorrect: true
   ChainWrapping:
-    active: true
+    active: false
     autoCorrect: true
   CommentSpacing:
     active: true
@@ -212,13 +207,13 @@ formatting:
     active: true
     autoCorrect: true
   ImportOrdering:
-    active: true
+    active: false
     autoCorrect: true
   Indentation:
     active: true
     autoCorrect: true
     indentSize: 4
-    continuationIndentSize: 4
+    continuationIndentSize: 6
   MaximumLineLength:
     active: true
     maxLineLength: 120
@@ -235,7 +230,7 @@ formatting:
     active: true
     autoCorrect: true
   NoItParamInMultilineLambda:
-    active: true
+    active: false
   NoLineBreakAfterElse:
     active: true
     autoCorrect: true
@@ -291,6 +286,11 @@ naming:
   ClassNaming:
     active: true
     classPattern: '[A-Z$][a-zA-Z0-9$]*'
+  ConstructorParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
+    privateParameterPattern: '[a-z][A-Za-z0-9]*'
+    excludeClassPattern: '$^'
   EnumNaming:
     active: true
     enumEntryPattern: '^[A-Z][_a-zA-Z0-9]*'
@@ -301,11 +301,16 @@ naming:
     active: false
     maximumFunctionNameLength: 30
   FunctionMinLength:
-    active: false
+    active: true
     minimumFunctionNameLength: 3
   FunctionNaming:
     active: true
     functionPattern: '^([a-z$][a-zA-Z$0-9]*)|(`.*`)$'
+    excludeClassPattern: '$^'
+    ignoreOverridden: true
+  FunctionParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
   MatchingDeclarationName:
     active: true
@@ -314,8 +319,9 @@ naming:
     ignoreOverriddenFunction: true
   ObjectPropertyNaming:
     active: true
-    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
     constantPattern: '[A-Za-z][_A-Za-z0-9]*'
+    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
+    privatePropertyPattern: '(_)?[A-Za-z][A-Za-z0-9_]*'
   PackageNaming:
     active: true
     packagePattern: '^[a-z]+(\.[a-z][a-z0-9]*)*$'
@@ -335,6 +341,7 @@ naming:
     variablePattern: '[a-z][A-Za-z0-9]*'
     privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
+    ignoreOverridden: true
 
 performance:
   active: true
@@ -350,17 +357,17 @@ potential-bugs:
   DuplicateCaseInWhenExpression:
     active: true
   EqualsAlwaysReturnsTrueOrFalse:
-    active: false
+    active: true
   EqualsWithHashCodeExist:
     active: true
   ExplicitGarbageCollectionCall:
     active: true
   InvalidRange:
-    active: false
+    active: true
   IteratorHasNextCallsNextMethod:
-    active: false
+    active: true
   IteratorNotThrowingNoSuchElementException:
-    active: false
+    active: true
   LateinitUsage:
     active: false
     excludeAnnotatedProperties: ""
@@ -370,25 +377,25 @@ potential-bugs:
   UnreachableCode:
     active: true
   UnsafeCallOnNullableType:
-    active: false
+    active: true
   UnsafeCast:
-    active: false
+    active: true
   UselessPostfixExpression:
-    active: false
+    active: true
   WrongEqualsTypeParameter:
-    active: false
+    active: true
 
 style:
   active: true
   CollapsibleIfStatements:
-    active: false
+    active: true
   DataClassContainsFunctions:
-    active: false
+    active: true
     conversionFunctionPrefix: 'to'
   EqualsNullCall:
-    active: false
+    active: true
   ExpressionBodySyntax:
-    active: false
+    active: true
     includeLineWrapping: false
   ForbiddenComment:
     active: true
@@ -396,17 +403,19 @@ style:
   ForbiddenImport:
     active: false
     imports: ''
-  FunctionOnlyReturningConstant:
+  ForbiddenVoid:
     active: false
+  FunctionOnlyReturningConstant:
+    active: true
     ignoreOverridableFunction: true
     excludedFunctions: 'describeContents'
   LoopWithTooManyJumpStatements:
-    active: false
+    active: true
     maxJumpCount: 1
   MagicNumber:
     active: true
     ignoreNumbers: '-1,0,1,2'
-    ignoreHashCodeFunction: false
+    ignoreHashCodeFunction: true
     ignorePropertyDeclaration: false
     ignoreConstantDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
@@ -418,31 +427,31 @@ style:
   MaxLineLength:
     active: true
     maxLineLength: 120
-    excludePackageStatements: false
-    excludeImportStatements: false
+    excludePackageStatements: true
+    excludeImportStatements: true
     excludeCommentStatements: true
   MayBeConst:
-    active: false
+    active: true
   ModifierOrder:
     active: true
   NestedClassesVisibility:
-    active: false
+    active: true
   NewLineAtEndOfFile:
     active: true
   NoTabs:
-    active: false
+    active: true
   OptionalAbstractKeyword:
     active: true
   OptionalUnit:
-    active: false
+    active: true
   OptionalWhenBraces:
-    active: false
+    active: true
   PreferToOverPairSyntax:
-    active: false
+    active: true
   ProtectedMemberInFinalClass:
-    active: false
+    active: true
   RedundantVisibilityModifierRule:
-    active: false
+    active: true
   ReturnCount:
     active: true
     max: 2
@@ -450,31 +459,36 @@ style:
   SafeCast:
     active: true
   SerialVersionUIDInSerializableClass:
-    active: false
+    active: true
   SpacingBetweenPackageAndImports:
-    active: false
+    active: true
   ThrowsCount:
     active: true
     max: 2
   TrailingWhitespace:
-    active: false
+    active: true
   UnnecessaryAbstractClass:
     active: false
+    excludeAnnotatedClasses: "dagger.Module"
   UnnecessaryInheritance:
-    active: false
+    active: true
+  UnnecessaryLet:
+    active: true
   UnnecessaryParentheses:
-    active: false
+    active: true
   UntilInsteadOfRangeTo:
-    active: false
+    active: true
   UnusedImports:
-    active: false
+    active: true
   UnusedPrivateMember:
-    active: false
-    allowedNames: "(_|ignored|expected)"
+    active: true
+    allowedNames: "(_|ignored|expected|serialVersionUID)"
   UseDataClass:
-    active: false
+    active: true
     excludeAnnotatedClasses: ""
   UtilityClassWithPublicConstructor:
+    active: true
+  VarCouldBeVal:
     active: false
   WildcardImport:
     active: true

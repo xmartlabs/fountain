@@ -1,5 +1,6 @@
 package com.xmartlabs.fountain.coroutines
 
+import android.arch.paging.DataSource
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
@@ -27,7 +28,6 @@ object FountainCoroutines {
    * @param firstPage The first page number, defined by the service.
    * The default value is 1.
    * @param ioServiceCoroutineDispatcher The [Dispatchers] with which the service call will be made.
-   * By default, it is a pool of 5 threads.
    * @param coroutineScope The [CoroutineScope] where the couroutine will be executed.
    * @param pagedListConfig The paged list configuration.
    * In this object you can specify several options, for example the [pageSize][PagedList.Config.pageSize]
@@ -57,9 +57,8 @@ object FountainCoroutines {
    * @param cachedDataSourceAdapter The [CachedDataSourceAdapter] to take control of the [DataSource].
    * @param firstPage The first page number, defined by the service.
    * The default value is 1.
-   * @param ioServiceExecutor The [Executor] with which the service call will be made.
-   * By default, it is a pool of 5 threads.
-   * @param ioDatabaseExecutor The [Executor] through which the database transactions will be made.
+   * @param ioServiceCoroutineDispatcher The [Dispatchers] with which the service call will be made.
+   * @param ioDatabaseCoroutineDispatcher The [Dispatchers] through which the database transactions will be made.
    * By default the library will use a single thread executor.
    * @param coroutineScope The [CoroutineScope] where the couroutine will be executed.
    * @param pagedListConfig The paged list configuration.

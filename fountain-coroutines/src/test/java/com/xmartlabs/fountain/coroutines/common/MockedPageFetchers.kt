@@ -21,13 +21,15 @@ class MockedPageFetcher(var error: Boolean = false) : CoroutinePageFetcher<ListR
       .toDeferred()
 }
 
-fun <T: ListResponse<*>> CoroutinePageFetcher<T>.toInfiniteCoroutineNetworkDataSourceAdapter() =
+fun <T : ListResponse<*>> CoroutinePageFetcher<T>.toInfiniteCoroutineNetworkDataSourceAdapter() =
     object : CoroutineNetworkDataSourceAdapter<T> {
       override val pageFetcher = this@toInfiniteCoroutineNetworkDataSourceAdapter
       override fun canFetch(page: Int, pageSize: Int) = true
     }
 
-class EntityCountMockedPageFetcher(private val entityCount: Long) : CoroutinePageFetcher<ListResponseWithEntityCount<Int>> {
+class EntityCountMockedPageFetcher(
+    private val entityCount: Long
+) : CoroutinePageFetcher<ListResponseWithEntityCount<Int>> {
   override fun fetchPage(page: Int, pageSize: Int): Deferred<ListResponseWithEntityCount<Int>> =
       generateSpecificIntPageResponseList(page)
           .filter { it < entityCount }

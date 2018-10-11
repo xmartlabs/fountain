@@ -21,11 +21,10 @@ class UserRepositoryUsingRx @Inject constructor(
     private val db: AppDb
 ) : UserRepository {
   override fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : RxPageFetcher<GhListResponse<User>> {
+    val pageFetcher = object : RxPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsersUsingRx(userName, page = page, pageSize = pageSize)
-    })
-
+    }
     val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
     return FountainRx.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
@@ -34,10 +33,10 @@ class UserRepositoryUsingRx @Inject constructor(
   }
 
   override fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = (object : RxPageFetcher<GhListResponse<User>> {
+    val pageFetcher = object : RxPageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Single<GhListResponse<User>> =
           userService.searchUsersUsingRx(userName, page = page, pageSize = pageSize)
-    })
+    }
 
     val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
 

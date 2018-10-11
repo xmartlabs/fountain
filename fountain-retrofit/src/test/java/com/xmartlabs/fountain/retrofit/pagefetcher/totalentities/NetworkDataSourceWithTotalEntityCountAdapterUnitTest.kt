@@ -58,12 +58,11 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
 
   @Test
   fun testFetchTwoAndAHalfPages() {
-    val entityCount =  (5f / 2f * TestConstants.DEFAULT_NETWORK_PAGE_SIZE).toInt()
+    val entityCount = (5f / 2f * TestConstants.DEFAULT_NETWORK_PAGE_SIZE).toInt()
     val pageFetcher = EntityCountMockedPageFetcher(entityCount.toLong())
     val mockedNetworkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
-
 
     Assert.assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateIntPageResponseList(1), listing.getPagedList())
@@ -81,6 +80,7 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
     Assert.assertEquals((0 until entityCount).toList(), listing.getPagedList())
   }
 
-  abstract fun createListing(mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>)
-      : Listing<Int>
+  abstract fun createListing(
+      mockedNetworkDataSourceAdapter: RetrofitNetworkDataSourceAdapter<out ListResponse<Int>>
+  ): Listing<Int>
 }

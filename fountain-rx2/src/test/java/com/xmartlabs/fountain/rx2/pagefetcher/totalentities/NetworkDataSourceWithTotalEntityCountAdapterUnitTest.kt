@@ -80,6 +80,7 @@ abstract class NetworkDataSourceWithTotalEntityCountAdapterUnitTest {
     Assert.assertEquals((0 until entityCount).toList(), listing.getPagedList())
   }
 
-  abstract fun createListing(mockedNetworkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<Int>>)
-      : Listing<Int>
+  abstract fun createListing(
+      mockedNetworkDataSourceAdapter: RxNetworkDataSourceAdapter<out ListResponse<Int>>
+  ): Listing<Int>
 }

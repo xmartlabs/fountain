@@ -3,7 +3,7 @@ package com.xmartlabs.fountain.common
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 
-class KnownSizeResponseManager(private val firstPage : Int) {
+class KnownSizeResponseManager(private val firstPage: Int) {
   private var totalEntities: Long? = null
 
   fun onTotalEntityResponseArrived(response: ListResponseWithEntityCount<*>) {
@@ -15,12 +15,12 @@ class KnownSizeResponseManager(private val firstPage : Int) {
   }
 
   fun canFetch(page: Int, pageSize: Int): Boolean {
-    if (totalEntities == null) {
-      return true
-    }
-
-    val pageCount = if (firstPage == 0) page + 1 else page
-    val firstEntityOfPagePosition = (pageCount - 1) * pageSize + 1
-    return firstEntityOfPagePosition <= totalEntities!!
+    return totalEntities
+        ?.let {
+          val pageCount = if (firstPage == 0) page + 1 else page
+          val firstEntityOfPagePosition = (pageCount - 1) * pageSize + 1
+          return firstEntityOfPagePosition <= it
+        }
+        ?: true
   }
 }

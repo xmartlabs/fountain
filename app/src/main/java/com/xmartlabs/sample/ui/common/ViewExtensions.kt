@@ -4,7 +4,6 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 
-
 fun EditText.onSearchPerformed(action: () -> Unit) {
   setOnEditorActionListener { _, actionId, _ ->
     if (actionId == EditorInfo.IME_ACTION_GO) {

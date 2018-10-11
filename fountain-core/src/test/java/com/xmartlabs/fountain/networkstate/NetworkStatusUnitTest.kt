@@ -80,7 +80,6 @@ abstract class NetworkStatusUnitTest {
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
-
     listing.scrollToTheEnd()
     state = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
         IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)

@@ -24,12 +24,12 @@ class RetryCacheModeUnitTest : RetryUnitTest() {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value!! is NetworkState.Error)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value!! is NetworkState.Error)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
@@ -47,12 +47,12 @@ class RetryCacheModeUnitTest : RetryUnitTest() {
     assert(listing.networkState.value is NetworkState.Loading)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value!! is NetworkState.Error)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    assert(listing.networkState.value!! is NetworkState.Error)
+    assert(listing.networkState.value is NetworkState.Error)
 
     listing.retry.invoke()
     assert(listing.networkState.value is NetworkState.Loading)

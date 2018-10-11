@@ -6,7 +6,7 @@ import java.util.concurrent.Executors
 
 object FountainConstants {
   @Suppress("MagicNumber")
-  val NETWORK_EXECUTOR: Executor  by lazy { Executors.newFixedThreadPool(5) }
+  val NETWORK_EXECUTOR: Executor by lazy { Executors.newFixedThreadPool(5) }
   val DATABASE_EXECUTOR: Executor by lazy { Executors.newSingleThreadExecutor() }
 
   const val DEFAULT_FIRST_PAGE = 1

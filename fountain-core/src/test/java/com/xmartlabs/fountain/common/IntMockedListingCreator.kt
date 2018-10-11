@@ -47,7 +47,7 @@ object IntMockedListingCreator {
         if (this.numberOfErrors > 0) {
           this.numberOfErrors--
           throw IllegalStateException("${this.numberOfErrors} errors remaining.")
-        } else{
+        } else {
           sequentialIntCacheDataSourceFactory.clearData()
         }
       }

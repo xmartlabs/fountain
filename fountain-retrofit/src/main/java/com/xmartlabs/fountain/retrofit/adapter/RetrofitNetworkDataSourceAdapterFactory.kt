@@ -12,7 +12,6 @@ object RetrofitNetworkDataSourceAdapterFactory {
    * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
    * It is used when the service returns the entity count in the response.
    *
-   * @param Value The value that the service returns.
    * @param ListResponseValue The response type that the service returns.
    * @param pageFetcher It is used to fetch each page from the service.
    * @param firstPage The first page number, defined by the service.
@@ -37,7 +36,6 @@ object RetrofitNetworkDataSourceAdapterFactory {
    * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
    * It is used when the service returns the page count in the response.
    *
-   * @param Value The value that the service returns.
    * @param ListResponseValue The response type that the service returns.
    * @param pageFetcher It is used to fetch each page from the service.
    * @param firstPage The first page number, defined by the service.
@@ -68,8 +66,8 @@ object RetrofitNetworkDataSourceAdapterFactory {
  */
 fun <ServiceResponse : ListResponseWithEntityCount<*>>
     RetrofitPageFetcher<ServiceResponse>.toTotalEntityCountNetworkDataSourceAdapter(
-    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
-) = RetrofitNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
+        firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+    ) = RetrofitNetworkDataSourceAdapterFactory.fromTotalEntityCountListResponse(this, firstPage)
 
 /**
  * Provides a [RetrofitNetworkDataSourceAdapter] implementation of a [ListResponseWithEntityCount] response.
@@ -80,5 +78,5 @@ fun <ServiceResponse : ListResponseWithEntityCount<*>>
  */
 fun <ServiceResponse : ListResponseWithPageCount<*>>
     RetrofitPageFetcher<ServiceResponse>.toTotalPageCountNetworkDataSourceAdapter(
-    firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
-) = RetrofitNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)
+        firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
+    ) = RetrofitNetworkDataSourceAdapterFactory.fromTotalPageCountListResponse(this, firstPage)
