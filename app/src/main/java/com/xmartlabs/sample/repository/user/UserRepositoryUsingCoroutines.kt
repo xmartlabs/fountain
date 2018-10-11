@@ -1,4 +1,4 @@
-package com.xmartlabs.sample.repository
+package com.xmartlabs.sample.repository.user
 
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.Listing
@@ -19,8 +19,8 @@ class UserRepositoryUsingCoroutines @Inject constructor(
     private val userService: UserService,
     private val userDao: UserDao,
     private val db: AppDb
-) {
-  fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
+) : UserRepository {
+  override fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : CoroutinePageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Deferred<GhListResponse<User>> =
           userService.searchUsersUsingCoroutines(userName, page = page, pageSize = pageSize)
@@ -33,7 +33,7 @@ class UserRepositoryUsingCoroutines @Inject constructor(
     )
   }
 
-  fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
+  override fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
     val pageFetcher = (object : CoroutinePageFetcher<GhListResponse<User>> {
       override fun fetchPage(page: Int, pageSize: Int): Deferred<GhListResponse<User>> =
           userService.searchUsersUsingCoroutines(userName, page = page, pageSize = pageSize)

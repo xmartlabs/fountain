@@ -1,4 +1,4 @@
-package com.xmartlabs.sample.ui
+package com.xmartlabs.sample.ui.searchusers
 
 enum class Mode{
   NETWORK,
