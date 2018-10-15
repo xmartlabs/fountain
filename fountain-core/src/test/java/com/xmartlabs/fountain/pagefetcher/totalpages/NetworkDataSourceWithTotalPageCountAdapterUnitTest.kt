@@ -5,9 +5,9 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
-import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.pagefetcher.NetworkDataSourceWithTotalPageCountAdapter
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourcePageFetcher
+import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.getPagedList
 import com.xmartlabs.fountain.testutils.extensions.getPagedListSize
@@ -30,12 +30,12 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
         .mockLifecycleEvents()
 
     pageFetcher.sendListResponseWithPageCountResponse(1)
-    Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    Assert.assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
     listing.scrollToTheEnd()
 
     pageFetcher.sendListResponseWithPageCountResponse(1, 1)
-    Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    Assert.assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
     listing.scrollToTheEnd()
   }
@@ -47,17 +47,17 @@ abstract class NetworkDataSourceWithTotalPageCountAdapterUnitTest {
         .mockLifecycleEvents()
 
     pageFetcher.sendListResponseWithPageCountResponse(2)
-    Assert.assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    Assert.assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
     listing.scrollToTheEnd()
 
     pageFetcher.sendListResponseWithPageCountResponse(2, 1)
-    Assert.assertEquals(2 * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    Assert.assertEquals(2 * TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateSpecificIntPageResponseList(0, 1), listing.getPagedList())
     listing.scrollToTheEnd()
 
     pageFetcher.sendListResponseWithPageCountResponse(2, 1)
-    Assert.assertEquals(2 * IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    Assert.assertEquals(2 * TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     Assert.assertEquals(generateSpecificIntPageResponseList(0, 1), listing.getPagedList())
     listing.scrollToTheEnd()
   }
