@@ -15,6 +15,7 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.asCoroutineDispatcher
 
 /** A [Listing] factory */
@@ -26,7 +27,7 @@ object FountainCoroutines {
    * @param networkDataSourceAdapter The [CoroutineNetworkDataSourceAdapter] to manage the paged service endpoint.
    * @param firstPage The first page number, defined by the service.
    * The default value is 1.
-   * @param ioServiceCoroutineDispatcher The [Dispatchers] with which the service call will be made.
+   * @param ioServiceCoroutineDispatcher The [CoroutineDispatcher] with which the service call will be made.
    * @param coroutineScope The [CoroutineScope] where the couroutine will be executed.
    * @param pagedListConfig The paged list configuration.
    * In this object you can specify several options, for example the [pageSize][PagedList.Config.pageSize]
@@ -37,7 +38,7 @@ object FountainCoroutines {
   fun <NetworkValue> createNetworkListing(
       networkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE,
-      ioServiceCoroutineDispatcher: CoroutineDispatcher = FountainConstants.NETWORK_EXECUTOR.asCoroutineDispatcher(),
+      ioServiceCoroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
       coroutineScope: CoroutineScope = GlobalScope,
       pagedListConfig: PagedList.Config = FountainConstants.DEFAULT_PAGED_LIST_CONFIG
   ) = NetworkPagedListingCreator.createListing(
@@ -56,9 +57,9 @@ object FountainCoroutines {
    * @param cachedDataSourceAdapter The [CachedDataSourceAdapter] to take control of the [DataSource].
    * @param firstPage The first page number, defined by the service.
    * The default value is 1.
-   * @param ioServiceCoroutineDispatcher The [Dispatchers] with which the service call will be made.
-   * @param ioDatabaseCoroutineDispatcher The [Dispatchers] through which the database transactions will be made.
-   * By default the library will use a single thread executor.
+   * @param ioServiceCoroutineDispatcher The [CoroutineDispatcher] with which the service call will be made.
+   * @param ioDatabaseCoroutineDispatcher The [CoroutineDispatcher] through which the database transactions will be made.
+   * By default the library will use a single thread [CoroutineDispatcher].
    * @param coroutineScope The [CoroutineScope] where the couroutine will be executed.
    * @param pagedListConfig The paged list configuration.
    * In this object you can specify several options, for example the [pageSize][PagedList.Config.pageSize]
@@ -69,7 +70,7 @@ object FountainCoroutines {
   fun <NetworkValue, DataSourceValue> createNetworkWithCacheSupportListing(
       networkDataSourceAdapter: CoroutineNetworkDataSourceAdapter<out ListResponse<out NetworkValue>>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
-      ioServiceCoroutineDispatcher: CoroutineDispatcher = FountainConstants.NETWORK_EXECUTOR.asCoroutineDispatcher(),
+      ioServiceCoroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
       ioDatabaseCoroutineDispatcher: CoroutineDispatcher = FountainConstants.DATABASE_EXECUTOR.asCoroutineDispatcher(),
       coroutineScope: CoroutineScope = GlobalScope,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE,
