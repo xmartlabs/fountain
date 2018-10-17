@@ -83,7 +83,7 @@ You can read the [full documentation](https://xmartlabs.gitbook.io/fountain/).
 ### Factory constructors
 There's one static factory object class for each each dependency.
 - FountainCoroutines: Used to get a [Listing] from a Retrofit service which uses a Coroutine adapter.
-- FountainRetrofit: Used to get a [Listing] from a Retrofit service without using an special adapter.
+- FountainRetrofit: Used to get a [Listing] from a Retrofit service without using a special adapter.
 - FountainRx: Used to get a [Listing] from a Retrofit service which uses a RxJava2 adapter.
 
 Each static factory has the same constructors with different params:
