@@ -5,7 +5,6 @@ import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.common.Experimental
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.coroutines.adapter.CoroutineNetworkDataSourceAdapter
 import com.xmartlabs.fountain.coroutines.adapter.NotPagedCoroutinePageFetcher
@@ -58,7 +57,6 @@ object FountainCoroutines {
    * @param coroutineScope The [CoroutineScope] where the couroutine will be executed.
    * @return A [Listing] structure with Network Support.
    */
-  @Experimental
   fun <NetworkValue> createNotPagedNetworkListing(
       notPagedCoroutinePageFetcher: NotPagedCoroutinePageFetcher<out ListResponse<out NetworkValue>>,
       ioServiceCoroutineDispatcher: CoroutineDispatcher = FountainConstants.NETWORK_EXECUTOR.asCoroutineDispatcher(),

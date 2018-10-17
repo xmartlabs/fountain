@@ -5,7 +5,6 @@ import android.arch.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
-import com.xmartlabs.fountain.common.Experimental
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.feature.cachednetwork.CachedNetworkListingCreator
 import com.xmartlabs.fountain.feature.network.NetworkPagedListingCreator
@@ -52,7 +51,6 @@ object FountainRetrofit {
    * By default, it is a pool of 5 threads.
    * @return A [Listing] structure with Network Support.
    */
-  @Experimental
   fun <NetworkValue> createNotPagedNetworkListing(
       notPagedRetrifitPageFetcher: NotPagedRetrifitPageFetcher<out ListResponse<out NetworkValue>>,
       ioServiceExecutor: Executor = FountainConstants.NETWORK_EXECUTOR
@@ -111,7 +109,6 @@ object FountainRetrofit {
    * By default the library will use a single thread executor.
    * @return A [Listing] structure with Cache + Network Support.
    */
-  @Experimental
   fun <NetworkValue, DataSourceValue> createNotPagedNetworkWithCacheSupportListing(
       notPagedRetrifitPageFetcher: NotPagedRetrifitPageFetcher<out ListResponse<out NetworkValue>>,
       cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,

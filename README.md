@@ -40,6 +40,9 @@ data class Listing<T>(
 Basically, you could manage all data streams with a `Listing` component, which is awesome!
 It's really flexible and useful to display the paged list entities and reflect the network status changes in the UI.
 
+Despite of this library was designed to work with paged endpoints, it **also supports** to work with **not paged endpoints**.
+That means that you can use all [Listing] features in services that return a not paged list.
+
 Fountain provides two ways to generate a `Listing` component from paged services:    
 1. [**Network support:**](#network-support) Provides a `Listing` based on a common Retrofit service implementation.
 Note entities won't be saved in memory nor disk.
@@ -83,11 +86,19 @@ There's one static factory object class for each each dependency.
 - FountainRetrofit: Used to get a [Listing] from a Retrofit service without using an special adapter.
 - FountainRx: Used to get a [Listing] from a Retrofit service which uses a RxJava2 adapter.
 
-Each static factory has two constructors, one for each Fountain mode.
+Each static factory has the same constructors with different params:
+- [`createNetworkListing`](#network-support-for-paged-endpoints): A constructor to get a `Listing` component from a common **paged** Retrofit **service** implementation.
+- [`createNotPagedNetworkListing`](#network-support-for-not-paged-endpoints): A constructor to get a `Listing` component from a common **not paged** Retrofit **service** implementation.
+- [`createNetworkWithCacheSupportListing`](#cache--network-support-for-paged-endpoints): A constructor to get a `Listing` component with **cache support** from a common **paged** Retrofit **service** implementation.
+- [`createNotPagedNetworkWithCacheSupportListing`](#cache--network-support-for-not-paged-endpoints): A constructor to get a `Listing` component with **cache support** from a common **not paged** Retrofit **service** implementation.
 
 ### Network support
+Provides a `Listing` based on a common Retrofit service implementation.
+In this mode the fetched entities are volatile, they won't be saved in memory nor disk.
 
-The `Listing` with network support can be obtained invoking `createNetworkListing` from the static factory class.
+#### Network support for paged endpoints
+
+The `Listing` with network support for paged endpoints can be obtained invoking `createNetworkListing` from the static factory class.
 
 It requires only one argument, a `NetworkDataSourceAdapter`, which provides all operations that the library will use to handle the paging.
 
@@ -119,7 +130,29 @@ interface RxPageFetcher<T : ListResponse<*>> {
 }
 ```
 
-#### List Responses
+#### Network support for not paged endpoints
+
+The `Listing` with network support for not paged endpoints can be obtained invoking `createNetworkListing` from the static factory class.
+
+It requires only one argument, a `NotPagedPageFetcher`, which provides a method to fetch the data from a service source.
+
+There is one `NotPagedPageFetcher` per library adapter, we will refer to any of them as `NotPagedPageFetcher` throughout the documentation. 
+
+```kotlin
+interface NotPagedRetrifitPageFetcher<T : ListResponse<*>> {
+  fun fetchData(): Call<T>
+}
+
+interface NotPagedCoroutinePageFetcher<T : ListResponse<*>> {
+  fun fetchData(): Deferred<T>
+}
+
+interface NotPagedRxPageFetcher<T : ListResponse<*>> {
+  fun fetchData(): Single<T>
+}
+```
+
+##### List Responses
 
 The library defines a common service response type which is used to fetch the pages.
 
@@ -160,12 +193,27 @@ fun <ServiceResponse : ListResponseWithPageCount<*>>
 
 ### Cache + Network support
 
-The `Listing` with network and cache support can be obtained invoking `createNetworkWithCacheSupportListing` from the static factory class.
+Provides a `Listing` with cache support using a common Retrofit service implementation, and a [`DataSource`](https://developer.android.com/reference/android/arch/paging/DataSource) for caching the data.
+
+#### Cache + Network support for paged endpoints
+
+The `Listing` with network and cache support for paged endpoints can be obtained invoking `createNetworkWithCacheSupportListing` from the static factory class.
 
 It has two required components: 
 1. A `NetworkDataSourceAdapter<out ListResponse<NetworkValue>>` to fetch all pages.
-1. A `CachedDataSourceAdapter<NetworkValue, DataSourceValue>` to update the `DataSource`.
+1. A [`CachedDataSourceAdapter<NetworkValue, DataSourceValue>`](#cacheddatasourceadapter) to update the `DataSource`.
 It's the interface that the library will use to take control of the `DataSource`.
+
+#### Cache + Network support for not paged endpoints
+
+The `Listing` with network and cache support for not paged endpoints can be obtained invoking `createNotPagedNetworkWithCacheSupportListing` from the static factory class.
+
+It has two required components: 
+1. A `NotPagedPageFetcher<out ListResponse<NetworkValue>>` to fetch the data.
+1. A [`CachedDataSourceAdapter<NetworkValue, DataSourceValue>`](#cacheddatasourceadapter) to update the `DataSource`.
+It's the interface that the library will use to take control of the `DataSource`.
+
+#### CachedDataSourceAdapter
 
 ```kotlin
 interface CachedDataSourceAdapter<NetworkValue, DataSourceValue> {
