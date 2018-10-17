@@ -16,7 +16,7 @@ ext {
             espresso                       : '3.0.2',
             gradle                         : '3.1.4',
             gson                           : '2.8.5',
-            jacoco                         : '0.13.0',
+            jacoco                         : '0.12.0',
             junit                          : '4.12',
             kotlin                         : '1.2.71',
             kotlinCoroutines               : '0.26.0',
