@@ -40,8 +40,9 @@ data class Listing<T>(
 Basically, you could manage all data streams with a `Listing` component, which is awesome!
 It's really flexible and useful to display the paged list entities and reflect the network status changes in the UI.
 
-Despite of this library was designed to work with paged endpoints, it **also supports** to work with **not paged endpoints**.
-That means that you can use all [Listing] features in services that return a not paged list.
+This library was designed to work with paged endpoints.
+However, it also supports working with not paged endpoints.
+That means that you can use all [Listing] features in services that return a list that's not paged.
 
 Fountain provides two ways to generate a `Listing` component from paged services:    
 1. [**Network support:**](#network-support) Provides a `Listing` based on a common Retrofit service implementation.
