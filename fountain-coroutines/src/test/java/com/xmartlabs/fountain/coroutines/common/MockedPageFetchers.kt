@@ -5,6 +5,8 @@ import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.coroutines.adapter.CoroutineNetworkDataSourceAdapter
 import com.xmartlabs.fountain.coroutines.adapter.CoroutinePageFetcher
+import com.xmartlabs.fountain.coroutines.adapter.NotPagedCoroutinePageFetcher
+import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.toListResponse
 import com.xmartlabs.fountain.testutils.extensions.toListResponseEntityCount
@@ -13,13 +15,20 @@ import kotlinx.coroutines.experimental.CompletableDeferred
 import kotlinx.coroutines.experimental.Deferred
 
 class MockedPageFetcher(var error: Boolean = false) : CoroutinePageFetcher<ListResponse<Int>> {
-  override fun fetchPage(page: Int, pageSize: Int): Deferred<ListResponse<Int>> =
-      if (error) IllegalStateException("Mocked error").toErrorDeferred() else generateServiceCall(page)
-
-  private fun generateServiceCall(page: Int) = generateSpecificIntPageResponseList(page)
-      .toListResponse()
-      .toDeferred()
+  override fun fetchPage(page: Int, pageSize: Int) =
+      if (error) generateError() else generateServiceCall(page)
 }
+
+class NotPagedMockedPageFetcher(var error: Boolean = false) : NotPagedCoroutinePageFetcher<ListResponse<Int>> {
+  override fun fetchData() =
+      if (error) generateError() else generateServiceCall(TestConstants.DEFAULT_FIRST_PAGE)
+}
+
+fun generateError(): Deferred<ListResponse<Int>> = IllegalStateException("Mocked error").toErrorDeferred()
+
+private fun generateServiceCall(page: Int) = generateSpecificIntPageResponseList(page)
+    .toListResponse()
+    .toDeferred()
 
 fun <T : ListResponse<*>> CoroutinePageFetcher<T>.toInfiniteCoroutineNetworkDataSourceAdapter() =
     object : CoroutineNetworkDataSourceAdapter<T> {

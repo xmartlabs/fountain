@@ -4,8 +4,8 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
-import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
 import com.xmartlabs.fountain.testutils.extensions.scrollToTheEnd
 import com.xmartlabs.fountain.testutils.extensions.sendPageResponse
@@ -33,19 +33,19 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    var state: NetworkState = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    var state: NetworkState = NetworkState.Loading(TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
 
-    state = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    state = NetworkState.Loaded(TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
     listing.scrollToTheEnd()
-    state = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    state = NetworkState.Loading(TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(state, listing.networkState.value)
   }
 
@@ -55,13 +55,13 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    var state: NetworkState = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    var state: NetworkState = NetworkState.Loading(TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    state = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    state = NetworkState.Loaded(TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
   }
 
@@ -71,23 +71,23 @@ abstract class NetworkStatusUnitTest {
     val listing = createListing(mockedNetworkDataSourceAdapter)
         .mockLifecycleEvents()
 
-    var state: NetworkState = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    var state: NetworkState = NetworkState.Loading(TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
     mockedNetworkDataSourceAdapter.sendPageResponse()
-    state = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    state = NetworkState.Loaded(TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
 
     listing.scrollToTheEnd()
-    state = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    state = NetworkState.Loading(TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, state)
 
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
-    state = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    state = NetworkState.Loaded(TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, state)
   }
 
@@ -101,8 +101,8 @@ abstract class NetworkStatusUnitTest {
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
-    val state = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    val state = NetworkState.Error(exception, TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.networkState.value, state)
   }
 
@@ -122,8 +122,8 @@ abstract class NetworkStatusUnitTest {
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
-    val state = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    val state = NetworkState.Error(exception, TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, state)
   }
 
@@ -145,8 +145,8 @@ abstract class NetworkStatusUnitTest {
     val exception = Exception()
     mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
     assert(listing.networkState.value is NetworkState.Loaded)
-    val state = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, true, false)
+    val state = NetworkState.Error(exception, TestConstants.DEFAULT_FIRST_PAGE,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, true, false)
     Assert.assertEquals(listing.refreshState.value, state)
   }
 

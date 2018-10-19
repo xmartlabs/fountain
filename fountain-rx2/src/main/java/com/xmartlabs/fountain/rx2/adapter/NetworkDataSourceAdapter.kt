@@ -5,7 +5,7 @@ import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
 import io.reactivex.Single
 
 /**
- * It is used to fetch each page from the service.
+ * It's used to fetch each page from the service.
  * It's based on [RxJava](https://github.com/ReactiveX/RxJava).
  */
 interface RxPageFetcher<T : ListResponse<*>> {
@@ -17,6 +17,14 @@ interface RxPageFetcher<T : ListResponse<*>> {
    * @return A [Single] of the type [T] that represent the service call.
    */
   fun fetchPage(page: Int, pageSize: Int): Single<T>
+}
+
+/**
+ * It's used to fetch the service data where the service response is a not paged list.
+ * It's based on [RxJava](https://github.com/ReactiveX/RxJava).
+ */
+interface NotPagedRxPageFetcher<T : ListResponse<*>> {
+  fun fetchData(): Single<T>
 }
 
 /**It's a [NetworkDataSourceAdapter] based on a [RxPageFetcher]. */

@@ -4,8 +4,8 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
-import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.getPagedList
 import com.xmartlabs.fountain.testutils.extensions.mockLifecycleEvents
@@ -56,18 +56,18 @@ abstract class RetryUnitTest {
 
     val exception = Exception()
     mockedNetworkDataSourceAdapter.pageFetcher.onError(exception)
-    var networkState: NetworkState = NetworkState.Error(exception, IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    var networkState: NetworkState = NetworkState.Error(exception, TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
 
     listing.retry.invoke()
-    networkState = NetworkState.Loading(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    networkState = NetworkState.Loading(TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
     mockedNetworkDataSourceAdapter.sendPageResponse(1)
 
-    networkState = NetworkState.Loaded(IntMockedListingCreator.DEFAULT_FIRST_PAGE + 1,
-        IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, false, false)
+    networkState = NetworkState.Loaded(TestConstants.DEFAULT_FIRST_PAGE + 1,
+        TestConstants.DEFAULT_NETWORK_PAGE_SIZE, false, false)
     Assert.assertEquals(listing.networkState.value, networkState)
 
     assertEquals(generateSpecificIntPageResponseList(0, 1), listing.getPagedList())
