@@ -3,8 +3,10 @@ package com.xmartlabs.fountain.retrofit.common
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
+import com.xmartlabs.fountain.retrofit.adapter.NotPagedRetrifitPageFetcher
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitPageFetcher
+import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.toListResponse
 import com.xmartlabs.fountain.testutils.extensions.toListResponseEntityCount
@@ -16,13 +18,18 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MockedPageFetcher(var error: Boolean = false) : RetrofitPageFetcher<ListResponse<Int>> {
-  override fun fetchPage(page: Int, pageSize: Int): Call<ListResponse<Int>> =
+  override fun fetchPage(page: Int, pageSize: Int) =
       if (error) createErrorCall() else generateServiceCall(page)
-
-  private fun generateServiceCall(page: Int) = generateSpecificIntPageResponseList(page)
-      .toListResponse()
-      .toCall()
 }
+
+class NotPagedMockedPageFetcher(var error: Boolean = false) : NotPagedRetrifitPageFetcher<ListResponse<Int>> {
+  override fun fetchData() =
+      if (error) createErrorCall() else generateServiceCall(TestConstants.DEFAULT_FIRST_PAGE)
+}
+
+private fun generateServiceCall(page: Int) = generateSpecificIntPageResponseList(page)
+    .toListResponse()
+    .toCall()
 
 fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toInfiniteRetrofitNetworkDataSourceAdapter() =
     object : RetrofitNetworkDataSourceAdapter<T> {

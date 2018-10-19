@@ -5,6 +5,7 @@ import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
+import com.xmartlabs.fountain.common.FountainConstants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -13,25 +14,29 @@ import retrofit2.Response
 private fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toBasePageFetcher(): BasePageFetcher<T> {
   return object : BasePageFetcher<T> {
     @WorkerThread
-    override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
-      @Suppress("TooGenericExceptionCaught")
-      try {
-        val response = this@toBasePageFetcher.fetchPage(page = page, pageSize = pageSize).execute()
-        if (response.isSuccessful) {
-          response.body()
-              ?.let { networkResultListener.onSuccess(it) }
-              .orDo {
-                networkResultListener.onError(
-                    IllegalStateException("Response body cannot be null", HttpException(response))
-                )
-              }
-        } else {
-          networkResultListener.onError(HttpException(response))
-        }
-      } catch (throwable: Throwable) {
-        networkResultListener.onError(throwable)
-      }
+    override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) =
+        fetchPage(page = page, pageSize = pageSize)
+            .executeAndNotify(networkResultListener)
+  }
+}
+
+private fun <T> Call<T>.executeAndNotify(networkResultListener: NetworkResultListener<T>) {
+  @Suppress("TooGenericExceptionCaught")
+  try {
+    val response = execute()
+    if (response.isSuccessful) {
+      response.body()
+          ?.let { networkResultListener.onSuccess(it) }
+          .orDo {
+            networkResultListener.onError(
+                IllegalStateException("Response body cannot be null", HttpException(response))
+            )
+          }
+    } else {
+      networkResultListener.onError(HttpException(response))
     }
+  } catch (throwable: Throwable) {
+    networkResultListener.onError(throwable)
   }
 }
 
@@ -83,3 +88,18 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
 }
 
 private fun <T> T?.orDo(action: () -> T) = this ?: action()
+
+private fun <T : ListResponse<*>> NotPagedRetrifitPageFetcher<T>.toBasePageFetcher() = object : BasePageFetcher<T> {
+  @WorkerThread
+  override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) =
+      fetchData()
+          .executeAndNotify(networkResultListener)
+}
+
+internal fun <T : ListResponse<*>> NotPagedRetrifitPageFetcher<T>.toBaseNetworkDataSourceAdapter() =
+    object : BaseNetworkDataSourceAdapter<T> {
+      override val pageFetcher = this@toBaseNetworkDataSourceAdapter.toBasePageFetcher()
+
+      override fun canFetch(page: Int, pageSize: Int): Boolean =
+          FountainConstants.DEFAULT_FIRST_PAGE == page
+    }

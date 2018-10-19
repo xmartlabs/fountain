@@ -4,8 +4,8 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.NetworkState
-import com.xmartlabs.fountain.common.IntMockedListingCreator
 import com.xmartlabs.fountain.testutils.MockedNetworkDataSourceAdapter
+import com.xmartlabs.fountain.testutils.TestConstants
 import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageResponseList
 import com.xmartlabs.fountain.testutils.extensions.getPagedList
 import com.xmartlabs.fountain.testutils.extensions.getPagedListSize
@@ -31,13 +31,13 @@ abstract class RefreshUnitTest {
     mockedNetworkDataSourceAdapter.sendPageResponse()
     assert(listing.networkState.value is NetworkState.Loaded)
 
-    assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     assertEquals(generateSpecificIntPageResponseList(0), listing.getPagedList())
 
     listing.refresh.invoke()
     mockedNetworkDataSourceAdapter.sendPageResponse(page = 1)
 
-    assertEquals(IntMockedListingCreator.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
+    assertEquals(TestConstants.DEFAULT_NETWORK_PAGE_SIZE, listing.getPagedListSize())
     assertEquals(generateSpecificIntPageResponseList(1), listing.getPagedList())
   }
 
