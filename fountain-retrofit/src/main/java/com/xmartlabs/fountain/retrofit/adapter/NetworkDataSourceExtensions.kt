@@ -2,10 +2,9 @@ package com.xmartlabs.fountain.retrofit.adapter
 
 import android.support.annotation.WorkerThread
 import com.xmartlabs.fountain.ListResponse
-import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
 import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
-import com.xmartlabs.fountain.common.FountainConstants
+import com.xmartlabs.fountain.common.BaseNetworkDataSourceAdapterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -41,12 +40,7 @@ private fun <T> Call<T>.executeAndNotify(networkResultListener: NetworkResultLis
 }
 
 internal fun <T : ListResponse<*>> RetrofitNetworkDataSourceAdapter<T>.toBaseNetworkDataSourceAdapter() =
-    object : BaseNetworkDataSourceAdapter<T> {
-      override val pageFetcher = this@toBaseNetworkDataSourceAdapter.pageFetcher.toBasePageFetcher()
-
-      override fun canFetch(page: Int, pageSize: Int): Boolean =
-          this@toBaseNetworkDataSourceAdapter.canFetch(page = page, pageSize = pageSize)
-    }
+    BaseNetworkDataSourceAdapterFactory.createFromAdapter(pageFetcher.toBasePageFetcher(), this)
 
 @Suppress("ComplexMethod")
 internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
@@ -97,9 +91,4 @@ private fun <T : ListResponse<*>> NotPagedRetrifitPageFetcher<T>.toBasePageFetch
 }
 
 internal fun <T : ListResponse<*>> NotPagedRetrifitPageFetcher<T>.toBaseNetworkDataSourceAdapter() =
-    object : BaseNetworkDataSourceAdapter<T> {
-      override val pageFetcher = this@toBaseNetworkDataSourceAdapter.toBasePageFetcher()
-
-      override fun canFetch(page: Int, pageSize: Int): Boolean =
-          FountainConstants.DEFAULT_FIRST_PAGE == page
-    }
+    BaseNetworkDataSourceAdapterFactory.createFromNotPagedPageFetcher(toBasePageFetcher())
