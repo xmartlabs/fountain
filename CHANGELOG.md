@@ -6,7 +6,7 @@ Released on 2018-10-23.
 **Big Breaking changes:**
 #### Fountain modules
 
-The library has a lot of changes, now the it has 3 different modules:
+The library now has 3 different modules:
 - Coroutine module: Uses a [Coroutine Retrofit adapter](https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter) to fetch the pages.
 - Retrofit module: Uses a simple Retrofit [call](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html) to fetch the pages.
 - RxJava2 module: Uses a RxJava2 Retrofit adapter to fetch the pages.
