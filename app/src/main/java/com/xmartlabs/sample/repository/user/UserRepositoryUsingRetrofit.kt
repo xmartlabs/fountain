@@ -3,6 +3,7 @@ package com.xmartlabs.sample.repository.user
 import android.arch.paging.PagedList
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.retrofit.FountainRetrofit
+import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitPageFetcher
 import com.xmartlabs.fountain.retrofit.adapter.toTotalEntityCountNetworkDataSourceAdapter
 import com.xmartlabs.sample.db.AppDb
@@ -21,12 +22,7 @@ class UserRepositoryUsingRetrofit @Inject constructor(
     private val db: AppDb
 ) : UserRepository {
   override fun searchServiceUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = object : RetrofitPageFetcher<GhListResponse<User>> {
-      override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =
-          userService.searchUsersUsingRetrofit(userName, page = page, pageSize = pageSize)
-    }
-
-    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
+    val networkDataSourceAdapter = getNetworkDataSourceAdapter(userName)
     return FountainRetrofit.createNetworkListing(
         networkDataSourceAdapter = networkDataSourceAdapter,
         pagedListConfig = pagedListConfig
@@ -34,12 +30,7 @@ class UserRepositoryUsingRetrofit @Inject constructor(
   }
 
   override fun searchServiceAndDbUsers(userName: String, pagedListConfig: PagedList.Config): Listing<User> {
-    val pageFetcher = object : RetrofitPageFetcher<GhListResponse<User>> {
-      override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =
-          userService.searchUsersUsingRetrofit(userName, page = page, pageSize = pageSize)
-    }
-
-    val networkDataSourceAdapter = pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
+    val networkDataSourceAdapter = getNetworkDataSourceAdapter(userName)
 
     val cachedDataSourceAdapter = UserCachedDataSourceAdapter(userName, userDao, db)
     return FountainRetrofit.createNetworkWithCacheSupportListing(
@@ -47,5 +38,13 @@ class UserRepositoryUsingRetrofit @Inject constructor(
         cachedDataSourceAdapter = cachedDataSourceAdapter,
         pagedListConfig = pagedListConfig
     )
+  }
+
+  private fun getNetworkDataSourceAdapter(userName: String): RetrofitNetworkDataSourceAdapter<GhListResponse<User>> {
+    val pageFetcher = object : RetrofitPageFetcher<GhListResponse<User>> {
+      override fun fetchPage(page: Int, pageSize: Int): Call<GhListResponse<User>> =
+          userService.searchUsersUsingRetrofit(userName, page = page, pageSize = pageSize)
+    }
+    return pageFetcher.toTotalEntityCountNetworkDataSourceAdapter()
   }
 }

@@ -66,13 +66,13 @@ repositories {
 
 dependencies {
     // This dependency is required only if you want to use a Retrofit service without a special adapter. 
-    implementation 'com.github.xmartlabs.fountain:fountain-retrofit:0.3.0'
+    implementation 'com.github.xmartlabs.fountain:fountain-retrofit:0.4.0'
 
     // This dependency is required only if you want to use a Coroutine retrofit adapter.
-    implementation 'com.github.xmartlabs.fountain:fountain-coroutines:0.3.0'
+    implementation 'com.github.xmartlabs.fountain:fountain-coroutines:0.4.0'
 
     // This dependency is required only if you want to use a RxJava2 retrofit adapter.
-    implementation 'com.github.xmartlabs.fountain:fountain-rx2:0.3.0'
+    implementation 'com.github.xmartlabs.fountain:fountain-rx2:0.4.0'
 }
 ```
 
