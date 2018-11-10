@@ -44,7 +44,7 @@ dependencies {
     implementation "com.google.code.gson:gson:${libraryVersion.gson}"
     implementation "com.google.dagger:dagger-android-support:${libraryVersion.dagger}"
     implementation "com.google.dagger:dagger:${libraryVersion.dagger}"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:${libraryVersion.kotlinCoroutinesRetrofitAdapter}"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${libraryVersion.kotlinCoroutinesRetrofitAdapter}"
     implementation "com.jakewharton.timber:timber:${libraryVersion.timber}"
     implementation "com.squareup.okhttp3:logging-interceptor:${libraryVersion.okHttp}"
     implementation "com.squareup.okhttp3:okhttp:${libraryVersion.okHttp}"

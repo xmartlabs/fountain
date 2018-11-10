@@ -6,7 +6,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.xmartlabs.sample.db.AppDb
 import com.xmartlabs.sample.service.UserService
 import dagger.Module
@@ -32,7 +32,7 @@ class AppModule {
   @Singleton
   @Provides
   fun provideOkHttpClient(): OkHttpClient {
-    val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
+    val loggingInterceptor = HttpLoggingInterceptor { Timber.tag("OkHttp").d(it) }
     loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
     return OkHttpClient.Builder()

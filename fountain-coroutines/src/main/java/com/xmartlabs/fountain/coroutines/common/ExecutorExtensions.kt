@@ -1,8 +1,8 @@
 package com.xmartlabs.fountain.coroutines.common
 
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
 
 internal fun CoroutineDispatcher.toExecutor(coroutineScope: CoroutineScope) = Executor {

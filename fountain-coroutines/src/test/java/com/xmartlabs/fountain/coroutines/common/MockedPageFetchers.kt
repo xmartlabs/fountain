@@ -11,8 +11,8 @@ import com.xmartlabs.fountain.testutils.extensions.generateSpecificIntPageRespon
 import com.xmartlabs.fountain.testutils.extensions.toListResponse
 import com.xmartlabs.fountain.testutils.extensions.toListResponseEntityCount
 import com.xmartlabs.fountain.testutils.extensions.toListResponsePageCount
-import kotlinx.coroutines.experimental.CompletableDeferred
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 
 class MockedPageFetcher(var error: Boolean = false) : CoroutinePageFetcher<ListResponse<Int>> {
   override fun fetchPage(page: Int, pageSize: Int) =
