@@ -6,9 +6,12 @@ import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 
 class MockedNetworkDataSourcePageFetcher<T> : BasePageFetcher<T> {
-  private var networkResultListener: NetworkResultListener<T>? = null
-  private var pendingResponse: T? = null
-  private var pendingError: Throwable? = null
+  @Suppress("MemberVisibilityCanBePrivate")
+  internal var networkResultListener: NetworkResultListener<T>? = null
+  @Suppress("MemberVisibilityCanBePrivate")
+  internal var pendingResponse: T? = null
+  @Suppress("MemberVisibilityCanBePrivate")
+  internal var pendingError: Throwable? = null
 
   @WorkerThread
   override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) {
@@ -64,4 +67,4 @@ class MockedNetworkDataSourceAdapter<T> : BaseNetworkDataSourceAdapter<T> {
   override fun canFetch(page: Int, pageSize: Int): Boolean = true
 }
 
-private fun <T> T?.orDo(action: () -> T) = this ?: action()
+internal fun <T> T?.orDo(action: () -> T) = this ?: action()

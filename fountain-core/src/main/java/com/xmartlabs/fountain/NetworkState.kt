@@ -1,5 +1,7 @@
 package com.xmartlabs.fountain
 
+import android.annotation.SuppressLint
+
 /**
  * A structure to handle the network states.
  *
@@ -8,6 +10,7 @@ package com.xmartlabs.fountain
  * @param isFirstPage Indicates if the requested page is the first page.
  * @param isLastPage Indicates if the requested page is the last page.
  */
+@SuppressLint("SyntheticAccessor")
 sealed class NetworkState(
     open val page: Int,
     open val pageSize: Int,

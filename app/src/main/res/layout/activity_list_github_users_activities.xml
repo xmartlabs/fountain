@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -41,6 +42,8 @@
                 android:hint="@string/user_name"
                 android:imeOptions="actionSearch"
                 android:inputType="textNoSuggestions"
+                android:autofillHints="username"
+                tools:ignore="UnusedAttribute"
                 />
 
         </android.support.design.widget.TextInputLayout>
