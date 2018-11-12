@@ -20,7 +20,8 @@ object RetrofitNetworkDataSourceAdapterFactory {
       pageFetcher: RetrofitPageFetcher<ListResponseValue>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
   ) = object : RetrofitNetworkDataSourceAdapter<ListResponseValue> {
-    private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
+    @Suppress("RedundantVisibilityModifier")
+    internal val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
     override val pageFetcher: RetrofitPageFetcher<ListResponseValue>
       get() = object : RetrofitPageFetcher<ListResponseValue> {
@@ -44,7 +45,8 @@ object RetrofitNetworkDataSourceAdapterFactory {
       pageFetcher: RetrofitPageFetcher<ListResponseValue>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
   ) = object : RetrofitNetworkDataSourceAdapter<ListResponseValue> {
-    private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
+    @Suppress("RedundantVisibilityModifier")
+    internal val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
     override val pageFetcher: RetrofitPageFetcher<ListResponseValue>
       get() = object : RetrofitPageFetcher<ListResponseValue> {

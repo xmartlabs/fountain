@@ -34,7 +34,7 @@ class ListGithubUsersActivity : AppCompatActivity(), HasSupportFragmentInjector 
 
   private val adapterType: FountainAdapterType
     get() =
-      intent.extras.getSerializable(KEY_ADAPTER_TYPE_NAME) as? FountainAdapterType ?: FountainAdapterType.RETROFIT
+      intent?.extras?.getSerializable(KEY_ADAPTER_TYPE_NAME) as? FountainAdapterType ?: FountainAdapterType.RETROFIT
 
   override fun supportFragmentInjector() = dispatchingAndroidInjector
 

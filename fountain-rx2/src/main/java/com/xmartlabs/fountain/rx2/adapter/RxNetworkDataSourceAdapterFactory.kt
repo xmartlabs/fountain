@@ -20,7 +20,8 @@ object RxNetworkDataSourceAdapterFactory {
       pageFetcher: RxPageFetcher<ListResponseValue>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
   ) = object : RxNetworkDataSourceAdapter<ListResponseValue> {
-    private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
+    @Suppress("RedundantVisibilityModifier")
+    internal val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
     override val pageFetcher: RxPageFetcher<ListResponseValue>
       get() = object : RxPageFetcher<ListResponseValue> {
@@ -44,7 +45,8 @@ object RxNetworkDataSourceAdapterFactory {
       pageFetcher: RxPageFetcher<ListResponseValue>,
       firstPage: Int = FountainConstants.DEFAULT_FIRST_PAGE
   ) = object : RxNetworkDataSourceAdapter<ListResponseValue> {
-    private val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
+    @Suppress("RedundantVisibilityModifier")
+    internal val knownSizeResponseManager = KnownSizeResponseManager(firstPage)
 
     override val pageFetcher: RxPageFetcher<ListResponseValue>
       get() = object : RxPageFetcher<ListResponseValue> {

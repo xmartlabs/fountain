@@ -290,7 +290,7 @@ public class PagingRequestHelper {
          *
          * @param callback The callback that should be invoked with the result.
          */
-        void run(Callback callback);
+        void run(@NonNull Callback callback);
         /**
          * Callback class provided to the {@link #run(Callback)} method to report the result.
          */
@@ -396,6 +396,7 @@ public class PagingRequestHelper {
         public Throwable getErrorFor(@NonNull RequestType type) {
             return mErrors[type.ordinal()];
         }
+        @NonNull
         @Override
         public String toString() {
             return "StatusReport{"
@@ -406,7 +407,7 @@ public class PagingRequestHelper {
                     + '}';
         }
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             StatusReport that = (StatusReport) o;

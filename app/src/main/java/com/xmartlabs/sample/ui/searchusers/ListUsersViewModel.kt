@@ -23,7 +23,7 @@ class ListUsersViewModel @Inject constructor(
 ) : ViewModel() {
   companion object {
     private val PAGED_LIST_CONFIG: PagedList.Config = PagedList.Config.Builder().setPageSize(10).build()
-    private fun <T> emptyLiveData(): LiveData<T> {
+    fun <T> emptyLiveData(): LiveData<T> {
       val emptyLiveData = MutableLiveData<T>()
       emptyLiveData.value = null
       return emptyLiveData

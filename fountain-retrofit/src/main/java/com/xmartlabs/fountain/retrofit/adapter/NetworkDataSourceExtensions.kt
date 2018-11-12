@@ -19,7 +19,7 @@ private fun <T : ListResponse<*>> RetrofitPageFetcher<T>.toBasePageFetcher(): Ba
   }
 }
 
-private fun <T> Call<T>.executeAndNotify(networkResultListener: NetworkResultListener<T>) {
+internal fun <T> Call<T>.executeAndNotify(networkResultListener: NetworkResultListener<T>) {
   @Suppress("TooGenericExceptionCaught")
   try {
     val response = execute()
@@ -81,9 +81,9 @@ internal fun <T> Call<T>.doOnSuccess(onSuccessResponse: (T) -> Unit): Call<T> {
   }
 }
 
-private fun <T> T?.orDo(action: () -> T) = this ?: action()
+internal fun <T> T?.orDo(action: () -> T) = this ?: action()
 
-private fun <T : ListResponse<*>> NotPagedRetrifitPageFetcher<T>.toBasePageFetcher() = object : BasePageFetcher<T> {
+internal fun <T : ListResponse<*>> NotPagedRetrifitPageFetcher<T>.toBasePageFetcher() = object : BasePageFetcher<T> {
   @WorkerThread
   override fun fetchPage(page: Int, pageSize: Int, networkResultListener: NetworkResultListener<T>) =
       fetchData()
