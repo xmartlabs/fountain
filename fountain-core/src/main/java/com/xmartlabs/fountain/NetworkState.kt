@@ -10,6 +10,7 @@ import android.annotation.SuppressLint
  * @param isFirstPage Indicates if the requested page is the first page.
  * @param isLastPage Indicates if the requested page is the last page.
  */
+@SuppressLint("SyntheticAccessor")
 sealed class NetworkState(
     open val page: Int,
     open val pageSize: Int,
@@ -24,7 +25,6 @@ sealed class NetworkState(
    * @param isFirstPage Indicates if the requested page is the first page.
    * @param isLastPage Indicates if the requested page is the last page.
    */
-  @SuppressLint("SyntheticAccessor")
   data class Loading(
       override val page: Int,
       override val pageSize: Int,
@@ -40,7 +40,6 @@ sealed class NetworkState(
    * @param isFirstPage Indicates if the requested page is the first page.
    * @param isLastPage Indicates if the requested page is the last page.
    */
-  @SuppressLint("SyntheticAccessor")
   data class Loaded(
       override val page: Int,
       override val pageSize: Int,
@@ -57,7 +56,6 @@ sealed class NetworkState(
    * @param isFirstPage Indicates if the requested page is the first page.
    * @param isLastPage Indicates if the requested page is the last page.
    */
-  @SuppressLint("SyntheticAccessor")
   data class Error(
       val exception: Throwable,
       override val page: Int,
