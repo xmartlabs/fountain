@@ -1,7 +1,7 @@
 def build_versions = [:]
 build_versions.min_sdk = 14
-build_versions.target_sdk = 26
-build_versions.build_tools = "27.0.3"
+build_versions.target_sdk = 28
+build_versions.build_tools = "28.0.3"
 ext.build_versions = build_versions
 
 ext {
@@ -14,7 +14,7 @@ ext {
             detekt                         : '1.0.0.RC9.2',
             dokka                          : '0.9.17',
             espresso                       : '3.0.2',
-            gradle                         : '3.1.4',
+            gradle                         : '3.2.1',
             gson                           : '2.8.5',
             jacoco                         : '0.12.0',
             junit                          : '4.12',

@@ -23,7 +23,7 @@ android {
     lintOptions {
         checkAllWarnings true
         warningsAsErrors true
-        ignore 'GradleDependency', 'GoogleAppIndexingWarning', 'NewerVersionAvailable', 'UnusedIds'
+        ignore 'GradleDependency', 'GoogleAppIndexingWarning', 'NewerVersionAvailable', 'UnusedIds', 'ObsoleteLintCustomCheck'
     }
 }
 dependencies {
