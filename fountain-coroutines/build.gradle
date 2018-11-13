@@ -44,12 +44,6 @@ dependencies {
     testImplementation project(':fountain-testutils')
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 dokka {
     outputDirectory = "$buildDir/docs"
 }

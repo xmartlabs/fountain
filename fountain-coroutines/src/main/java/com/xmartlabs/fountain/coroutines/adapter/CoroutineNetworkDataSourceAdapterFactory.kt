@@ -4,9 +4,9 @@ import com.xmartlabs.fountain.ListResponseWithEntityCount
 import com.xmartlabs.fountain.ListResponseWithPageCount
 import com.xmartlabs.fountain.common.FountainConstants
 import com.xmartlabs.fountain.common.KnownSizeResponseManager
-import kotlinx.coroutines.experimental.CompletableDeferred
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.runBlocking
 
 /** A [CoroutineNetworkDataSourceAdapter] factory */
 object CoroutineNetworkDataSourceAdapterFactory {

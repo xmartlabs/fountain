@@ -2,7 +2,7 @@ package com.xmartlabs.fountain.coroutines.adapter
 
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.NetworkDataSourceAdapter
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 
 /**
  * It's used to fetch each page from the service.

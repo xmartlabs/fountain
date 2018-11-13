@@ -7,7 +7,7 @@ import com.xmartlabs.fountain.coroutines.adapter.NotPagedCoroutinePageFetcher
 import com.xmartlabs.fountain.testutils.InstantExecutor
 import com.xmartlabs.fountain.testutils.IntMockedCachedDataSourceAdapter
 import com.xmartlabs.fountain.testutils.TestConstants
-import kotlinx.coroutines.experimental.asCoroutineDispatcher
+import kotlinx.coroutines.asCoroutineDispatcher
 
 object IntMockedListingCreator {
   fun createNetworkListing(

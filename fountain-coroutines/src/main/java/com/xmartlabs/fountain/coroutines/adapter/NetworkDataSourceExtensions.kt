@@ -6,7 +6,7 @@ import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener
 import com.xmartlabs.fountain.common.BaseNetworkDataSourceAdapterFactory
 import com.xmartlabs.fountain.common.notifyFromCallable
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 
 private fun <T : ListResponse<*>> CoroutinePageFetcher<T>.toBasePageFetcher(): BasePageFetcher<T> {
   return object : BasePageFetcher<T> {

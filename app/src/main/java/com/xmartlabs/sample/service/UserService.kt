@@ -3,7 +3,7 @@ package com.xmartlabs.sample.service
 import com.xmartlabs.sample.model.User
 import com.xmartlabs.sample.model.service.GhListResponse
 import io.reactivex.Single
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

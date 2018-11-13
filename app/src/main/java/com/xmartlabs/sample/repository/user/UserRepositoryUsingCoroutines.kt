@@ -11,7 +11,7 @@ import com.xmartlabs.sample.db.UserDao
 import com.xmartlabs.sample.model.User
 import com.xmartlabs.sample.model.service.GhListResponse
 import com.xmartlabs.sample.service.UserService
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 import javax.inject.Singleton
 
