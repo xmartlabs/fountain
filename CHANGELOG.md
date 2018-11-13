@@ -1,7 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-### [0.4.0](https://github.com/xmartlabs/fountain/releases/tag/0.3.0)
+### [0.5.0](https://github.com/xmartlabs/fountain/releases/tag/0.5.0)
+Released on 2018-11-13.
+- Upgrade kotlin version to 1.3 and coroutines version to 1.0.1.
+- Upgrade Android target version to 28
+
+### [0.4.0](https://github.com/xmartlabs/fountain/releases/tag/0.4.0)
 Released on 2018-10-23.
 **Big Breaking changes:**
 #### Fountain modules
@@ -73,4 +78,5 @@ Released on 2018-07-23.
 - Fix issue when the initialization process throws an Exception [#29](https://github.com/xmartlabs/fountain/pull/29).
 
 ### [0.1.0](https://github.com/xmartlabs/fountain/releases/tag/0.1.0)
-Released on 2018-07-05. This is the initial version.
+Released on 2018-07-05.
+This is the initial version.

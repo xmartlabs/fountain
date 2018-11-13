@@ -66,15 +66,17 @@ repositories {
 
 dependencies {
     // This dependency is required only if you want to use a Retrofit service without a special adapter. 
-    implementation 'com.github.xmartlabs.fountain:fountain-retrofit:0.4.0'
+    implementation 'com.github.xmartlabs.fountain:fountain-retrofit:0.5.0'
 
     // This dependency is required only if you want to use a Coroutine retrofit adapter.
-    implementation 'com.github.xmartlabs.fountain:fountain-coroutines:0.4.0'
+    implementation 'com.github.xmartlabs.fountain:fountain-coroutines:0.5.0'
 
     // This dependency is required only if you want to use a RxJava2 retrofit adapter.
-    implementation 'com.github.xmartlabs.fountain:fountain-rx2:0.4.0'
+    implementation 'com.github.xmartlabs.fountain:fountain-rx2:0.5.0'
 }
 ```
+
+Fountain is using Kotlin 1.3, if you are using Kotlin 1.2.X, please use Fountain [0.4.0](https://github.com/xmartlabs/fountain/tree/0.4.0).
 
 > Despite Fountain is in experimental state, we believe the API won't receive major changes.
 
