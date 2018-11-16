@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ### [0.5.0](https://github.com/xmartlabs/fountain/releases/tag/0.5.0)
-Released on 2018-11-13.
+Released on 2018-11-16.
 - Upgrade kotlin version to 1.3 and coroutines version to 1.0.1.
 - Upgrade Android target version to 28
 
