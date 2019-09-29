@@ -1,6 +1,6 @@
 package com.xmartlabs.fountain.common
 
-import android.arch.paging.PagedList
+import androidx.paging.PagedList
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 

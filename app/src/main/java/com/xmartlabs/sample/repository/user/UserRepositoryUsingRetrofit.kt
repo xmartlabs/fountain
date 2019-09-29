@@ -1,6 +1,6 @@
 package com.xmartlabs.sample.repository.user
 
-import android.arch.paging.PagedList
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.retrofit.FountainRetrofit
 import com.xmartlabs.fountain.retrofit.adapter.RetrofitNetworkDataSourceAdapter

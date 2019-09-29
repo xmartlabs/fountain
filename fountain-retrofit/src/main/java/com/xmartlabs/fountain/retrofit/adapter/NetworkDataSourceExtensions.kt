@@ -1,6 +1,6 @@
 package com.xmartlabs.fountain.retrofit.adapter
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.adapter.BasePageFetcher
 import com.xmartlabs.fountain.adapter.NetworkResultListener

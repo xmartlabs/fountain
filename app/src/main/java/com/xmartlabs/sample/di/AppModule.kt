@@ -1,7 +1,7 @@
 package com.xmartlabs.sample.di
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson

@@ -1,10 +1,10 @@
 package com.xmartlabs.fountain.feature.network
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.paging.PageKeyedDataSource
-import android.arch.paging.PagedList
-import android.support.annotation.AnyThread
+import androidx.annotation.AnyThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.PageKeyedDataSource
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
@@ -12,11 +12,11 @@ import com.xmartlabs.fountain.feature.PagerManager
 import java.util.concurrent.Executor
 
 internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
-    firstPage: Int,
-    ioServiceExecutor: Executor,
-    pagedListConfig: PagedList.Config,
-    networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>,
-    private val initData: ServiceResponse?
+  firstPage: Int,
+  ioServiceExecutor: Executor,
+  pagedListConfig: PagedList.Config,
+  networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>,
+  private val initData: ServiceResponse?
 ) : PageKeyedDataSource<Int, T>() {
 
   val networkState: LiveData<NetworkState>

@@ -1,8 +1,8 @@
 package com.xmartlabs.fountain.feature.cachednetwork
 
-import android.arch.lifecycle.LiveData
-import android.arch.paging.PagedList
-import android.support.annotation.AnyThread
+import androidx.annotation.AnyThread
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
@@ -11,12 +11,12 @@ import com.xmartlabs.fountain.feature.PagerManager
 import java.util.concurrent.Executor
 
 internal class BoundaryCallback<NetworkValue, DataSourceValue, NetworkResponse : ListResponse<out NetworkValue>>(
-    networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
-    private val cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
-    pagedListConfig: PagedList.Config,
-    ioServiceExecutor: Executor,
-    private val ioDatabaseExecutor: Executor,
-    firstPage: Int
+  networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
+  private val cachedDataSourceAdapter: CachedDataSourceAdapter<NetworkValue, DataSourceValue>,
+  pagedListConfig: PagedList.Config,
+  ioServiceExecutor: Executor,
+  private val ioDatabaseExecutor: Executor,
+  firstPage: Int
 ) : PagedList.BoundaryCallback<DataSourceValue>() {
   val networkState: LiveData<NetworkState>
     get() = pageManager.networkState

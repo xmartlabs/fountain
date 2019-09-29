@@ -1,6 +1,6 @@
 package com.xmartlabs.fountain.rx2
 
-import android.arch.paging.PagedList
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter

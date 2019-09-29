@@ -1,9 +1,9 @@
 package com.xmartlabs.fountain.feature
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.paging.PagedList
 import android.arch.paging.PagingRequestHelper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.fountain.adapter.BaseNetworkDataSourceAdapter
@@ -11,10 +11,10 @@ import com.xmartlabs.fountain.adapter.NetworkResultListener
 import java.util.concurrent.Executor
 
 internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out NetworkValue>>(
-    private val networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
-    private val pagedListConfig: PagedList.Config,
-    private val ioServiceExecutor: Executor,
-    private val firstPage: Int
+  private val networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
+  private val pagedListConfig: PagedList.Config,
+  private val ioServiceExecutor: Executor,
+  private val firstPage: Int
 ) {
   private var isLoadingInitialData = false
   internal var page = firstPage

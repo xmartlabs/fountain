@@ -1,7 +1,6 @@
 package com.xmartlabs.fountain.coroutines
 
-import android.arch.paging.DataSource
-import android.arch.paging.PagedList
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.ListResponse
 import com.xmartlabs.fountain.Listing
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter

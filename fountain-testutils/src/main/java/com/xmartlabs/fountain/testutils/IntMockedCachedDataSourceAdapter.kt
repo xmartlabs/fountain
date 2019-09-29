@@ -1,6 +1,6 @@
 package com.xmartlabs.fountain.testutils
 
-import android.arch.paging.DataSource
+import androidx.paging.DataSource
 import com.xmartlabs.fountain.adapter.CachedDataSourceAdapter
 
 class IntMockedCachedDataSourceAdapter(var numberOfErrors: Int = 0) : CachedDataSourceAdapter<Int, Int> {

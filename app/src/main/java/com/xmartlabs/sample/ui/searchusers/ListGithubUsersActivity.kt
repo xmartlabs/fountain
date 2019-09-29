@@ -1,13 +1,13 @@
 package com.xmartlabs.sample.ui.searchusers
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.paging.PagedList
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.R
 import com.xmartlabs.sample.model.User

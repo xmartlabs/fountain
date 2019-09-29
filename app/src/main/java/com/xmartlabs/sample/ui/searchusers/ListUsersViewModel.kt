@@ -1,11 +1,7 @@
 package com.xmartlabs.sample.ui.searchusers
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
-import android.arch.paging.PagedList
+import androidx.lifecycle.*
+import androidx.paging.PagedList
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.model.User
 import com.xmartlabs.sample.repository.user.UserRepositoryUsingCoroutines

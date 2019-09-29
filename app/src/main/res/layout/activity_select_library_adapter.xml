@@ -40,7 +40,7 @@
         android:textSize="18sp"
         />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/retrofitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
         app:backgroundTint="@color/colorPrimary"
         />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/coroutineAdapterButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         app:backgroundTint="@color/colorPrimary"
         />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rxjavaButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

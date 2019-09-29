@@ -2,7 +2,7 @@ package com.xmartlabs.sample.ui.selectmode
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.xmartlabs.sample.R
 import com.xmartlabs.sample.ui.common.FountainAdapterType
 import com.xmartlabs.sample.ui.searchusers.ListGithubUsersActivity
