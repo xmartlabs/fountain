@@ -12,11 +12,11 @@ import com.xmartlabs.fountain.feature.PagerManager
 import java.util.concurrent.Executor
 
 internal class NetworkPagedDataSource<T, ServiceResponse : ListResponse<out T>>(
-  firstPage: Int,
-  ioServiceExecutor: Executor,
-  pagedListConfig: PagedList.Config,
-  networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>,
-  private val initData: ServiceResponse?
+    firstPage: Int,
+    ioServiceExecutor: Executor,
+    pagedListConfig: PagedList.Config,
+    networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>,
+    private val initData: ServiceResponse?
 ) : PageKeyedDataSource<Int, T>() {
 
   val networkState: LiveData<NetworkState>

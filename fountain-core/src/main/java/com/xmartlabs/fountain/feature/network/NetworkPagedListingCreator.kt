@@ -11,10 +11,10 @@ import java.util.concurrent.Executor
 
 object NetworkPagedListingCreator {
   fun <Value, ServiceResponse : ListResponse<out Value>> createListing(
-    firstPage: Int,
-    ioServiceExecutor: Executor,
-    pagedListConfig: PagedList.Config,
-    networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>
+      firstPage: Int,
+      ioServiceExecutor: Executor,
+      pagedListConfig: PagedList.Config,
+      networkDataSourceAdapter: BaseNetworkDataSourceAdapter<ServiceResponse>
   ): Listing<Value> {
     val sourceFactory = NetworkPagedDataSourceFactory(
         firstPage = firstPage,

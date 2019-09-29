@@ -1,6 +1,10 @@
 package com.xmartlabs.sample.ui.searchusers
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.xmartlabs.fountain.NetworkState
 import com.xmartlabs.sample.model.User

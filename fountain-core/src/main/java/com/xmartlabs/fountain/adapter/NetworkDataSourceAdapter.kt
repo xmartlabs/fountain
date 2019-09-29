@@ -4,7 +4,6 @@ import androidx.annotation.CheckResult
 import androidx.annotation.NonNull
 import androidx.annotation.WorkerThread
 
-
 /** It is used to get notify the service response. */
 interface NetworkResultListener<T> {
   /** Invoked when the service returned a valid response. */

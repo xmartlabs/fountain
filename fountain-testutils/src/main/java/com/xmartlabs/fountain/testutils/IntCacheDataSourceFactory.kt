@@ -3,7 +3,6 @@ package com.xmartlabs.fountain.testutils
 import androidx.paging.DataSource
 import androidx.paging.ItemKeyedDataSource
 
-
 internal class IntCacheDataSourceFactory : DataSource.Factory<Int, Int>() {
   private val items: MutableList<Int> = ArrayList()
   private lateinit var dataSource: MockIntDataSource

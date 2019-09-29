@@ -11,10 +11,10 @@ import com.xmartlabs.fountain.adapter.NetworkResultListener
 import java.util.concurrent.Executor
 
 internal class PagerManager<NetworkValue, NetworkResponse : ListResponse<out NetworkValue>>(
-  private val networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
-  private val pagedListConfig: PagedList.Config,
-  private val ioServiceExecutor: Executor,
-  private val firstPage: Int
+    private val networkDataSourceAdapter: BaseNetworkDataSourceAdapter<NetworkResponse>,
+    private val pagedListConfig: PagedList.Config,
+    private val ioServiceExecutor: Executor,
+    private val firstPage: Int
 ) {
   private var isLoadingInitialData = false
   internal var page = firstPage
