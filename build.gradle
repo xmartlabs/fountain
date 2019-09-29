@@ -38,7 +38,14 @@ dependencies {
 
 detekt {
     config = files("detekt-config.yml")
-    input = files("$projectDir")
+    input = files(
+            "$projectDir/app",
+            "$projectDir/fountain-core",
+            "$projectDir/fountain-coroutines",
+            "$projectDir/fountain-retrofit",
+            "$projectDir/fountain-rx2",
+            "$projectDir/fountain-testutils"
+    )
     filters = ".*/resources/.*,.*/build/.*"
 }
 
