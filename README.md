@@ -12,6 +12,7 @@ A smart and simple way to work with paged endpoints.
 To see an example of how to use it, check out the introducing Fountain posts: [part one](https://blog.xmartlabs.com/2018/07/16/Introducing-Fountain-Part-One/) 
 and [part two](https://blog.xmartlabs.com/2018/08/20/Introducing-Fountain-Part-Two/).
 
+**Atention:** since all of Fountain functionalities are present in android official [Paging3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) library, Fountain is deprecated and we recommend using that tool.
 
 ## Overview
 
